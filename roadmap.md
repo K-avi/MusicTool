@@ -43,6 +43,9 @@ then add the possibility to write down what u generate
 
 debugger init scale/ mode; faire fonctions d'accès o mode (le passer en argument pr autre chose etc)
 
-ensuite faire le frontend de ca en ecrivant les fonction de parse 
+ensuite faire le frontend de ca en ecrivant les fonction de parse
 
 devoir pouvoir print chaque gamme etc
+
+refaire gestion de sauvegarde avc realloc: faire une structure sauvegarde avc un pointeur de gamme et de truc harmonisé initialisé à 20 slots
+avoir un compteur plein et si compt=20 faire un realloc de 10 slots 

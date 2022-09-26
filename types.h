@@ -38,32 +38,32 @@ typedef struct{ //scale modes structure
 
 }S_MODES;
 
-typedef struct{// user saved Data structure 
+typedef struct{// user saved Data structure
 
     S_SCALE* scales; //used to save scales //could allocate it w array instead dunno
 
     LENGTH scale_num; //number of scales saved
-	LENGTH scale_tot ;//number of scale u can save
+	  LENGTH scale_tot ;//number of scale u can save
 
 }S_SAVED_SCALES;
 
-typedef struct{// user saved Data structure 
+typedef struct{// user saved Data structure
 
     S_MODES* modes; //used to save modes
 
     LENGTH mode_num; //number of modes saved
-	LENGTH mode_tot; //number of modes u can save 
+	  LENGTH mode_tot; //number of modes u can save
 
 }S_SAVED_MODES;
 
 
 
-/*typedef struct{ //structure to store up to 20 slots of the saved structure  //might be useless tbh 
+typedef struct{ //structure to store up to 20 slots of the saved structure  //might be useless tbh
 
-    S_SAVED saved[20];
-    LENGTH length;
+    S_SAVED_MODES * saved_modes;
+    S_SAVED_SCALES * saved_scales;
 
-}S_SAVED_ARR;*/
+}S_USERINFO;
 
 
 

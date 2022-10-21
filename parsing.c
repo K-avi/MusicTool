@@ -3,6 +3,7 @@
 #include "string.h"
 #include "init.h"
 #include "scalegen.h"
+#include "user_info.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -86,7 +87,8 @@ LENGTH parse_scale_length(const char* string){// it's embarrassing how bad I am 
     return ret;
 }
 
-S_SCALE * parse_scale( char * string){ //parses a scale from a string containing numbers from 0 to 11(b) written in hexadecimal form
+/* obsolete u died as u lived; ugly n unloved
+S_SCALE * old_parse_scale( char * string){ //parses a scale from a string containing numbers from 0 to 11(b) written in hexadecimal form
 
     S_SCALE * rep=malloc(sizeof (S_SCALE));
     partial_init_scale(rep);
@@ -99,10 +101,14 @@ S_SCALE * parse_scale( char * string){ //parses a scale from a string containing
 
     int i=11;
     NOTE note=13;
-    if(!strncmp(string, "Harmo_Scale",11)){
-        while((string[i]!=(char)10 )&& (string[i]!=(char)0)){
+    if( (!strncmp(string, "Harmo_Scale",11)) || (!strncmp(string, "save_scale",10)) || (!strncmp(string,"save_harmonised_scale",21) )) {
+      while(string[i]!=' ' && string[i]!='\0'){
+        i++;
+        continue;
+      }
+      while((string[i]!=(char)10 )&& (string[i]!='\0')){
 
-            if( (string[i]>=48 && string[i]<=57) || (string[i]>=65) && (string[i] <67) || (string[i]>=97) && (string[i] <99) ){
+            if( (string[i]>=48 && string[i]<=57) || ((string[i]>=65) && (string[i] <67)) || ((string[i]>=97) && (string[i] <99)) ){
 
                 switch ((NOTE) string[i]){ //very messy; should change it tbh
                     case 48: note= 0; break;
@@ -122,7 +128,7 @@ S_SCALE * parse_scale( char * string){ //parses a scale from a string containing
                     case 97: note= 10; break;
                     case 98: note= 11; break;
 
-                    default: note= 13; break;
+                    default: note= 13; printf("%c %d inside\n", string[i],i); break;
                 }
                 add_note(rep, note);
             }
@@ -131,4 +137,57 @@ S_SCALE * parse_scale( char * string){ //parses a scale from a string containing
     }
     return rep;
 }
+*/
 
+char * set_to_beginning( char* str){
+  //sets a str to the first iteration of '0'; returns a null string otherwhise.
+  int i=0;
+  while(str[i]!='0' && str[i]!='\0') i++;
+
+  return &str[i];
+}
+
+
+S_SCALE * parse_scale( char *str){
+
+  S_SCALE * rep=malloc(sizeof (S_SCALE));
+  partial_init_scale(rep);
+
+  if(strlen(str)>100){
+      printf("\nstring parsed is too long, please try a shorter string\n");
+      init_scale(rep);
+      return rep;
+  }
+  NOTE note=0;
+  int i=0;
+  char *tmp= set_to_beginning(str);
+
+  while(tmp[i]!='\0' && tmp[i]!='\n'){
+
+    note= (tmp[i]% 32 + 9)%25;
+    /*switch ((NOTE) tmp[i]){ //very messy; should change it tbh
+        case 48: note= 0; break;
+        case 49: note= 1; break;
+        case 50: note= 2; break;
+        case 51: note= 3; break;
+        case 52: note= 4; break;
+        case 53: note= 5; break;
+        case 54: note= 6; break;
+        case 55: note= 7; break;
+        case 56: note= 8; break;
+        case 57: note= 9; break;
+
+        case 65: note= 10; break;
+        case 66: note= 11; break;
+
+        case 97: note= 10; break;
+        case 98: note= 11; break;
+
+        default: i++; continue;*/
+
+    add_note(rep, note);
+    i++;
+  }
+  sort_scale(rep);
+  return rep;
+}

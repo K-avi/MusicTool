@@ -14,8 +14,7 @@ int cmpfunc (const void * a, const void * b) { //comparative function to be used
 bool IsValidNote( NOTE note){ //checks wether a note is valid or not (valid meaning that it's value is between 0 and 11
 
 
-    bool ret= (note >=0 || note <=11) ? true : false;
-    return ret;
+    return (note >=0 && note <=11);
 }
 
 bool IsInScale( S_SCALE* scale, NOTE note){ //asserts wether a note is already in a scale or not
@@ -74,7 +73,7 @@ S_SCALE* generate_ran_scale(LENGTH length){ //generates a random scale of 'lengt
 }
 
 
-void set_scale( S_SCALE* scale, int *arr, int length){ //sets a scale to the array passed as argument n sets it's length to the arrays length
+void set_scale( S_SCALE* scale, NOTE *arr, LENGTH length){ //sets a scale to the array passed as argument n sets it's length to the arrays length
 
     partial_init_scale(scale);
     int i;
@@ -83,6 +82,8 @@ void set_scale( S_SCALE* scale, int *arr, int length){ //sets a scale to the arr
     }
     scale->length=length;
 }
+
+
 
 void print_scale( const S_SCALE *scale){ //prints the notes of a scale and it's length in a nice way :)
 
@@ -108,9 +109,15 @@ void print_array( NOTE *scale, LENGTH length){ //prints the notes of a scale pas
 
     printf("}\n");
     printf("the scale's length is %d\n", length);
-    
+
 }
 
+S_SCALE * make_scale( NOTE *scale, LENGTH length){ //generates a scale from an array + a length passed as argument
 
+    S_SCALE* ret = malloc(sizeof(S_SCALE));
 
+    set_scale( ret, scale, length);
 
+    return ret;
+
+}

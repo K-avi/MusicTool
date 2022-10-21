@@ -1,51 +1,30 @@
+Ce qui est a faire ds le scale mode:
 
-function to init saved array;
+    REECRIRE LES GAMMES COMME DES USHORT IVAN JPP DE TOI T BETE
 
-then
+different systeme d'indexation pour les donnees sauvegardees ; mettre flag des indexs libres etc
+possibilite de precise à quel slot je sauvegarde;
 
-function to clear a scale/ add a scale;
+tester la reallocation;
 
-
-then do all of the parsing lmao
-
-also do the front end -> like generate n save a stuff itll be a pain
-
+reecriture certaines fonctions de parsing;
 
 
+/////chord mode:
 
+sst generation de triades a partir d'une gamme.
 
+sst generation accords avc n extensions a partir d'une gamme
 
+generation d'accords:
+-> simple (random)
+-> par blocs de triades preconcus (II ; V ; I etc)
+-> complexe (peut etre que je le ferais ps mais l'idée
+c'est qu'il comprenne certains principes de transpositions d'accord et une version
+simplifiée de l'harmonie tonale; concept de Ton, S-D, Dom...)
 
+apres chord mode :
 
+possibilite d'ecrire resultats sur fichier .txt (les rendre interpretables pour faire systeme de sauvegarde???)
 
-
-
-
-stuff to add:
-
-
-- possibility to save stuff n generate a scale n then save it to harmonise it
-    on the implementation of saved mode:
-            when u generate something it's automatically saved in a placeholder until u generate something else; if u type a command like 'savescale'; it should be saved in a struct n saved at an index
-- possibility to acces said stuff w a command like generate_from_saved
--parse which saved stuff u want to use
--be able to clear saved stuff either all of it or a specific scale/mode
-
-
-
-then continue to chord mode maybe?
-
-
-
-then add the possibility to write down what u generate
-
-16/09:
-
-debugger init scale/ mode; faire fonctions d'accès o mode (le passer en argument pr autre chose etc)
-
-ensuite faire le frontend de ca en ecrivant les fonction de parse
-
-devoir pouvoir print chaque gamme etc
-
-refaire gestion de sauvegarde avc realloc: faire une structure sauvegarde avc un pointeur de gamme et de truc harmonisé initialisé à 20 slots
-avoir un compteur plein et si compt=20 faire un realloc de 10 slots 
+possibilite d'ecrire resultats sur fichiers .midi (ps interpretables apres pcq trop dangereux)

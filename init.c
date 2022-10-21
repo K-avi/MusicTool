@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 
-bool QUIT_INFO; //failsafe;  to be set to true when starting the program; will prevent the program from running if set to false; might not use
 
 void init_scale( S_SCALE * scale ){ //initializes the length of a scale to 1; sets it's first note to the fundamental and fills it with the value 13 as placeholder
 

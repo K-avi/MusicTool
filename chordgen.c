@@ -22,9 +22,9 @@ CHORD_BITS triads_at_fund (S_SCALE * scale){//returns the triads you can generat
 CHORD_BITS * triads_from_scale( S_SCALE* scale){// returns the triads you can generate from a scale
 
 //not done yet
-  CHORD_BITS* ret= malloc(scale->legnth*sizeof(CHORD_BITS));
+  CHORD_BITS* ret= malloc(scale->length*sizeof(CHORD_BITS));
   for(LENGTH i=0; i<scale->length; i++){
-    ret[i]=triads_at_fund(scale->scale[i]);
+   //not done ret[i]=triads_at_fund(scale->scale[i]);
   }
-  return ret
+  return ret;
 }

@@ -40,19 +40,21 @@ typedef struct{ //scale modes structure
 
 typedef struct{// user saved Data structure
 
-    S_SCALE* scales; //used to save scales //could allocate it w array instead dunno
 
     LENGTH scale_num; //number of scales saved
 	  LENGTH scale_tot ;//number of scale u can save
+
+    S_SCALE** scales; //used to save scales
+
 
 }S_SAVED_SCALES;
 
 typedef struct{// user saved Data structure
 
-    S_MODES* modes; //used to save modes
-
     LENGTH mode_num; //number of modes saved
 	  LENGTH mode_tot; //number of modes u can save
+
+    S_MODES** modes; //used to save modes
 
 }S_SAVED_MODES;
 
@@ -66,5 +68,28 @@ typedef struct{ //structure to store up to 20 slots of the saved structure  //mi
 }S_USERINFO;
 
 
+//-----------------------------------------------------------------------------------------------//
+
+// CHORD MODE
+
+typedef struct{
+  NOTE * note;
+  LENGTH length;
+}S_CHORD;
+
+typedef struct CHORDS{
+  S_CHORD chord;
+  struct CHORDS * next;
+}CHORDS;
+
+typedef struct{
+  CHORDS * chords;
+  LENGTH length;
+}S_CHORD_PROG;
+
+
+typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a scale
+// 0000 0000
+//8th bit is wether minor third; 7th major third; 6th dim fifth; 5th just fifth; 4th aug fifth
 
 #endif

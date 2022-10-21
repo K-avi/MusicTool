@@ -1,7 +1,8 @@
 #ifndef INIT_H_INCLUDED
 #define INIT_H_INCLUDED
 
-extern bool QUIT_INFO;
+#include "types.h"
+
 extern void init_scale( S_SCALE * scale );
 extern void partial_init_scale( S_SCALE*scale);
 

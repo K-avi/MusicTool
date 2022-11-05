@@ -265,7 +265,7 @@ static void ScaleHarmonizationLoop(){
           
           index=parse_index(line);
           if(index==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
-          else{remove_scale(user_saved, index);}
+          else{remove_scale(user_saved, index); }
           
           printf("  >>>");
           continue;
@@ -274,7 +274,7 @@ static void ScaleHarmonizationLoop(){
           
           index=parse_index(line);
           if(index==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
-          else{remove_modes(user_saved, index);}
+          else{remove_modes(user_saved, index); compt_harmo--;}
           
           printf("  >>>");
           continue;

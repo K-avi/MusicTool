@@ -20,11 +20,12 @@ printf("At Line %d\n",__LINE__); \
 exit(1);}
 #endif //DEBUG
 
-#define MAJ_SCALE {0, 2, 4, 5, 7, 9,11, 13, 13, 13, 13,13}
-
+//different renames of char to make reading easier;
 typedef unsigned char NOTE;
 typedef unsigned char LENGTH;
 typedef unsigned char CPT;
+
+typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
 
 typedef unsigned short S_SCALE; 
 
@@ -36,35 +37,22 @@ typedef unsigned short S_SCALE;
 
 typedef S_SCALE* S_MODES; //array containing n scales 
 
-typedef struct{// user saved Data structure
-
-
-    LENGTH scale_num; //number of scales saved
-	  LENGTH scale_tot ;//number of scale u can save
-
-    S_SCALE** scales; //used to save scales
-
-
+typedef struct S_LINKED_SCALE{ //basic linked list w scales
+  S_SCALE scale; 
+  struct S_LINKED_SCALE * next;
 }S_SAVED_SCALES;
 
-typedef struct{// user saved Data structure
-
-    LENGTH mode_num; //number of modes saved
-	  LENGTH mode_tot; //number of modes u can save
-
-    S_MODES** modes; //used to save modes
-
+typedef struct S_LINKED_MODE{
+  S_MODES modes;
+  struct S_LINKED_MODE * next;
 }S_SAVED_MODES;
 
-
-
 typedef struct{ //structure to store up to 20 slots of the saved structure  //might be useless tbh
-
-    S_SAVED_MODES * saved_modes;
-    S_SAVED_SCALES * saved_scales;
-
+    S_SAVED_MODES *saved_modes;
+    S_SAVED_SCALES *saved_scales;
+    CPT scales_num;
+    CPT modes_num;
 }S_USERINFO;
-
 
 //-----------------------------------------------------------------------------------------------//
 

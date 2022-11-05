@@ -1,7 +1,7 @@
 
 
-#CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter
-CFLAGS = -g -Wno-unused-parameter
+CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter
+#CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 
 PROGRAMS =   test MusicTool
@@ -10,12 +10,12 @@ PROGRAMS =   test MusicTool
 
 all: $(PROGRAMS)
 
-test: scalegen.o harmo.o main_test.o
+test: scalegen.o harmo.o parsing.o scaleloop.o user_info.o globals.o init.o main_test.o
 	$(CC) -o $@ $(CFLAGS) $^
 
 
 
-MusicTool: scalegen.o init.o scaleloop.o harmo.o misc.o parsing.o user_info.o globals.o  copy.o main.o
+MusicTool: scalegen.o init.o scaleloop.o harmo.o parsing.o user_info.o globals.o main.o
 	$(CC) -o $@ $(CFLAGS) $^
 
 #Ou plus simplement

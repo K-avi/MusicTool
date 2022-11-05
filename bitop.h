@@ -4,6 +4,9 @@
 #include "types.h"
 
 #define SCALE_BITS 16
+#define ERROR_FLAG 0x8000 // way to return error from functions that generates scale 
+
+// error flag's bit rep is: 1000 0000 0000 0000
 #define SET_NTH(bits, n) ( 1<<n | bits)
 #define GET_NTH(bits,n) (1 & bits>>n)
 #define POP_BIT(bits, n) (1<<n ^ bits)

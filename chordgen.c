@@ -5,6 +5,8 @@
 #include "bitop.h"
 
 
+/*
+
 CHORD_BITS triads_at_fund (S_SCALE * scale){//returns the triads you can generate on the first degree of a scale
 
   if(scale==NULL) return 0;
@@ -28,3 +30,5 @@ CHORD_BITS * triads_from_scale( S_SCALE* scale){// returns the triads you can ge
   }
   return ret;
 }
+
+*/

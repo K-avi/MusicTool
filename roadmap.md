@@ -1,13 +1,18 @@
 Ce qui est a faire ds le scale mode:
 
-    REECRIRE LES GAMMES COMME DES USHORT IVAN JPP DE TOI T BETE
+  
 
-different systeme d'indexation pour les donnees sauvegardees ; mettre flag des indexs libres etc
-possibilite de precise à quel slot je sauvegarde;
+à refaire: 
 
-tester la reallocation;
+la partie scaleloop; 
+la partie user_info; 
+la partie copy -> seulement pour les modes; 
 
-reecriture certaines fonctions de parsing;
+
+
+
+
+
 
 
 /////chord mode:

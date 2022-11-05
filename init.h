@@ -3,12 +3,15 @@
 
 #include "types.h"
 
-extern void init_scale( S_SCALE * scale );
-extern void partial_init_scale( S_SCALE*scale);
+extern void init_saved_scale(S_SAVED_SCALES* saved_scales);
+extern void free_saved_scale( S_SAVED_SCALES * saved_scales);
 
-extern void init_modes(S_MODES * modes);
-extern void partial_init_modes(S_MODES * modes);
+extern void init_saved_mode(S_SAVED_MODES* saved_modes);
+extern void free_saved_modes( S_SAVED_MODES * saved_modes);
 
-//extern void init_saved_struct(S_SAVED* user_data, LENGTH length);
+extern void init_userinfo( S_USERINFO* user_data);
+extern void free_userinfo( S_USERINFO* user_info);
+
+
 
 #endif // INIT_H_INCLUDED

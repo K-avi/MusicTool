@@ -1,167 +1,163 @@
 #include "user_info.h"
+#include "bitop.h"
 #include "types.h"
-#include "init.h"
+#include "harmo.h"
 #include "scalegen.h"
-#include "copy.h"
 #include <stdlib.h>
 #include <stdio.h>
 
+void add_scale(S_SAVED_SCALES * saved_scales, S_SCALE scale){
 
-void init_saved_scale(S_SAVED_SCALES* user_data, LENGTH  scale_tot){
-  //initialises a saved scale struct
-
-	free(user_data);
-	user_data=malloc(sizeof(S_SAVED_SCALES));
-	user_data->scales=malloc(12*scale_tot*sizeof(S_SCALE));
-	user_data->scale_tot= scale_tot;
-	user_data->scale_num= 0;
-
-	int i;
-	for(i=0; i<scale_tot; i++){
-		user_data->scales[i]=malloc(sizeof(S_SCALE));
-		init_scale(user_data->scales[i]);
-	}
-
-}
-
-
-S_SCALE** realloc_scales( S_USERINFO* user_data){ // NOT TESTED 	!!!!!!!
-  //adds 10 slots for scales in memory when the scale array is full; returns a pointer to the new emplacement of the scale
-  if( user_data->saved_scales->scale_tot+=10 >=100){
-    printf("limit of savable scales reached. Please clear the scales\n" );
-    return user_data->saved_scales->scales;
-  }
-  user_data->saved_scales->scale_tot+=10;
+	if(!saved_scales) return;
+	S_SAVED_SCALES *tmp=saved_scales; 
 	
-  return realloc(user_data->saved_scales->scales, (10*sizeof(S_SCALE)+ user_data->saved_scales->scale_tot*sizeof(S_SCALE)));
-
-
-}
-
-
-void save_scale( S_SCALE* user_data, S_USERINFO * user_info){
-  //used to save a scale in the user data structure returns an error if the slots to save scales are all fille
-
-	if (user_info->saved_scales->scale_num ==user_info->saved_scales->scale_tot){
-		printf("scale struct fyll; scales reallocated");
-		user_info->saved_scales->scales=realloc_scales(user_info);
-	}
-
-	else if(user_info->saved_scales->scale_tot<user_info->saved_scales->scale_num){
-
-		printf("error: the number of scales saved is higher than the memory allocated to save them. Please clear the save structure");
-		return;
-
-	}
-
-	else{
-
-		copy_scale(user_info->saved_scales->scales[user_info->saved_scales->scale_num++], user_data);
-	}
-
-}
-
-
-void print_saved_scale( S_USERINFO * user_data, LENGTH index){// could be a macro tbh
-	//doesnt check for bad allocation !!!!!!!!
-	print_scale(user_data->saved_scales->scales[index]);
-}
-
-void clear_saved_scale( S_SAVED_SCALES * user_data){
-	for( int i=0; i< user_data->scale_tot; i++){
-			free(user_data->scales[i]);
-	}
-	free(user_data->scales);
-	free(user_data);
-}
-/*************************************MODE SECTION****************************/
-
-
-void realloc_saved_mode (S_SAVED_MODES * user_data){
-
-}
-
-
-
-
-
-void save_mode(S_MODES * user_data, S_USERINFO *user_info){//used to save a mode in the data structure
-	//used to save a scale in the user data structure returns an error if the slots to save scales are all filled
-
-	if (user_info->saved_modes->mode_num ==user_info->saved_modes->mode_tot){
-//obsolete; to redo
-		//user_info->saved_modes->modes=realloc_modes(user_info);
-	}
-
-	else if(user_info->saved_scales->scale_tot<user_info->saved_scales->scale_num){
-
-		printf("error: the number of scales saved is higher than the memory allocated to save them. Please clear the save structure");
-		return;
-
-	}
-
-	else{
-	 copy_modes(user_info->saved_modes->modes[user_info->saved_modes->mode_num++], user_data);
-	}
-
-}
-
-void clear_saved_mode(S_SAVED_MODES * user_data){
-	for( int i=0; i< user_data->mode_tot; i++){
-			free(user_data->modes[i]);
-	}
-	//free(user_data->modes);
-	//free(user_data);
-}
-
-void init_saved_mode(S_SAVED_MODES* user_data, LENGTH  modes_tot){
-    //similar to init saved scales but with modes structure; to redo entierly; modify mode struct !!!!!!!
-	//initialises a saved scale struct
-	//creates memory leaks
-
-		free(user_data);
-		user_data=malloc(sizeof(S_SAVED_MODES));
-		user_data->modes=malloc(modes_tot*sizeof(S_MODES)); //might generate segfaults
-		user_data->mode_tot= modes_tot;
-		user_data->mode_num= 0;
-
-		int i;
-		for(i=0; i<modes_tot; i++){
-			user_data->modes[i]=malloc(sizeof(S_MODES));
-
-
-			init_modes(user_data->modes[i]);
+	if(tmp->next){
+		while (tmp->next){
+			tmp=tmp->next;
 		}
-
-
+	}
+	S_SAVED_SCALES *tmp1=malloc(sizeof(S_SAVED_SCALES));
+	tmp1->next=NULL;
+	tmp1->scale=scale; 
+	tmp->next=tmp1;
 }
 
-/**************************GENERAL SECTION**********************************/
+void print_saved_scale( S_USERINFO * user_data, LENGTH index){
+	if(index> user_data->scales_num){ printf("index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return;}
+	CPT i=0; 
+	S_SAVED_SCALES *tmp = user_data->saved_scales;
+	while(i<index && tmp){
+		if(tmp->next)tmp=tmp->next;
+		i++;
+	}
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return; }
+	print_scale(tmp->scale);
+}
+///////////////////////MODES/////////////////////////
 
+void set_modes( S_SAVED_MODES * saved_modes, S_MODES modes){
+	if(!(saved_modes && modes) ){ printf("\nplaceholder\n");return;}
+	if(saved_modes->modes)free(saved_modes->modes);
+	saved_modes->modes=generate_modes(modes[0]);
+}
 
-void resets_saved_element(S_USERINFO * user_data, LENGTH struct_num, LENGTH element_of_struct){ //resets an element of a user saved struct; the index of the structure is passed as argument along with 0 or 1 to indicate wether it's the scale or the modes contained at this index that needs to be reset
-
-
-    if (element_of_struct ==0){
-           // init_scale(user_data[struct_num]->scale); //maybe use partial init idk
-
-    }else if(element_of_struct==1){
-
-      // init_modes(user_data[struct_num]->scale);
-    }
+void add_mode(S_SAVED_MODES * saved_modes, S_MODES modes){
+	if(!(saved_modes && modes) ) { printf("placeholder");return;}
+	S_SAVED_MODES *tmp=saved_modes; 
+	while (tmp->next){
+		tmp=tmp->next;
+	}
+	S_SAVED_MODES *tmp1=malloc(sizeof(S_SAVED_SCALES));
+	tmp1->next=NULL;
+	S_MODES tmp1_modes=generate_modes(modes[0]);
+	tmp1->modes=tmp1_modes; 
+	tmp->next=tmp1;
 }
 
 
-void init_userinfo( S_USERINFO* user_data){
-  //initialises and allocates memory to the different pointers in the user_data structure
-  user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));
-  user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES));
-
-  init_saved_scale(user_data->saved_scales, 20);
-  init_saved_mode(user_data->saved_modes, 20);
+void print_saved_modes( S_USERINFO * user_data, LENGTH index){
+	if(index> user_data->modes_num){ printf("index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return;}
+	CPT i=0; 
+	S_SAVED_MODES *tmp = user_data->saved_modes;
+	while(i<index && tmp){
+		if(tmp->next)tmp=tmp->next;
+		i++;
+	}
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return; }
+	print_modes(tmp->modes);
 }
 
-void clear_userinfo( S_USERINFO* user_data){
-	clear_saved_scale(user_data->saved_scales);
-	clear_saved_mode(user_data->saved_modes);
+S_SCALE get_scale_of_modes( S_USERINFO * user_data, CPT modes_num, CPT scale_num){
+	//retrieves the scale situated at scale num (nth scale) of the modes saved at modes num (nth mode)
+	if(!user_data){ printf("eror: user_data is null\n"); return ERROR_FLAG;}
+	
+	else if(modes_num>user_data->modes_num) {
+		printf("error: index of modes to retrieve scale from is higher than number of modes saved; please enter a valid index.\n");
+		return ERROR_FLAG;
+	}
+	CPT cpt=0;
+	S_SAVED_MODES *tmp=user_data->saved_modes;
+	while(cpt<modes_num && tmp){
+		cpt++;
+		tmp=tmp->next;
+	}
+	if(!tmp){ 
+		printf("placeholder error 2 in get_scale_of_modes\n"); 
+		return ERROR_FLAG;
+	}
+	if(scale_num>get_length(tmp->modes[0])){
+		printf("error: placeholder placeholder\n");
+		return ERROR_FLAG;
+	}else return tmp->modes[scale_num];
+}// NOT TESTED !!!!!!!!!!!!!!!!!
+
+////////////////USER INFO ///////////////////
+
+void save_scale( S_SCALE scale, S_USERINFO * user_info){
+  //used to save a scale in the user data structure returns an error if the slots to save scales are all fille
+  user_info->scales_num++;
+  add_scale(user_info->saved_scales, scale);
 }
+
+void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in the data structure
+	//used to save a scale in the user data structure returns an error if the slots to save scales are all 
+	user_info->modes_num++;
+	add_mode(user_info->saved_modes, modes);
+}
+
+void remove_scale(  S_USERINFO * user_info, CPT index ){ //removes scale at index passed as argument if it exists
+	
+	
+	if( index > user_info->scales_num){ printf("index passed is higher than the number of scales contained; can't clear this scale\n"); return;}
+	S_SAVED_SCALES * tmp= user_info->saved_scales, *tmp1;
+	CPT cpt=0;
+	while(cpt< (index-1) && tmp){
+		tmp=tmp->next;
+		cpt++;
+	}
+	if(!tmp) { printf(" indexation problem; something went wrong\n"); return;}
+	if(tmp->next){
+		if(tmp->next->next){
+			
+			tmp1=tmp->next;
+			print_scale(tmp1->scale);
+			tmp->next=tmp->next->next;
+			free(tmp1);
+		}else {
+			
+			tmp1=tmp->next;
+			print_scale(tmp1->scale);
+			tmp->next=NULL;
+			print_scale(tmp->scale);
+			free(tmp1);
+		}
+	}
+	user_info->scales_num--;
+}
+
+void remove_modes(  S_USERINFO * user_info, CPT index ){ //removes modes at index passed as argument if it exists
+	
+	if( index > user_info->modes_num){ printf("index passed is higher than the number of scales contained; can't clear this scale\n"); return;}
+	S_SAVED_MODES* tmp= user_info->saved_modes, *tmp1;
+	CPT cpt=0;
+	while(cpt< (index-1) && tmp){
+		tmp=tmp->next;
+		cpt++;
+	}
+	if(!tmp) { printf(" indexation problem; something went wrong\n"); return;}
+	if(tmp->next){
+		if(tmp->next->next){
+			tmp1=tmp->next;
+			tmp->next=tmp->next->next;
+			free(tmp1->modes);
+			free(tmp1);
+		}else {
+			tmp1=tmp->next;
+			tmp->next=NULL;
+			free(tmp1->modes);
+			free(tmp1);
+		}
+	}
+	user_info->modes_num--;
+}
+

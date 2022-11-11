@@ -12,7 +12,8 @@
 #include "scaleloop.h"
 #include "init.h"
 #include "user_info.h"
-
+#include "chordgen.h"
+#include "chordprint.h"
 
 
 int main(){
@@ -23,36 +24,23 @@ int main(){
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
    
- 
+  //TRIADS_IN_SCALE tri=triads_at_fund(236);
+  //TRIADS_IN_SCALE tri= triads_at_fund(2047);
 
-  user_saved=malloc(sizeof(S_USERINFO));
-  init_userinfo(user_saved);
+  TRIADS_IN_SCALE *triads_maj= get_triads( 1370);
 
-/*
-  save_scale(1370, user_saved);
-  save_scale(1371, user_saved);
+ /* for( CPT i=0; i<7; i++){
+    print_bits(triads_maj[i]);
+    printf("\n");
+  }*/
 
+ // print_bits(tri);
+
+ // printf("%d",tri);
+
+ printf("%d %d %d %d", select_rand_chord(0xF),select_rand_chord(0xF),select_rand_chord(0xF),select_rand_chord(0xF));
+
+ free(triads_maj);
   
-
-  S_MODES eccle_modes= generate_modes(1370);
-  S_MODES other_modes= generate_modes(1371);
-
-  save_modes(eccle_modes, user_saved);
-  save_modes(other_modes, user_saved);
-
-
-  remove_scale( user_saved, 2);
-  //print_saved_scale(user_saved, 2);
-  
-  remove_modes( user_saved, 2 );
-  print_saved_modes(user_saved, 2);
-  //ScaleLoop();
-
-  
-  if(eccle_modes) free(eccle_modes);
-  if(other_modes) free(other_modes);*/
-  ScaleLoop();
-  free_userinfo(user_saved);
-   return 0;
-
+  return 0;
 }

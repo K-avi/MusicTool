@@ -17,4 +17,27 @@
 #define FULLSCALE 2047 //value of a fullscale as a ushort
 #define MAXLENGTH 12 //max length of a scale 
 
+
+
+////////////////////////// MASKS //////////////////////
+
+//MASK FOR S_SCALE -> CHORD_BITS
+#define TRIAD_MASK 0xEC 
+/* binary rep is 0000 0000 1110 1100; used to retrieve the bits where 
+relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generation */
+
+//MASKS FOR CHORD_BITS -> TRIADS_IN_SCALE
+#define MIN_MASK 9 // 0000 1001
+#define MAJ_MASK 0xA // 0000 1010
+#define DIM_MASK 5 // 0000 0101
+#define AUG_MASK 0x12 // 0001 0010
+
+
+//MASKS FOR TRIADS_IN_SCALE 
+
+#define MIN_CHORD 1 
+#define MAJ_CHORD 2
+#define DIM_CHORD 4
+#define AUG_CHORD 8
+
 #endif

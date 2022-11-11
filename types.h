@@ -47,7 +47,7 @@ typedef struct S_LINKED_MODE{
   struct S_LINKED_MODE * next;
 }S_SAVED_MODES;
 
-typedef struct{ //structure to store up to 20 slots of the saved structure  //might be useless tbh
+typedef struct{ 
     S_SAVED_MODES *saved_modes;
     S_SAVED_SCALES *saved_scales;
     CPT scales_num;
@@ -58,24 +58,38 @@ typedef struct{ //structure to store up to 20 slots of the saved structure  //mi
 
 // CHORD MODE
 
-typedef struct{
-  NOTE * note;
-  LENGTH length;
-}S_CHORD;
+
+//the following redefinitions of char and short are done to make the chord more readable; and bc theyre used in different contexts. 
+
+typedef unsigned char S_CHORD; //dunno how to use it just yet tbh; might make it a short
 
 typedef struct CHORDS{
   S_CHORD chord;
   struct CHORDS * next;
-}CHORDS;
+}S_CHORD_PROG;
 
+/*
 typedef struct{
   CHORDS * chords;
   LENGTH length;
 }S_CHORD_PROG;
+*/
 
 
 typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a scale
 // 0000 0000
-//8th bit is wether minor third; 7th major third; 6th dim fifth; 5th just fifth; 4th aug fifth
+// lsb bit is wether minor third; 7th major third; 6th dim fifth; 5th just fifth; 4th aug fifth 
+
+typedef unsigned char TRIADS_IN_SCALE; //used to know which triads are contained in a scale 
+/* lsb is set if minor chord, is in the scale 7 bit if major chord, 6th bit if dim chord, 5th if augmented chord */
+
+typedef unsigned short DEG_IN_SCALE; //used to know which degrees are in a scale. Behaves like the S_SCALE structure; 
+//but used for a different purpose.
+
+typedef struct SCL_INFO{
+  S_SCALE scale; 
+  TRIADS_IN_SCALE * scale_at_deg; 
+  LENGTH scale_length;
+}SCL_INFO;
 
 #endif

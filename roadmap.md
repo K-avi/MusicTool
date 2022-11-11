@@ -1,19 +1,6 @@
 Ce qui est a faire ds le scale mode:
 
-  
-
-à refaire: 
-
-la partie scaleloop; 
-la partie user_info; 
-la partie copy -> seulement pour les modes; 
-
-
-
-
-
-
-
+refaire API pr qu'elle soit mieux ( un seul mode avc tte les fonctions)
 
 /////chord mode:
 
@@ -33,3 +20,10 @@ apres chord mode :
 possibilite d'ecrire resultats sur fichier .txt (les rendre interpretables pour faire systeme de sauvegarde???)
 
 possibilite d'ecrire resultats sur fichiers .midi (ps interpretables apres pcq trop dangereux)
+
+
+
+
+generation d'accords random : 
+
+-> conceptualiser accords / degres

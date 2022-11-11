@@ -10,7 +10,7 @@ PROGRAMS =   test MusicTool
 
 all: $(PROGRAMS)
 
-test: scalegen.o harmo.o parsing.o scaleloop.o user_info.o globals.o init.o main_test.o
+test: scalegen.o harmo.o parsing.o scaleloop.o user_info.o globals.o init.o chordgen.o chordprint.o main_test.o 
 	$(CC) -o $@ $(CFLAGS) $^
 
 
@@ -18,7 +18,6 @@ test: scalegen.o harmo.o parsing.o scaleloop.o user_info.o globals.o init.o main
 MusicTool: scalegen.o init.o scaleloop.o harmo.o parsing.o user_info.o globals.o main.o
 	$(CC) -o $@ $(CFLAGS) $^
 
-#Ou plus simplement
 %.o:%.c %.h
 	$(CC)  $(GCC_FLAGS) -c  $<
 

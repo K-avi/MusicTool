@@ -9,48 +9,59 @@
 #include "bitop.h"
 
 
-SIGNED_LENGTH map_index_to_note(S_SCALE scale, LENGTH index){
-    /*the purpose of this function is to return which note corresponds to the nth degree of a scale. For example, if I say 1 it returns 1 bc its the fundamental.
-    if I want the 2nd note I return the bit where the 1st note is +1 and so on */
-    if(get_length(scale)<index) return -1;
-    else if( index==1) return 1;
-    else{
-        CPT cpt=0, bit=0;
-        while (cpt<index) {
-            if( (1<<cpt) & scale) bit=cpt;
-            cpt++;
-        }
-        return bit;
-    }
-}
+void print_triad( TRIADS_IN_SCALE triads){//prints which triads a scale contains
+  if( !triads){ printf(" this scale doesn't contain any triads :/\n"); return;}
+  if( MIN_CHORD & triads){
+    printf( "this scale contains the minor chord\n");
+  }
+  if(MAJ_CHORD & triads){
+    printf( "this scale contains the major chord\n");
+  }
+  if( DIM_CHORD & triads){
+    printf( "this scale contains the diminished chord\n");
+  }
+  if( AUG_CHORD & triads){
+    printf( "this scale contains the augmented chord\n");
+  }
+}//maybe tested
 
-char * get_deg(S_SCALE scale, LENGTH degree){ //returns the string corresponding to the nth note in the scale 
-    if(get_length(scale)<degree) return "err1";
-    if(!((1<<degree) & scale) ) return "err2";
-    switch (degree) {
-    case 1: return "I";
-    case 2: return "bII";
-    case 3: return "II";
-    case 4: return "bIII";
-    case 5: return "III";
-    case 6: return "IV";
-    case 7: return "bV";
-    case 8: return "V";
-    case 9: return "bVI";
-    case 10: return "VI";
-    case 11: return "bVII";
-    case 12: return "VII";
-    default: return "err3";
-    }
 
-}
-
-char * get_triad_type(TRIADS_IN_SCALE triad){
+char*  triad_to_str( TRIADS_IN_SCALE triad){//pretty self expleanatory
     switch (triad) {
-    case MAJ_CHORD: return "";
-    case MIN_CHORD: return "m";
-    case AUG_CHORD: return "+";
-    case DIM_CHORD: return "°";
-    default: return "err1";
+    case 1: return "m";
+    case 2: return "";
+    case 4: return "°";
+    case 8: return "+";
+    default: { return NULL;}
+    }
+}
+
+char *deg_to_str(DEGREES deg){
+
+    switch (deg) { //i dont like switch cases statements but these seem necessary
+    case 0: return "I";
+    case 1: return "bII";
+    case 2: return "II";
+    case 3: return "bIII";
+    case 4: return "III";
+    case 5: return "IV";
+    case 6: return "bV";
+    case 7: return "V";
+    case 8: return "bVI";
+    case 9: return "VI";
+    case 10: return "bVII";
+    case 11: return "VII";
+    default: { return NULL;}
+    }
+
+}
+
+void print_chord_prog( S_CHORD_PROG * chord_prog){
+    if(!chord_prog) return;
+    //if( !(chord_prog->degrees && chord_prog->triads && chord_prog->length==0)) return;
+
+    for(CPT i=0; i<chord_prog->length; i++){
+        if(i!=chord_prog->length-1) printf("%s%s ,", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
+        else printf("%s%s\n", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
     }
 }

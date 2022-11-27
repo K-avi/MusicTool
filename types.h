@@ -24,8 +24,10 @@ exit(1);}
 typedef unsigned char NOTE;
 typedef unsigned char LENGTH;
 typedef unsigned char CPT;
+typedef unsigned char DEGREES;
 
 typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
+typedef char SIGNED_BOOL; //1 if true; 0 false ; -1 error
 
 typedef unsigned short S_SCALE; 
 
@@ -63,12 +65,12 @@ typedef struct{
 
 typedef unsigned char S_CHORD; //dunno how to use it just yet tbh; might make it a short
 
+/*
 typedef struct CHORDS{
   S_CHORD chord;
   struct CHORDS * next;
 }S_CHORD_PROG;
 
-/*
 typedef struct{
   CHORDS * chords;
   LENGTH length;
@@ -83,13 +85,51 @@ typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a
 typedef unsigned char TRIADS_IN_SCALE; //used to know which triads are contained in a scale 
 /* lsb is set if minor chord, is in the scale 7 bit if major chord, 6th bit if dim chord, 5th if augmented chord */
 
-typedef unsigned short DEG_IN_SCALE; //used to know which degrees are in a scale. Behaves like the S_SCALE structure; 
-//but used for a different purpose.
+typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scale. 
+//behaves similarly to S_SCALE but w an important difference: the LSB corresponds to the fundamental note in the scale 
+
+/* for example: the I IV V chord pattern would be stored as 
+  0000 0000 1010 0001
+  LSB is fund next set bit is 4th and the last set bit is the fifth 
+
+  and II V I would be: 
+  0000 0000 1000 0101
+*/
 
 typedef struct SCL_INFO{
   S_SCALE scale; 
-  TRIADS_IN_SCALE * scale_at_deg; 
-  LENGTH scale_length;
+  TRIADS_IN_SCALE * chords_at_deg; 
 }SCL_INFO;
 
+typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
+  DEGREES* degrees;
+  TRIADS_IN_SCALE *triads;
+  LENGTH length;
+}S_CHORD_PROG;
+
+
+/*
+typedef struct chord_book{//custom book structure; irrelevant
+
+  CHORD_DEGREES relev_deg;
+  LENGTH length; //length takes more memory but makes it so u don't need to calculate length every time
+
+  struct chord_book * next;
+
+}S_CUSTOM_BOOK;*/
+
+typedef unsigned short CHORD_PROG_ID; //unique id obtained by multiplicating primes to associate each chord 
+//in the chord book to a scale 
+
+
+typedef struct chord_entry{//chord_book structure.
+  CHORD_DEGREES relev_deg;
+  LENGTH length;
+  CHORD_PROG_ID id; 
+}S_CHORD_ENTRY;
+typedef struct chord_entry * S_CHORD_BOOK;
+
+
+
+//chord book should prolly be an array tho bc ill need to go through it n shit 
 #endif

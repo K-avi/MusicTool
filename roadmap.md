@@ -24,6 +24,20 @@ possibilite d'ecrire resultats sur fichiers .midi (ps interpretables apres pcq t
 
 
 
-generation d'accords random : 
+generation d'accords par pattern : 
 
--> conceptualiser accords / degres
+
+"base de donnees" avc progression d'accords préconçues: 
+
+ex: 
+
+IV V I //cadence parfaite
+II V I //jazse
+V I //imparfaite
+IV I //pelagiale qqch comme ça la
+I bVII bVI V //cadence anda
+VI IV V I  //ukulele bby
+VI I  //eheh
+VI III IV V I //eheheh
+V bII I //eheheheh
+I bIII IV //bluesy boi

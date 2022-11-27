@@ -103,3 +103,18 @@ I, IIm, IIIm, IV, V, VIm, VII°
 
 il existe d'autres notations pour certains types d'accords avec extensions (Isus4; I7; Imaj7; I6,11;...) ce n'est pas le sujet pour le moment.
 
+--------------------
+
+La structure Chordbook : 
+
+elle contient la liste de suite d'accords connus que MusicTool peut reconnaitre. 
+Parmis celles-ci on trouve le 
+
+II V I;
+IV V I;
+etc. 
+Pour rendre la structure + compacte et la génération d'accords plus flexible, on supposera que toutes les triades peuvent être utilisées pour remplir une pattern d'accord. Ex: 
+
+II V I 
+II+ Vm I° 
+etc

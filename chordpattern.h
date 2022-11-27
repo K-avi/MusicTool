@@ -1,0 +1,5 @@
+#ifndef CHORDPATTERN_H_INCLUDED
+#define CHORDPATTERN_H_INCLUDED
+
+
+#endif

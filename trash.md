@@ -113,3 +113,20 @@ S_SCALE rot1(S_SCALE scale, CPT n){
   //free(eccle_modes);
   //free(not_eccle);
  // free(not_not_eccle);
+
+
+/* prolly very useless lmao
+LENGTH *select_random_degrees(S_SCALE scale, LENGTH scale_length, CPT num){
+  
+  if(num>scale_length) return NULL;
+  
+  LENGTH* ret= malloc(num*sizeof(LENGTH));
+  CPT j=0;
+  int ran=-1; 
+  while( j <num){
+    ran=rand()%13;
+    if(ran==0) ret[j++]=1; 
+    else if( (1<<ran) & scale) ret[j++]=ran;
+  }
+  return ret;
+}*/

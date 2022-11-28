@@ -12,6 +12,7 @@
 #include "user_info.h"
 #include "globals.h"
 #include "chordgen.h"
+#include "chordloop.h"
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
   setbuf(stdout, NULL);
    
  
-  //initialises the user savec info structure
+  //initialises the user saved info structure
   user_saved=malloc(sizeof(S_USERINFO));
   init_userinfo(user_saved);
 
@@ -54,9 +55,7 @@ int main()
 			continue;
 		} else if (strstr(line, "chord mode")!=NULL)	{
 
-            printf("\nchord mode isn't implemented yet\n");
-            printf("  >>>");
-
+            chordloop();
 			continue;
 		} else if (strstr(line, "help")!=NULL)	{
 

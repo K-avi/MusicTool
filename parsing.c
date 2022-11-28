@@ -77,3 +77,33 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns null scale if no sc
     }  
     return ret;
 }
+
+char* set_to_beginning_chprog(char* str){//sets to the first iteration of a '[' in a string
+  if(!str) return NULL;
+  
+  char* tmp= strstr(str,"[");
+   
+  return tmp;
+  
+}
+
+S_CHORD_PROG* parse_chprog(char* string){
+    if(!string) return NULL;
+
+    char*tmp= set_to_beginning_chprog(string);
+    CPT i=0, nb_accords=0;
+
+    while(tmp[i]!='\0' && tmp[i]!= ']'){
+        if(tmp[i++]==',') nb_accords++;
+    }
+
+    S_CHORD_PROG *ret=malloc(nb_accords*sizeof(S_CHORD_PROG));
+
+    i=0;
+
+    //needs to do the loop where I generate each chord by looking at the string between "[... ,"; ", ... ,"
+    //or ", ... ]"
+
+    return ret ;
+
+}

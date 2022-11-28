@@ -16,6 +16,7 @@
 #include "chordprint.h"
 #include "rand.h"
 #include "chordprog.h"
+#include "chordpattern.h"
 
 
 int main(){
@@ -63,16 +64,16 @@ int main(){
  }*/
 
  S_CHORD_PROG* chord_prog= generate_chord_prog(1371, 5);
- init_chord_book( &chord_book, &nb_entries, &nb_entries_max);
+ //init_chord_book( chord_book, &nb_entries);
 
 
 
- printf("%d ", chord_book[0].length);
- printf("%d ", chord_book[0].relev_deg);
+ //printf("%d ", chord_book[0].length);
+ //printf("%d ", chord_book[0].relev_deg);
 
  print_chord_prog(chord_prog);
 
- 
+
  free_chord_prog(chord_prog);
 
  

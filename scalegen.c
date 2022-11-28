@@ -72,6 +72,7 @@ S_SCALE generate_ran_scale(LENGTH length){ //generates a random scale of 'length
 
     S_SCALE  ret=0;
     int i;
+    length=length%13;
     for(i=0; i<length-1; i++){
         add_rand_note(&ret);
     }

@@ -99,7 +99,7 @@ typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scal
 typedef struct SCL_INFO{
   S_SCALE scale; 
   TRIADS_IN_SCALE * chords_at_deg; 
-}SCL_INFO;
+}SCL_INFO;//useless ?
 
 typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
   DEGREES* degrees;
@@ -108,16 +108,6 @@ typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
 }S_CHORD_PROG;
 
 
-/*
-typedef struct chord_book{//custom book structure; irrelevant
-
-  CHORD_DEGREES relev_deg;
-  LENGTH length; //length takes more memory but makes it so u don't need to calculate length every time
-
-  struct chord_book * next;
-
-}S_CUSTOM_BOOK;*/
-
 typedef unsigned short CHORD_PROG_ID; //unique id obtained by multiplicating primes to associate each chord 
 //in the chord book to a scale 
 
@@ -125,11 +115,9 @@ typedef unsigned short CHORD_PROG_ID; //unique id obtained by multiplicating pri
 typedef struct chord_entry{//chord_book structure.
   CHORD_DEGREES relev_deg;
   LENGTH length;
-  CHORD_PROG_ID id; 
+  struct chord_entry* next;
+  unsigned id;
 }S_CHORD_ENTRY;
 typedef struct chord_entry * S_CHORD_BOOK;
 
-
-
-//chord book should prolly be an array tho bc ill need to go through it n shit 
 #endif

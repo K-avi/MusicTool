@@ -60,8 +60,10 @@ void print_chord_prog( S_CHORD_PROG * chord_prog){
     if(!chord_prog) return;
     //if( !(chord_prog->degrees && chord_prog->triads && chord_prog->length==0)) return;
 
+    printf("[ ");
     for(CPT i=0; i<chord_prog->length; i++){
-        if(i!=chord_prog->length-1) printf("%s%s ,", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
-        else printf("%s%s\n", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
+        if(i!=chord_prog->length-1) printf("%s%s, ", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
+        else printf("%s%s", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
     }
+    printf(" ]\n");
 }

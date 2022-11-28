@@ -12,3 +12,17 @@ LENGTH count_bits( unsigned bits){
   }
   return ret;
 }//should be moved to somewhere else; 
+
+bool isprime(unsigned n){
+    for(int i=2;i*i<=n;i++){
+        if(n%i==0){ 
+            return false;
+        }
+    }
+    return true;
+}
+
+unsigned nextprime( unsigned n){
+  if( isprime(n+1) ) return n+1;
+  else return(nextprime(n+1));
+}

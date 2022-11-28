@@ -35,88 +35,64 @@ SIGNED_BOOL contains_pattern( S_SCALE scale, CHORD_DEGREES chord_degrees){//retu
 
 
 //fucking awful ffs 
-void init_chord_book( S_CHORD_BOOK *chord_book , CPT * nb_entries, CPT* nb_entries_max){//initialises the default chord book
+
+void add_book_entry(S_CHORD_BOOK chord_book, CHORD_DEGREES relev_deg, LENGTH length ){
+    if(!chord_book) return;
+    S_CHORD_ENTRY* new_entry=malloc(sizeof(S_CHORD_ENTRY));
+    new_entry->length=length;
+    new_entry->relev_deg=relev_deg;
+    new_entry->next=NULL;
+
+    unsigned id=0;
+
+    S_CHORD_BOOK tmp= chord_book; 
+    while(tmp){
+        id=tmp->id;
+        tmp=tmp->next;
+    }
+    new_entry->id=nextprime(id);
+    tmp->next=new_entry;
+}
+void init_chord_book( S_CHORD_BOOK chord_book , CPT * nb_entries){//initialises the default chord book
 //chord book is the book where the chord pattern recognised are stored.
 
   *nb_entries=10;
-  *nb_entries_max=10;
-  *chord_book= malloc(10 * sizeof(S_CHORD_ENTRY));
+ 
+  chord_book= malloc(sizeof(S_CHORD_ENTRY));
 
-  (*chord_book)->length=3; //I IV V  progression
-  (*chord_book)->relev_deg=0xA1;
-  (*chord_book)->id=2;
+  (chord_book)->length=3; //I IV V  progression
+  (chord_book)->relev_deg=0xA1;
+  chord_book->id=2;
 
-  (*chord_book+1)->length=3; //I II V progression
-  (*chord_book+1)->relev_deg=0x85;
-  (*chord_book+1)->id=3;
-
-  (*chord_book+2)->length=2; //I V  prog
-  (*chord_book+2)->relev_deg=0x81;
-  (*chord_book+2)->id=5;
+  add_book_entry(chord_book, 0x85, 3); //I IV V
+  add_book_entry(chord_book,0x81, 2); //I V
+  add_book_entry(chord_book, 0x21, 2); //I IV
   
-  (*chord_book+3)->length=2; //I IV 
-  (*chord_book+3)->relev_deg=0x21;
-  (*chord_book+3)->id=7;
+  add_book_entry(chord_book, 0x581, 4) ; //I bVII bVI V
 
-  (*chord_book+4)->length=4; //andalusian boii I bVII bVI V 
-  (*chord_book+4)->relev_deg=0x581;
-  (*chord_book+4)->id=11;
+  add_book_entry(chord_book, 0x2A1, 4); //I VI IV V 
 
-  (*chord_book+5)->length=4;  //I VI IV V 
-  (*chord_book+5)->relev_deg=0x2A1;
-  (*chord_book+5)->id=13;
+  add_book_entry(chord_book,0x201, 2);//I VI
+  
+  add_book_entry(chord_book, 0x2B1, 5) ;// I VI III IV V
+  
+  add_book_entry(chord_book,0x83, 3); //I V bII
+  add_book_entry(chord_book, 0x29, 3); //I III IV
 
-  (*chord_book+6)->length=2; //I VI  ehehe
-  (*chord_book+6)->relev_deg=0x201;
-  (*chord_book+6)->id=17;
-
-  (*chord_book+7)->length=5; //I VI III IV V  eheheheheheeh
-  (*chord_book+7)->relev_deg=0x2B1;
-  (*chord_book+7)->id=23;
-
-  (*chord_book+8)->length=3; //I V bII 
-  (*chord_book+8)->relev_deg=0x83;
-  (*chord_book+8)->id=29;
-
-  (*chord_book+9)->length=3; //I III IV  80% of blues n hardrock ; 60% of thrash metal lessgo
-  (*chord_book+9)->relev_deg=0x29;
-  (*chord_book+9)->id=31;
 
 }//pain, suffering even
 
 //need to do function that takes a scale n gets a struct w every pattern it contains; 
-
-CHORD_PROG_ID chord_book_of_scale( S_SCALE scale){
+CHORD_PROG_ID chord_book_of_scale( S_SCALE scale, S_CHORD_BOOK chord_book){
    //generates the sub-book of a scale as an unique key calculated by multiplicating prime numbers
   if(!scale) return 1;
-  LENGTH nb_deg_scl= get_length(scale);
+  if(!chord_book) return 1;
+  CHORD_PROG_ID id=1; //product of prime to keep track who is who etc
 
-  if(!contains_pattern(scale, 0x1)) return 1;
-  if(!contains_pattern(scale, 0x80)){
-    if(!contains_pattern(scale, 0x20)) return 1;
-    else return 1; //returns only IV
-  }//change 
+  S_CHORD_BOOK tmp=chord_book; 
 
-  CHORD_PROG_ID id=1; //sum of prime to keep track who is who etc
-  
-  if(contains_pattern(scale, chord_book[1].relev_deg)) id*=3;//contains I II V     
-      
-  if(contains_pattern(scale, chord_book[4].relev_deg)) id*=11;  // contains andalusian boii I bVII bVI V  
-  
-  if(contains_pattern(scale, chord_book[8].relev_deg)) id*=29; //contains I V bII 
- 
-  //this part is about who contains who; is u contain the big ass prog u contain the smaller ones n so on
-  if(contains_pattern(scale, chord_book[7].relev_deg )){
-    return id*(2*5*7*13*17*23*31);
-
-  }else if (contains_pattern(scale, chord_book[5].relev_deg )){
-    return id*(2*5*7*13);
-
-  }else if (contains_pattern(scale, chord_book[0].relev_deg )){
-    return id*(5*7*13);
-
-  }else if (contains_pattern(scale, chord_book[2].relev_deg )){ 
-    return id*5;
+  while (tmp) {
+    if(contains_pattern(scale, chord_book->relev_deg)) id*=chord_book->id; 
   }
   return id;
 }//not tested!!!
@@ -124,6 +100,9 @@ CHORD_PROG_ID chord_book_of_scale( S_SCALE scale){
 //then function that takes this struct n adds them by length to match a certain length 
 //needs to do smtg where I just take whatever degree if a length of 1 is missing
 
+
+
+/*
 S_CHORD_PROG *generate_blocks( S_SCALE scale, LENGTH length){//whorthless if I let the book be customised
 
 
@@ -162,7 +141,7 @@ S_CHORD_PROG *generate_blocks( S_SCALE scale, LENGTH length){//whorthless if I l
       }else if(chords%(5*7)){
 
       }else if(chords%(5*17)){
-        
+
       }
     }
     if(ran==3 && (chords%2 || chords%3 || chords%29 || chords%31)){
@@ -188,3 +167,5 @@ S_CHORD_PROG *generate_blocks( S_SCALE scale, LENGTH length){//whorthless if I l
 
   return ret;
 }
+
+*/

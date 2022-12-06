@@ -3,28 +3,12 @@
 
 #include <stdbool.h>
 
-
-#define DEBUG
-
-
-#ifndef DEBUG
-#define ASSERT(n)
-#else
-#define ASSERT(n) \
-if(!(n)) { \
-printf("%s - Failed",#n); \
-printf("On %s ",__DATE__); \
-printf("At %s ",__TIME__); \
-printf("In File %s ",__FILE__); \
-printf("At Line %d\n",__LINE__); \
-exit(1);}
-#endif //DEBUG
-
 //different renames of char to make reading easier;
 typedef unsigned char NOTE;
 typedef unsigned char LENGTH;
 typedef unsigned char CPT;
 typedef unsigned char DEGREES;
+typedef unsigned char INDEX;
 
 typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
 typedef char SIGNED_BOOL; //1 if true; 0 false ; -1 error
@@ -39,22 +23,7 @@ typedef unsigned short S_SCALE;
 
 typedef S_SCALE* S_MODES; //array containing n scales 
 
-typedef struct S_LINKED_SCALE{ //basic linked list w scales
-  S_SCALE scale; 
-  struct S_LINKED_SCALE * next;
-}S_SAVED_SCALES;
 
-typedef struct S_LINKED_MODE{
-  S_MODES modes;
-  struct S_LINKED_MODE * next;
-}S_SAVED_MODES;
-
-typedef struct{ 
-    S_SAVED_MODES *saved_modes;
-    S_SAVED_SCALES *saved_scales;
-    CPT scales_num;
-    CPT modes_num;
-}S_USERINFO;
 
 //-----------------------------------------------------------------------------------------------//
 
@@ -64,18 +33,6 @@ typedef struct{
 //the following redefinitions of char and short are done to make the chord more readable; and bc theyre used in different contexts. 
 
 typedef unsigned char S_CHORD; //dunno how to use it just yet tbh; might make it a short
-
-/*
-typedef struct CHORDS{
-  S_CHORD chord;
-  struct CHORDS * next;
-}S_CHORD_PROG;
-
-typedef struct{
-  CHORDS * chords;
-  LENGTH length;
-}S_CHORD_PROG;
-*/
 
 
 typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a scale
@@ -96,11 +53,6 @@ typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scal
   0000 0000 1000 0101
 */
 
-typedef struct SCL_INFO{
-  S_SCALE scale; 
-  TRIADS_IN_SCALE * chords_at_deg; 
-}SCL_INFO;//useless ?
-
 typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
   DEGREES* degrees;
   TRIADS_IN_SCALE *triads;
@@ -110,6 +62,7 @@ typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
 
 typedef unsigned short CHORD_PROG_ID; //unique id obtained by multiplicating primes to associate each chord 
 //in the chord book to a scale 
+//useless; maybe
 
 
 typedef struct chord_entry{//chord_book structure.
@@ -119,5 +72,33 @@ typedef struct chord_entry{//chord_book structure.
   unsigned id;
 }S_CHORD_ENTRY;
 typedef struct chord_entry * S_CHORD_BOOK;
+
+/////////////////////////// saved stuff
+
+typedef struct S_LINKED_SCALE{ //basic linked list w scales
+  S_SCALE scale; 
+  struct S_LINKED_SCALE * next;
+}S_SAVED_SCALES;
+
+typedef struct S_LINKED_MODE{
+  S_MODES modes;
+  struct S_LINKED_MODE * next;
+}S_SAVED_MODES;
+
+
+typedef struct S_LINKED_CHPROGS{
+ 
+  S_CHORD_PROG *ch_prog;
+  struct S_LINKED_CHPROGS * next ; 
+}S_SAVED_PROGS;
+
+typedef struct{ 
+    S_SAVED_MODES *saved_modes;
+    S_SAVED_SCALES *saved_scales;
+    S_SAVED_PROGS * saved_progs;
+    CPT progs_num;
+    CPT scales_num;
+    CPT modes_num;
+}S_USERINFO;
 
 #endif

@@ -97,9 +97,12 @@ S_CHORD_PROG* parse_chprog(char* string){
         if(tmp[i++]==',') nb_accords++;
     }
 
-    S_CHORD_PROG *ret=malloc(nb_accords*sizeof(S_CHORD_PROG));
-
-    i=0;
+    S_CHORD_PROG *ret=malloc(sizeof(S_CHORD_PROG));
+    
+    ret->length= nb_accords;
+    ret->degrees= malloc(nb_accords*sizeof(DEGREES));
+    ret->triads= malloc(nb_accords*sizeof(TRIADS_IN_SCALE));
+    
 
     //needs to do the loop where I generate each chord by looking at the string between "[... ,"; ", ... ,"
     //or ", ... ]"

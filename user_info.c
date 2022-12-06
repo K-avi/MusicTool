@@ -3,6 +3,8 @@
 #include "types.h"
 #include "harmo.h"
 #include "scalegen.h"
+#include "chordgen.h"
+#include "chordprog.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -161,3 +163,50 @@ void remove_modes(  S_USERINFO * user_info, CPT index ){ //removes modes at inde
 	user_info->modes_num--;
 }
 
+
+
+////////////////////// CHPROG ///////////////////
+
+void add_chprog(S_SAVED_PROGS* saved_chprog, S_CHORD_PROG *chprog){
+	
+	if(!saved_chprog) return;
+	S_SAVED_PROGS *tmp=saved_chprog; 
+	
+	if(tmp->next){
+		while (tmp->next){
+			tmp=tmp->next;
+		}
+	}
+	S_SAVED_PROGS *tmp1=malloc(sizeof(S_SAVED_PROGS));
+	tmp1->next=NULL;
+	tmp1->ch_prog=chprogdup(chprog);
+
+	tmp->next=tmp1;
+
+}//not tested
+
+
+void free_saved_progs( S_SAVED_PROGS * saved_chprog){//frees all the saved chord progression 
+
+	if(!saved_chprog) return;
+	S_SAVED_PROGS* tmp= NULL;
+	while(saved_chprog){
+		tmp=saved_chprog;
+		free_chord_prog(saved_chprog->ch_prog);
+		saved_chprog=saved_chprog->next;
+		free(tmp);
+	}
+}//not tested 
+
+
+void print_saved_chprog( S_USERINFO * user_data, LENGTH index){//not done
+	if(index> user_data->scales_num){ printf("index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return;}
+	CPT i=0; 
+	S_SAVED_SCALES *tmp = user_data->saved_scales;
+	while(i<index && tmp){
+		if(tmp->next)tmp=tmp->next;
+		i++;
+	}
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return; }
+	print_scale(tmp->scale);
+}

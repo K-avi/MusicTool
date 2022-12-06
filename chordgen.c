@@ -94,3 +94,21 @@ CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of 
    }
    return ret;
 }
+
+S_CHORD_PROG* chprogdup(  S_CHORD_PROG* source){//copies a cp from dest 
+
+    if(!source ) return NULL;
+    if( (!source->degrees) ||  (!source->triads) || (!source->length)) return NULL;
+    S_CHORD_PROG * ret= malloc(sizeof(S_CHORD_PROG));
+
+    ret->length=source->length;
+    ret->degrees= malloc(source->length*sizeof(DEGREES));
+    ret->triads= malloc(source->length*sizeof(TRIADS_IN_SCALE));
+
+    for( CPT i = 0; i<source->length; i++){
+      ret->degrees[i]= source->degrees[i];
+      ret->triads[i]= source->degrees[i];
+    }
+
+    return ret;
+}

@@ -107,6 +107,8 @@ S_CHORD_PROG* parse_chprog(char* string){
     //needs to do the loop where I generate each chord by looking at the string between "[... ,"; ", ... ,"
     //or ", ... ]"
 
+    while()
+
     return ret ;
 
 }

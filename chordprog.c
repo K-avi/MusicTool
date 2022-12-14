@@ -17,10 +17,11 @@ void set_chord_prog( S_CHORD_PROG * chord_prog, LENGTH length, TRIADS_IN_SCALE *
     chord_prog->length=length;
     chord_prog->degrees=degrees;
     chord_prog->triads=triads;
-}//should be moved to another file 
+}//should be moved to another file
+//obsolete
 
 
-unsigned at_least_one_chord(TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns 1 if at least one triad in a scale; 0 otherwise
+unsigned char at_least_one_chord(TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns 1 if at least one triad in a scale; 0 otherwise
   if( (!scl_triads) || length<=0) return 0;
   if(*scl_triads) return 1;
   else return at_least_one_chord(scl_triads++, length-1);

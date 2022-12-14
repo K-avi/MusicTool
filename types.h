@@ -53,16 +53,10 @@ typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scal
   0000 0000 1000 0101
 */
 
-typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
-  DEGREES* degrees;
-  TRIADS_IN_SCALE *triads;
-  LENGTH length;
-}S_CHORD_PROG;
 
 
-typedef unsigned short CHORD_PROG_ID; //unique id obtained by multiplicating primes to associate each chord 
-//in the chord book to a scale 
-//useless; maybe
+
+
 
 
 typedef struct chord_entry{//chord_book structure.
@@ -85,6 +79,12 @@ typedef struct S_LINKED_MODE{
   struct S_LINKED_MODE * next;
 }S_SAVED_MODES;
 
+typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
+  DEGREES* degrees;
+  TRIADS_IN_SCALE *triads;
+  LENGTH length;
+}S_CHORD_PROG;
+
 
 typedef struct S_LINKED_CHPROGS{
  
@@ -100,5 +100,16 @@ typedef struct{
     CPT scales_num;
     CPT modes_num;
 }S_USERINFO;
+
+typedef void* DEGREES_IN_CHPROG; //4 bits per degree, 0 is end of chprog, 1 is I, 2 is bII, ......
+typedef void* TRIADS_IN_CHPROG; // 4 bits per triad, 0 is terminated , 1 is minor , 2 is major, 3 is diminished, 4 is augmented
+
+typedef struct CHORD_PROG_NEW{
+  DEGREES_IN_CHPROG degrees; 
+  TRIADS_IN_CHPROG triads;
+}S_CHPROG_NEW;
+
+//u can store up to 16 chords in one unsigned long long ; so the allocation is an array %16
+
 
 #endif

@@ -40,4 +40,20 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define DIM_CHORD 4
 #define AUG_CHORD 8
 
+//masks for S_CHORD_PROG 
+
+#define LAST_CHORD 0x80
+
+//masks for CHORD 
+
+#define FIRST4 0x0F 
+#define LAST4 0xF0
+
+//!!!!!!!!!!!!!!!!!!!!!!! NOT THE SAME AS _CHORD DO NOT INTERCHANGE BE VERY CAREFULL    
+#define MIN 1 
+#define MAJ 2
+#define DIM 3
+#define AUG 4
+
+
 #endif

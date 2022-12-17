@@ -43,9 +43,12 @@ void free_saved_modes( S_SAVED_MODES * saved_modes){
 
 void init_userinfo( S_USERINFO* user_data){
   //initialises and allocates memory to the different pointers in the user_data structure
-  if(user_data==NULL) user_data=malloc(sizeof(S_USERINFO)) ;//printf("user_data pointer: %p\n", user_data);}
+
+  
+  //check causes unitialised value error in valgrind
+ /* if(user_data==NULL) user_data=malloc(sizeof(S_USERINFO)) ;//printf("user_data pointer: %p\n", user_data);}
   if(user_data->saved_modes) free(user_data->saved_modes);
-  if(user_data->saved_scales) free(user_data->saved_scales);
+  if(user_data->saved_scales) free(user_data->saved_scales);*/
 
   user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));// printf("saved modes pointer: %p\n", user_data->saved_modes);
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);

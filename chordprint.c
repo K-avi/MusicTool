@@ -1,12 +1,14 @@
 #include "chordprint.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "chordgen.h"
 #include "harmo.h"
 #include "scalegen.h"
 #include "types.h"
 #include "globals.h"
 #include "bitop.h"
+#include "chordprint.h"
 
 
 void print_triad( TRIADS_IN_SCALE triads){//prints which triads a scale contains
@@ -26,17 +28,18 @@ void print_triad( TRIADS_IN_SCALE triads){//prints which triads a scale contains
 }//maybe tested
 
 
-char*  triad_to_str( TRIADS_IN_SCALE triad){//pretty self expleanatory
+char*  bits_triad_to_str( TRIADS_IN_SCALE triad){//pretty self expleanatory
     switch (triad) {
-    case 1: return "m";
-    case 2: return "";
-    case 4: return "°";
-    case 8: return "+";
+    case MIN: return "m";
+    case MAJ: return "";
+    case DIM: return "°";
+    case AUG: return "+";
     default: { return NULL;}
     }
 }
 
-char *deg_to_str(DEGREES deg){
+
+char *bits_deg_to_str(DEGREES deg){
 
     switch (deg) { //i dont like switch cases statements but these seem necessary
     case 0: return "I";
@@ -56,14 +59,53 @@ char *deg_to_str(DEGREES deg){
 
 }
 
+char * chord_to_str(CHORD chord){//turns a chord into a string.
+
+    if(!chord) return NULL;
+
+    //uses a mask to separate first 4 and last 4 bits
+    CHORD first= chord & FIRST4; 
+    CHORD last= chord & LAST4;
+    last= last>>4; //
+
+  
+    char* degree= bits_deg_to_str(first);
+    char* triad= bits_triad_to_str(last);
+    
+
+     
+
+    if( (!triad) || (!degree) ) return NULL;
+
+  
+    LENGTH len_deg=strlen(degree);
+    LENGTH len_tri= strlen(triad);
+
+    LENGTH len=  (len_deg+len_tri);
+    char * ret= malloc( (len+1)*sizeof(char));
+    
+
+    for(int i=0; i<len_deg;i++){
+        ret[i]=degree[i];
+    }
+
+    for(int j= len_deg; j<len_deg+len_tri; j++){
+        ret[j]=triad[j-len_deg];
+    }
+
+    ret[len]='\0';
+    return ret;
+}
+
 void print_chord_prog( S_CHORD_PROG * chord_prog){
     if(!chord_prog) return;
     //if( !(chord_prog->degrees && chord_prog->triads && chord_prog->length==0)) return;
 
     printf("[ ");
     for(CPT i=0; i<chord_prog->length; i++){
-        if(i!=chord_prog->length-1) printf("%s%s, ", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
-        else printf("%s%s", deg_to_str(chord_prog->degrees[i]), triad_to_str(chord_prog->triads[i]) ) ;
+        if(i!=chord_prog->length-1) printf("%s, ", chord_to_str(chord_prog->chord_prog[i])) ;
+        else printf("%s", chord_to_str(chord_prog->chord_prog[i])) ;
     }
     printf(" ]\n");
 }
+

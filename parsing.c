@@ -78,6 +78,8 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns null scale if no sc
     return ret;
 }
 
+
+/*
 char* set_to_beginning_chprog(char* str){//sets to the first iteration of a '[' in a string
   if(!str) return NULL;
   
@@ -113,4 +115,4 @@ S_CHORD_PROG* parse_chprog(char* string){
 
     return ret ;
 
-}
+}*/

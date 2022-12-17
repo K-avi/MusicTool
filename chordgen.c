@@ -1,12 +1,12 @@
+#include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include "chordgen.h"
+#include <string.h>
+#include "bitop.h"
+#include "types.h"
 #include "harmo.h"
 #include "scalegen.h"
-#include "types.h"
-#include "globals.h"
-#include "bitop.h"
-
+#include "misc.h"
+#include "chordgen.h"
 
 
 
@@ -38,7 +38,7 @@ TRIADS_IN_SCALE triads_at_fund( S_SCALE scale){ //returns the triads that can be
 TRIADS_IN_SCALE * get_triads( S_SCALE scale){// returns the triads you can generate from a scale at each degree
 
   LENGTH length= get_length(scale);
-  CHORD_BITS* ret= malloc(length*sizeof(CHORD_BITS));
+  TRIADS_IN_SCALE* ret= malloc(length*sizeof(TRIADS_IN_SCALE));
 
   S_MODES modes= generate_modes(scale);
   for (CPT i=0; i<length; i++) {
@@ -50,7 +50,9 @@ TRIADS_IN_SCALE * get_triads( S_SCALE scale){// returns the triads you can gener
 
 TRIADS_IN_SCALE * get_triads_length( S_SCALE scale, LENGTH length){// same as get triads but without calculating the length
 
-  CHORD_BITS* ret= malloc(length*sizeof(CHORD_BITS));
+  if( (!scale) || (! length)) return NULL;
+
+  TRIADS_IN_SCALE* ret= malloc(length*sizeof(TRIADS_IN_SCALE));
 
   S_MODES modes= generate_modes(scale);
   for (CPT i=0; i<length; i++) {
@@ -60,31 +62,32 @@ TRIADS_IN_SCALE * get_triads_length( S_SCALE scale, LENGTH length){// same as ge
   return ret;
 }
 
+CHORD_DEGREES get_degrees( S_SCALE scale){//returns the degrees from which u can generate a triad in a scale
+//stored as a ushort   
+    if(!scale) return 0;
 
+    LENGTH length = get_length(scale);
 
-////////////////////
+    CHORD_DEGREES ret= scale << 1;
+    ret|= 1;
+    INDEX pos;
 
+    S_MODES modes= generate_modes(scale);
+  
 
-DEGREES * get_degrees( S_SCALE scale){ //returns the degrees from which u can generate a triad in a scale.
-  DEGREES* ret= malloc(get_length(scale)*sizeof(DEGREES));
-  ret[0]=0;
-  CPT j=1;
-  for(CPT i=0; i<12; i++){
-    if( (1<<i) & scale) ret[j++]=i+1;
-  }
-  return ret;
+    for(CPT i=0; i<length ; i++){
+      if( !triads_at_fund(modes[i])){
+        
+         pos=nth_bit_pos(ret,i+1);
+        
+         ret^=(1<<pos);
+      } //si il n'y a pas de triades au mode i ; enleve le degre de la valeur de retour.
+    }
+
+    free(modes);
+    return ret;
+
 }
-
-DEGREES * get_degrees_length( S_SCALE scale ,LENGTH length){//same as get degrees but without calculating the length of the scale
-  DEGREES* ret= malloc(length*sizeof(DEGREES)); 
-  ret[0]=0;
-  CPT j=1;
-  for(CPT i=0; i<12; i++){
-    if( (1<<i) & scale) ret[j++]=i+1;
-  }
-  return ret;
-}
-
 
 CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of degrees in a scale 
 //that contain at least one chord.
@@ -95,20 +98,64 @@ CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of 
    return ret;
 }
 
-S_CHORD_PROG* chprogdup(  S_CHORD_PROG* source){//copies a cp from dest 
+S_CHORD_PROG *chprogdup(  S_CHORD_PROG* source){//copies a cp from dest 
 
-    if(!source ) return NULL;
-    if( (!source->degrees) ||  (!source->triads) || (!source->length)) return NULL;
-    S_CHORD_PROG * ret= malloc(sizeof(S_CHORD_PROG));
+   if(!source ) return NULL;
+   if(!source->length) return NULL;
+   if(!source->chord_prog) return NULL;
+  
+   S_CHORD_PROG* ret=malloc(sizeof(S_CHORD_PROG));
+   ret->length=source->length;
+   ret->chord_prog=malloc(source->length* sizeof(CHORD));
+   memcpy( ret->chord_prog, source->chord_prog, source->length);
 
-    ret->length=source->length;
-    ret->degrees= malloc(source->length*sizeof(DEGREES));
-    ret->triads= malloc(source->length*sizeof(TRIADS_IN_SCALE));
+   return ret;
+}
 
-    for( CPT i = 0; i<source->length; i++){
-      ret->degrees[i]= source->degrees[i];
-      ret->triads[i]= source->degrees[i];
-    }
 
+//from formerly chordprog.c 
+
+bool at_least_one_chord(TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns 1 if at least one triad in a scale; 0 otherwise
+  if( (!scl_triads) || length<=0) return 0;
+  if(*scl_triads) return 1;
+  else return at_least_one_chord(scl_triads++, length-1);
+}
+
+CPT nb_chords( TRIADS_IN_SCALE * scl_triads, LENGTH length){ //returns the number of chords u can generate in a scale
+  if ((!scl_triads) || length <=0) return 0;
+  else if( *scl_triads) return (count_bits(*scl_triads) + nb_chords(scl_triads+1, length-1));
+  else return nb_chords(scl_triads++, length-1);
+}
+
+void free_chord_prog(S_CHORD_PROG* source){
+  free(source->chord_prog);
+  free(source);
+}
+
+//from rand.c cuz makes more sense here
+
+ DEGREES get_deg_from_chdeg( CHORD_DEGREES deg){//converts a degree stored in chord_degrees format to degrees format; 
+//in order to use it to generate the first 4 bits of a CHORD.
+
+    DEGREES ret= nth_bit_pos(deg, 1);
     return ret;
+}//tested
+
+CHORD generate_chord(TRIADS_IN_SCALE triads, CHORD_DEGREES deg){//generates a chord from a triad and a degree 
+  
+  if(!triads || !deg) return 0;
+
+  CHORD ret=0;
+
+  switch(triads){
+    case MIN_CHORD : ret=(MIN<<4); break;
+    case MAJ_CHORD : ret=(MAJ<<4); break;
+    case AUG_CHORD : ret=(AUG<<4); break;
+    case DIM_CHORD : ret=(DIM<<4); break;
+    default: ret=0; break;
+  } 
+  
+  ret=ret |get_deg_from_chdeg(deg);
+
+  return ret;
 }

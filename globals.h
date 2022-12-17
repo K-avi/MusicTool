@@ -22,7 +22,6 @@ extern NOTE triads[4][3];
 
 
 
-extern S_CHORD_BOOK  chord_book; //the default chorg prog book.
 extern CPT nb_entries;  //nb entries currently in chord_book 
 extern CPT nb_entries_max; //maxnum of entries in chordbook
 

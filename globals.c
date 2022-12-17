@@ -4,7 +4,6 @@
 
 S_USERINFO * user_saved=NULL ; //user_saved stuff
 
-S_CHORD_BOOK  chord_book=NULL; //the default chorg prog book.
 CPT nb_entries=0;  //nb entries currently in chord_book 
 CPT nb_entries_max=0; //maxnum of entries in chordbook
 

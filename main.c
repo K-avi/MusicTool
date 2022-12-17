@@ -12,7 +12,7 @@
 #include "user_info.h"
 #include "globals.h"
 #include "chordgen.h"
-#include "chordloop.h"
+
 
 int main()
 {
@@ -55,7 +55,8 @@ int main()
 			continue;
 		} else if (strstr(line, "chord mode")!=NULL)	{
 
-            chordloop();
+            printf("chord mode not done yet\n");
+		printf("  >>>");
 			continue;
 		} else if (strstr(line, "help")!=NULL)	{
 

@@ -7,8 +7,9 @@
 typedef unsigned char NOTE;
 typedef unsigned char LENGTH;
 typedef unsigned char CPT;
-typedef unsigned char DEGREES;
+typedef unsigned char DEGREES; 
 typedef unsigned char INDEX;
+typedef unsigned char CHORD;
 
 typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
 typedef char SIGNED_BOOL; //1 if true; 0 false ; -1 error
@@ -23,16 +24,12 @@ typedef unsigned short S_SCALE;
 
 typedef S_SCALE* S_MODES; //array containing n scales 
 
-
-
 //-----------------------------------------------------------------------------------------------//
 
 // CHORD MODE
 
 
 //the following redefinitions of char and short are done to make the chord more readable; and bc theyre used in different contexts. 
-
-typedef unsigned char S_CHORD; //dunno how to use it just yet tbh; might make it a short
 
 
 typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a scale
@@ -55,17 +52,14 @@ typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scal
 
 
 
+typedef struct S_CHORD_PROG{
+   unsigned char* chord_prog;
+   LENGTH length;
+}S_CHORD_PROG; //each chord is stored as a uchar w the first 4 bits being the degrees 
+//n the next 3 bits the triad type (min/maj/aug/dim); 
 
+//u can store up to 16 chords in one unsigned long long ; so the allocation is an array %16
 
-
-
-typedef struct chord_entry{//chord_book structure.
-  CHORD_DEGREES relev_deg;
-  LENGTH length;
-  struct chord_entry* next;
-  unsigned id;
-}S_CHORD_ENTRY;
-typedef struct chord_entry * S_CHORD_BOOK;
 
 /////////////////////////// saved stuff
 
@@ -78,13 +72,6 @@ typedef struct S_LINKED_MODE{
   S_MODES modes;
   struct S_LINKED_MODE * next;
 }S_SAVED_MODES;
-
-typedef struct CHORD_PROG{ //have to be carefull w allocations n shit
-  DEGREES* degrees;
-  TRIADS_IN_SCALE *triads;
-  LENGTH length;
-}S_CHORD_PROG;
-
 
 typedef struct S_LINKED_CHPROGS{
  
@@ -101,15 +88,6 @@ typedef struct{
     CPT modes_num;
 }S_USERINFO;
 
-typedef void* DEGREES_IN_CHPROG; //4 bits per degree, 0 is end of chprog, 1 is I, 2 is bII, ......
-typedef void* TRIADS_IN_CHPROG; // 4 bits per triad, 0 is terminated , 1 is minor , 2 is major, 3 is diminished, 4 is augmented
-
-typedef struct CHORD_PROG_NEW{
-  DEGREES_IN_CHPROG degrees; 
-  TRIADS_IN_CHPROG triads;
-}S_CHPROG_NEW;
-
-//u can store up to 16 chords in one unsigned long long ; so the allocation is an array %16
 
 
 #endif

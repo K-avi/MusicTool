@@ -1,6 +1,8 @@
 #include "types.h"
 #include "bitop.h"
 #include "misc.h"
+#include <stdio.h>
+#include <sys/types.h>
 
 
 LENGTH count_bits( unsigned bits){ 
@@ -25,4 +27,21 @@ bool isprime(unsigned n){
 unsigned nextprime( unsigned n){
   if( isprime(n+1) ) return n+1;
   else return(nextprime(n+1));
+}
+
+INDEX nth_bit_pos( unsigned bits, INDEX index){
+  //returns the shift of the nth bits in bits
+  if( (!bits)|| (!index)) return 0;
+
+  CPT cpt=0; 
+  INDEX ret= 0; 
+
+  for( CPT i=0; i<32; i++){
+    if( (1<<i) & bits) {
+      ret=i;
+      cpt++;
+    }
+    if(cpt==index) break;
+  }
+  return ret;
 }

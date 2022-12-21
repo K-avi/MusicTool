@@ -37,8 +37,8 @@ CHORD_DEGREES select_rand_degree( CHORD_DEGREES deg){//selects ONE random degree
   LENGTH length= count_bits(deg);
   if(length==1) return deg; 
 
-  unsigned rand_deg= rand()%(length+1);
-
+  unsigned rand_deg= (rand()%(length))+1;
+  
   return (1<<nth_bit_pos(deg, rand_deg));
 }//tested
 
@@ -48,10 +48,12 @@ CHORD_DEGREES select_rand_degree( CHORD_DEGREES deg){//selects ONE random degree
 S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
 
 
+    print_scale(scale);
     if (!scale || !length) return NULL;
     CHORD_DEGREES deg_w_chord= get_degrees(scale);
+    //_bits(deg_w_chord);
 
-   // print_bits(deg_w_chord);
+    
 
     if(!deg_w_chord ) return NULL;
 
@@ -62,13 +64,34 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
     if(count_bits(deg_w_chord)==1){ //case if u can only generate 1 chord from a scale 
       
       
-      INDEX index= nth_bit_pos(scale ,1); //retrieves the index of the relevent degree
+      INDEX index= nth_bit_pos(deg_w_chord ,1); //retrieves the index of the relevent degree
       S_SCALE relev_mode= rot(scale, index);//retrieves the mode of said degree
+    
+      TRIADS_IN_SCALE triads= triads_at_fund(relev_mode);
+      if(count_bits(triads)==1){
+        for(CPT i=0; i<length; i++){
 
-      for(CPT i=0; i<length; i++){
+          TRIADS_IN_SCALE triad_selected= select_rand_triads(triads);//selects a random triad on the degree 
+        
+          ret->chord_prog[i]= generate_chord(triad_selected, deg_w_chord);
+        }
+      }else{
 
-        TRIADS_IN_SCALE triad_selected= select_rand_triads(relev_mode);//selects a random triad on the degree 
-        ret->chord_prog[i]= generate_chord(triad_selected, deg_w_chord);
+        TRIADS_IN_SCALE curtriads= select_rand_triads(triads);
+        TRIADS_IN_SCALE prevtriads= curtriads;
+
+        for(CPT i=0; i<length; i++){
+
+          curtriads= select_rand_triads(triads);//selects a random triad on the degree 
+
+          while(curtriads==prevtriads){
+              
+              curtriads=select_rand_triads(triads);
+            }
+            prevtriads=curtriads;
+
+          ret->chord_prog[i]= generate_chord(curtriads, deg_w_chord);
+        }
       }
       
 
@@ -86,8 +109,9 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
         for(CPT i=0; i<length; i++){
 
             
-
+           //print_bits(deg_w_chord);
             curdeg=select_rand_degree(deg_w_chord);
+            
 
             while(curdeg==prevdeg){
               
@@ -95,13 +119,16 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
             }
             prevdeg=curdeg;
 
+            //printf("%b", curdeg);
             curmode=rot(scale , nth_bit_pos(curdeg, 1));
+
+           // print_scale(curmode);
             curtriads=triads_at_fund(curmode);
             seltriads= select_rand_triads(curtriads);
-            //print_bits(curtriads);
+           // print_bits(curtriads);
             
             ret->chord_prog[i]= generate_chord(seltriads, curdeg);
-            
+          
         }
 
     }

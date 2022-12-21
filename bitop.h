@@ -55,5 +55,16 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define DIM 3
 #define AUG 4
 
+///////////////////MACROS USED IN STR TO CHORD PARSING (for WORD_BITS) //////////////
+
+#define MAX_CHORD_STRING_LENGTH 5
+#define I 1 
+#define V 2 
+#define b 3 
+#define m 4
+#define plus 5 
+#define dim 6
+
+#define ERROR_WORD 32768
 
 #endif

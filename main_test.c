@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "chordloop.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parsing.h"
@@ -17,6 +18,9 @@
 #include "misc.h"
 #include "chordprint.h"
 
+
+
+#include <wchar.h>
 
 int main(){
 
@@ -39,7 +43,7 @@ int main(){
   ch->chord_prog[2]=0b00100101  ;*/
 
 
- S_CHORD_PROG * ch1= generate_chord_prog(1370, 5);
+ //S_CHORD_PROG * ch1= generate_chord_prog(1370, 5);
 
  //CHORD ch= generate_chord(MIN_CHORD, 1);
   //print_bits(ch);
@@ -65,7 +69,7 @@ int main(){
 
   //printf("%p\n",chord_to_str(ch1->chord_prog[0]));
 
- print_chord_prog(ch1);
+ //print_chord_prog(ch1);
   
 
   
@@ -74,5 +78,22 @@ int main(){
  
   //free_chord_prog(ch1);
 
+ /* for (int i=0; i<10; i++){
+    S_SCALE scale = parse_scale("{ 0 3 6 7 }");
+    //print_bits()
+   // printf("%b\n", get_degrees(scale));
+   // printf("%d",i );
+   // print_scale(rot(scale , i));
+    S_CHORD_PROG * chprog= generate_chord_prog(scale ,10);
+   // print_scale(scale);
+    print_chord_prog(chprog);
+   // printf("\n");
+  }*/
+   //chordloop();
+   wchar_t str= L'\240';
+
+
+   wprintf(L"%c", str);
+ 
  return 0;
 }

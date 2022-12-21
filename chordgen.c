@@ -8,7 +8,7 @@
 #include "misc.h"
 #include "chordgen.h"
 
-
+#include "stdio.h"
 
 CHORD_BITS relevant_at_fund (S_SCALE scale){//returns the relevant notes to generate triads on the first degree of a scale 
 
@@ -69,25 +69,33 @@ CHORD_DEGREES get_degrees( S_SCALE scale){//returns the degrees from which u can
     LENGTH length = get_length(scale);
 
     CHORD_DEGREES ret= scale << 1;
+    
     ret|= 1;
+
+    CHORD_DEGREES mask= ret;
+    //print_bits(ret);
     INDEX pos;
 
     S_MODES modes= generate_modes(scale);
   
 
     for(CPT i=0; i<length ; i++){
+
+    
       if( !triads_at_fund(modes[i])){
         
-         pos=nth_bit_pos(ret,i+1);
+         //printf("%d\n", i);
+         pos=nth_bit_pos(mask,i+1);
+         
         
          ret^=(1<<pos);
-      } //si il n'y a pas de triades au mode i ; enleve le degre de la valeur de retour.
+         //print_bits(ret);
+      }// else print_scale(modes[i]);//si il n'y a pas de triades au mode i ; enleve le degre de la valeur de retour.
     }
-
     free(modes);
     return ret;
 
-}
+}//tested
 
 CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of degrees in a scale 
 //that contain at least one chord.

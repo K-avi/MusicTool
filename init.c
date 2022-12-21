@@ -40,10 +40,27 @@ void free_saved_modes( S_SAVED_MODES * saved_modes){
 	}
 }
 
+void init_saved_progs(S_SAVED_PROGS* saved_progs){
+	saved_progs->ch_prog=NULL;
+	saved_progs->next=NULL;
+}
+
+
+
+void free_saved_progs( S_SAVED_PROGS * saved_progs){
+	if(!saved_progs) return;
+	S_SAVED_PROGS* tmp;
+	while(saved_progs){
+		tmp=saved_progs;
+		if(tmp->ch_prog) free(tmp->ch_prog);
+		saved_progs=saved_progs->next;
+		free(tmp);
+	}
+}
 
 void init_userinfo( S_USERINFO* user_data){
   //initialises and allocates memory to the different pointers in the user_data structure
-
+ //only call at the start of MusicTool otherwise can cause memleak
   
   //check causes unitialised value error in valgrind
  /* if(user_data==NULL) user_data=malloc(sizeof(S_USERINFO)) ;//printf("user_data pointer: %p\n", user_data);}
@@ -52,17 +69,21 @@ void init_userinfo( S_USERINFO* user_data){
 
   user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));// printf("saved modes pointer: %p\n", user_data->saved_modes);
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);
+  user_data->saved_progs= malloc(sizeof(S_SAVED_PROGS));
 
   user_data->modes_num=0;
   user_data->scales_num=0;
+  user_data->progs_num=0;
 
   init_saved_scale(user_data->saved_scales);
   init_saved_mode(user_data->saved_modes);
+  init_saved_progs(user_data->saved_progs);
 }
 
 void free_userinfo( S_USERINFO* user_info){
      free_saved_scale(user_info->saved_scales);
 	 free_saved_modes(user_info->saved_modes);
+	 free_saved_progs(user_info->saved_progs);
 	
 	free(user_info);
 }

@@ -79,6 +79,45 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns null scale if no sc
 }
 
 
+TRIADS_BITS str_to_triad_bits( const char * str){
+    if(!str) return -1;
+    
+    return 0;
+}
+
+DEGREES_BITS str_to_degree_bits( char * str){ //tries to get a degree from a string. 
+//is considered a valid degree any substring in the string that is I, bII,... VII
+//also does syntax checking with -1 being the error value
+    
+}
+
+
+CHORD str_to_chord( char* str){//turns the string in a chord into a scale. Makes the assumption that 
+//there is no space between the relevent chars. For example : "        bVIm" is accepted but 
+// " b V I m " is not
+//also does syntax checking for chord with 0 being the return error
+
+   if(!str) return -0;
+    char * tmp= str; 
+
+    while(*tmp==' ') tmp++;
+
+    WORD_BITS word=0;
+
+    CPT cpt=0;
+
+    while(*tmp!='\0' && tmp && cpt<=5){
+        
+        
+        if(*tmp!='V' || *tmp!='I' || *tmp!='b' || *tmp!='+' || *tmp!='m') return -1;
+
+        cpt++;
+        tmp++;
+    }
+
+    return 0;
+}
+
 /*
 char* set_to_beginning_chprog(char* str){//sets to the first iteration of a '[' in a string
   if(!str) return NULL;

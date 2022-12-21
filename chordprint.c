@@ -28,7 +28,7 @@ void print_triad( TRIADS_IN_SCALE triads){//prints which triads a scale contains
 }//maybe tested
 
 
-char*  bits_triad_to_str( TRIADS_IN_SCALE triad){//pretty self expleanatory
+char*  bits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
     switch (triad) {
     case MIN: return "m";
     case MAJ: return "";
@@ -39,7 +39,7 @@ char*  bits_triad_to_str( TRIADS_IN_SCALE triad){//pretty self expleanatory
 }
 
 
-char *bits_deg_to_str(DEGREES deg){
+char *bits_deg_to_str(DEGREES_BITS deg){
 
     switch (deg) { //i dont like switch cases statements but these seem necessary
     case 0: return "I";
@@ -100,11 +100,15 @@ char * chord_to_str(CHORD chord){//turns a chord into a string.
 void print_chord_prog( S_CHORD_PROG * chord_prog){
     if(!chord_prog) return;
     //if( !(chord_prog->degrees && chord_prog->triads && chord_prog->length==0)) return;
-
+    char * curchord= NULL;
     printf("[ ");
     for(CPT i=0; i<chord_prog->length; i++){
-        if(i!=chord_prog->length-1) printf("%s, ", chord_to_str(chord_prog->chord_prog[i])) ;
-        else printf("%s", chord_to_str(chord_prog->chord_prog[i])) ;
+        curchord =chord_to_str(chord_prog->chord_prog[i]);
+
+        if(i!=chord_prog->length-1) printf("%s, ", curchord) ;
+        else printf("%s", curchord) ;
+
+        free(curchord);
     }
     printf(" ]\n");
 }

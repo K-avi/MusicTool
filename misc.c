@@ -43,5 +43,6 @@ INDEX nth_bit_pos( unsigned bits, INDEX index){
     }
     if(cpt==index) break;
   }
+  
   return ret;
 }

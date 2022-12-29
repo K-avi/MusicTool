@@ -69,7 +69,7 @@ Pour simplifier la notation, on ignorera les equivalents enharmoniques. Ainsi #I
 
 I, bII, II, bIII, III, IV, bV, V, bVI, VI, bVII, VII ; 
 
-Pour differencier les triades a chaque degré, on utilisera la notation suivant I signifie degré 1 majeur, Im degré 1 mineur, I+ degré 1 augmenté, I° degré 1 diminué 
+Pour differencier les triades a chaque degré, on utilisera la notation suivant I signifie degré 1 majeur, Im degré 1 mineur, I+ degré 1 augmenté, I- degré 1 diminué 
 
 (cette notation n'est pas universelle, mais je l'ai pas inventée elle existe; cf https://ianring.com/musictheory/ )
 
@@ -99,7 +99,7 @@ la gamme majeur contient les triades suivantes au degrés suivant:
 
 I majeur ,II mineur ,III mineur ,IV majeur ,V majeur ,VI mineur ,VII diminué 
 ou plus simplement: 
-I, IIm, IIIm, IV, V, VIm, VII° 
+I, IIm, IIIm, IV, V, VIm, VII- 
 
 il existe d'autres notations pour certains types d'accords avec extensions (Isus4; I7; Imaj7; I6,11;...) ce n'est pas le sujet pour le moment.
 
@@ -116,5 +116,5 @@ etc.
 Pour rendre la structure + compacte et la génération d'accords plus flexible, on supposera que toutes les triades peuvent être utilisées pour remplir une pattern d'accord. Ex: 
 
 II V I 
-II+ Vm I° 
+II+ Vm I-
 etc

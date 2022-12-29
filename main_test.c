@@ -89,11 +89,24 @@ int main(){
     print_chord_prog(chprog);
    // printf("\n");
   }*/
-   //chordloop();
-   wchar_t str= L'\240';
+  // chordloop();
+  // wchar_t str= L'\240';
 
+  char * chord= "bVII+";
+  
 
-   wprintf(L"%c", str);
+  WORD_BITS bits= str_to_wordbits(chord);
+
+ // printf("%b\n", bits);
+  CHORD ch= word_bits_to_chord(bits);
+
+  //printf("%b\n", ch);
+  char * chord_str= chord_to_str(ch);
+
+  if(chord_str){
+  printf("%s\n", chord_str);
+  }else printf("%p\n" ,chord_str);
+   
  
  return 0;
 }

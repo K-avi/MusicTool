@@ -32,7 +32,7 @@ char*  bits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
     switch (triad) {
     case MIN: return "m";
     case MAJ: return "";
-    case DIM: return "°";
+    case DIM: return "-";
     case AUG: return "+";
     default: { return NULL;}
     }

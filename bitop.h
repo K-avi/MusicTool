@@ -55,15 +55,19 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define DIM 3
 #define AUG 4
 
+
+enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_bVI, DEG_VI, DEG_bVII, DEG_VII};
+//end of masks for chord
+
 ///////////////////MACROS USED IN STR TO CHORD PARSING (for WORD_BITS) //////////////
 
 #define MAX_CHORD_STRING_LENGTH 5
-#define I 1 
-#define V 2 
-#define b 3 
-#define m 4
-#define plus 5 
-#define dim 6
+#define WORD_BITS_I 1 
+#define WORD_BITS_V 2 
+#define WORD_BITS_b 3 
+#define WORD_BITS_m 4
+#define WORD_BITS_aug 5 
+#define WORD_BITS_dim 6
 
 #define ERROR_WORD 32768
 

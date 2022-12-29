@@ -69,3 +69,8 @@ GENERATION PAR PATTERN :
     -> CHORD_PROG* get_randchprog( LENGTH length, PNode tree)
     ->cree une suite d'accord en parcourant un arbre 
     ->bonchance
+
+
+
+
+RENOMME LES MASKS LA PUTAIN DE TA RACE I V B CV PAS????????

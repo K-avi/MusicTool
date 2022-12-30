@@ -56,12 +56,15 @@ void chordloop(){
         printf("  >>>");
         continue;
 
+      }else if(strstr(line, "save")) {
+         printf("  >>>");
+         continue;
       } else if (strstr(line, "help")!=NULL)	{
 
         printf("\ntype 'quit' to exit Chord Mode \n");
         printf("\ntype 'exit' to exit MusicTool \n");
-        printf("\ntype 'coherand x y' to generate a chord prog of length x using a scale of length y using a book of prebuilt chordprogs\n");
-        printf("\ntype 'coherand x' to generate a chord prog of length x using a scale of rand length using a book of prebuilt chordprogs\n");
+        //printf("\ntype 'coherand x y' to generate a chord prog of length x using a scale of length y using a book of prebuilt chordprogs\n");
+        //printf("\ntype 'coherand x' to generate a chord prog of length x using a scale of rand length using a book of prebuilt chordprogs\n");
         printf("\ntype 'fullrand x y' to generate a chord prog of length x using a scale of length y\n");
         printf("\ntype 'fullrand x' to generate a chord prog of length x using a scale of a random length\n");
         printf("\ntype 'fullrand' to generate a chord prog of a random length from a scale of random length \n");

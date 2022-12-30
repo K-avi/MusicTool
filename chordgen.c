@@ -136,6 +136,9 @@ CPT nb_chords( TRIADS_IN_SCALE * scl_triads, LENGTH length){ //returns the numbe
 }
 
 void free_chord_prog(S_CHORD_PROG* source){
+
+  if(!source) return ;
+  
   free(source->chord_prog);
   free(source);
 }

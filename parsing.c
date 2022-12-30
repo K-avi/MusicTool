@@ -1,6 +1,6 @@
 #include "parsing.h"
 #include "types.h"
-#include "string.h"
+#include <string.h>
 #include "init.h"
 #include "scalegen.h"
 #include "user_info.h"
@@ -81,7 +81,8 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns null scale if no sc
 
 
 WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that it can then be analyzed 
-
+//word bits is an intermediate format for chord prog parsing between a chord written as a string and a chord 
+//written as a short 
     if(!str) return 0;
     char * tmp= str; 
 
@@ -131,12 +132,18 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
 
 CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. Returns zero if the word isn't valid
     
+    //chrecks that there is no space between the relevent chars. For example : "        bVIm" is accepted but 
+    // " b V I m " is not
+    //also does syntax checking for chord with 0 being the return error
 
     /* 
     the words are between 1 and 5 'characters' . The way it's analyzed is  
     I check the validity of every character. 
     this function is ugly AF tbh I might make it cleaner at some point 
     */
+
+    //the function is a monstrous amalgamation of boilerplates n I feel pretty bad about it.
+    // I'll rewrite it at some point
 
    
     if(!word) return 0;
@@ -189,7 +196,7 @@ CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
 
 
         }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){ //bV?
-               // printf("in V\n");
+               
             shift+=3;
             if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bVI?
                 shift+=3;
@@ -230,7 +237,7 @@ CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
             return 0;
         }
 
-    }else if((word & (mask<<shift))== (WORD_BITS_I)){//I?
+    }else if((word & (mask))== (WORD_BITS_I)){//I?
         //cases: I Im I+ I- II III IV 
         shift+=3;
         
@@ -266,7 +273,7 @@ CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                    
         
         
-        }else if(word & WORD_BITS_V){//IV?
+        }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){//IV?
             shift+=3;
 
             if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IVm
@@ -337,48 +344,113 @@ CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
 }
 
 
-CHORD str_to_chord( char* str){//turns the string representing a chord into a CHORD . Makes the assumption that 
-//there is no space between the relevent chars. For example : "        bVIm" is accepted but 
-// " b V I m " is not
-//also does syntax checking for chord with 0 being the return error
+CHORD str_to_chord( char* str){
+    if(!str) return 0;
 
-    return 0;
+    return word_bits_to_chord(str_to_wordbits(str));
 }
 
-/*
-char* set_to_beginning_chprog(char* str){//sets to the first iteration of a '[' in a string
-  if(!str) return NULL;
-  
-  char* tmp= strstr(str,"[");
-   
-  return tmp;
-  
+
+
+char ** chprog_str_to_tab_chord_str( char* str, LENGTH length){//turns a string containing 
+//a chord prog to a tab of string where each index of the tab contains a substring of str w one chord 
+    if(!str) return NULL;
+    if(!length) return NULL;
+
+    char ** ret= malloc(length* sizeof(char*));
+    INDEX i=0;
+    CPT cpt=0;
+int debug=0;
+    char * tmp= str, *tmp1=str; 
+
+    while(*tmp!='\0' && *tmp1!='\0'){
+
+        while(*tmp1!= ',' && *tmp1!=']' && *tmp1!='\0'){
+            cpt++;
+            tmp1++;
+             
+        }
+
+        if(*tmp1== ']'){
+           
+            ret[i++]= strndup(tmp, cpt);
+            break;
+        }
+        else if(*tmp1== '\0'){//useless normally
+
+            ret[i++]= strndup(tmp, cpt);
+            break;
+        }else{
+             
+            ret[i++]= strndup(tmp, cpt);
+            cpt=0;
+            tmp=tmp1; 
+            tmp++;
+            tmp1++;
+        }
+    }
+    return ret;
 }
 
-S_CHORD_PROG* parse_chprog(char* string){
-    if(!string) return NULL;
+void free_str_tab(char ** str_tab, LENGTH length){
+    for (CPT i=0; i<length; i++){
+        free(str_tab[i]);
+    }
+    free(str_tab);
+}
 
-    char*tmp= set_to_beginning_chprog(string);
-    CPT i=0, nb_accords=0;
 
-    while(tmp[i]!='\0' && tmp[i]!= ']'){
-        if(tmp[i++]==',') nb_accords++;
+S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string representing a chord into a CHORD . Makes the assumption that 
+
+
+    //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
+    //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
+    //at the end check if every chord is not null and return zero if so
+    if(!str) return NULL;
+
+    char * tmp= strstr(str , "["), *tmp1=tmp;
+
+    
+    if(!tmp) return NULL; //checks that str contains [
+    
+    if(!strstr(str, "]")) return NULL; //checks that the string contains a closing bracket
+
+    if(*(++tmp)=='\0') return NULL; //checks that [ isnt the last character of the string
+
+    CPT num_of_chord=1;
+
+    while( *tmp!=']' ){
+        if(*tmp==',') num_of_chord++;
+        tmp++;
     }
 
-    S_CHORD_PROG *ret=malloc(sizeof(S_CHORD_PROG));
-    
-    ret->length= nb_accords;
-    ret->degrees= malloc(nb_accords*sizeof(DEGREES));
-    ret->triads= malloc(nb_accords*sizeof(TRIADS_IN_SCALE));
-    
 
-    //needs to do the loop where I generate each chord by looking at the string between "[... ,"; ", ... ,"
-    //or ", ... ]"
+    
+    tmp1++;
 
-    while(1){
-        break;
+    char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord);
+    
+    S_CHORD_PROG * ch_prog= malloc(sizeof(S_CHORD_PROG));
+
+    ch_prog->length=num_of_chord; 
+    ch_prog->chord_prog=malloc(num_of_chord* sizeof(CHORD));
+
+    for(CPT i=0; i<num_of_chord; i++){
+        
+        ch_prog->chord_prog[i]= str_to_chord(chord_tab[i]);
+
+        if( !(ch_prog->chord_prog[i])){ 
+          
+            free(ch_prog->chord_prog);
+            free(ch_prog); 
+            free_str_tab(chord_tab, num_of_chord); 
+
+            return NULL;
+
+        }
     }
 
-    return ret ;
+    free_str_tab(chord_tab, num_of_chord);
+    return ch_prog;
 
-}*/
+}

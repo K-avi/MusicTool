@@ -91,14 +91,11 @@ int main(){
   }*/
   // chordloop();
   // wchar_t str= L'\240';
-
-  char * chord= "bVII+";
+  /*
+  char * chord= "      IVm    ";
   
 
-  WORD_BITS bits= str_to_wordbits(chord);
-
- // printf("%b\n", bits);
-  CHORD ch= word_bits_to_chord(bits);
+  CHORD ch= str_to_chord(chord);
 
   //printf("%b\n", ch);
   char * chord_str= chord_to_str(ch);
@@ -107,6 +104,17 @@ int main(){
   printf("%s\n", chord_str);
   }else printf("%p\n" ,chord_str);
    
- 
+   
+  free(chord_str);*/
+
+  char *str= "[II, V,I]";
+
+  
+
+  S_CHORD_PROG * chprog= str_to_chord_prog(str);
+
+  print_chord_prog(chprog);
+
+  free_chord_prog(chprog);
  return 0;
 }

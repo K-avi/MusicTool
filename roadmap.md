@@ -73,7 +73,7 @@ GENERATION PAR PATTERN :
 
 
 
-SYNTAX CHECKER FFS 
+DO A SYNTAX CHECKER FFS 
 HOW IS 
 scale rand epepjfpojeojesqpojfeapojvpojrej 11 fdneqioczqhcoieZIHCHZQ
 

@@ -136,4 +136,4 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
     return ret;
 }//tested ; could be made better checking if multiple triads can be generated from a degree n allowing 
 //the same degree to be used two times if so. 
-//the current generating algorithm prevents a prof like [ IIm II I] from happenind.
+//the current generating algorithm prevents a prog like [ IIm II I] from happenind.

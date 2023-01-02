@@ -2,7 +2,7 @@
 #define SCALELOOP_H_INCLUDED
 
 extern void ScaleLoop();
-extern NOTE parse_scale_length(const char* string);
+
 
 
 

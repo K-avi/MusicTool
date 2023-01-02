@@ -6,6 +6,7 @@
 #include "chordloop.h"
 #include "globals.h"
 #include "harmo.h"
+#include "parseloop.h"
 #include "parsing.h"
 #include "scalegen.h"
 #include "types.h"
@@ -17,6 +18,7 @@
 #include "rand.h"
 #include "misc.h"
 #include "chordprint.h"
+#include "parseloop.h"
 
 
 
@@ -125,7 +127,9 @@ int main(){
   free_chord_prog(chprog);
   free_chord_prog(dup);*/
 
-  chordloop();
+ // chordloop();
+
+ parseloop();
 
   free_userinfo(user_saved);
  return 0;

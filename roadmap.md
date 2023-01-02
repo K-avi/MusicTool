@@ -73,4 +73,8 @@ GENERATION PAR PATTERN :
 
 
 
-RENOMME LES MASKS LA PUTAIN DE TA RACE I V B CV PAS????????
+SYNTAX CHECKER FFS 
+HOW IS 
+scale rand epepjfpojeojesqpojfeapojvpojrej 11 fdneqioczqhcoieZIHCHZQ
+
+A VALID FUCKING LINE WTF 

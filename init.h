@@ -14,4 +14,5 @@ extern void free_userinfo( S_USERINFO* user_info);
 
 
 
+
 #endif // INIT_H_INCLUDED

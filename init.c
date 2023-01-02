@@ -1,3 +1,4 @@
+#include "chordgen.h"
 #include "types.h"
 #include <stdbool.h>
 #include <stdlib.h>
@@ -52,7 +53,7 @@ void free_saved_progs( S_SAVED_PROGS * saved_progs){
 	S_SAVED_PROGS* tmp;
 	while(saved_progs){
 		tmp=saved_progs;
-		if(tmp->ch_prog) free(tmp->ch_prog);
+		if(tmp->ch_prog) free_chord_prog(tmp->ch_prog);
 		saved_progs=saved_progs->next;
 		free(tmp);
 	}

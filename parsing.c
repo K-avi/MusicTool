@@ -400,7 +400,7 @@ void free_str_tab(char ** str_tab, LENGTH length){
 }
 
 
-S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string representing a chord into a CHORD . Makes the assumption that 
+S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
 
 
     //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 

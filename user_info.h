@@ -29,5 +29,9 @@ extern void remove_scale( S_USERINFO * user_info, CPT index );
 extern void remove_modes( S_USERINFO * user_info, CPT index );
 
 
+//test only 
+
+extern S_CHORD_PROG * duplicate_chprog( S_CHORD_PROG * chprog);
+
 
 #endif // USER_INFO_H_INCLUDED

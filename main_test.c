@@ -30,6 +30,9 @@ int main(){
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
 
+  user_saved=malloc(sizeof(S_USERINFO));
+  init_userinfo(user_saved);
+
   //CHORD_DEGREES chord= get_degrees(1370);
   //print_bits(chord);
 
@@ -107,7 +110,7 @@ int main(){
    
   free(chord_str);*/
 
-  char *str= "[II, V,I]";
+ /* char *str= "[II, V,I]";
 
   
 
@@ -115,6 +118,15 @@ int main(){
 
   print_chord_prog(chprog);
 
+  S_CHORD_PROG * dup= duplicate_chprog(chprog);
+
+  save_chprog(dup, user_saved);
+
   free_chord_prog(chprog);
+  free_chord_prog(dup);*/
+
+  chordloop();
+
+  free_userinfo(user_saved);
  return 0;
 }

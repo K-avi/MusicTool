@@ -84,7 +84,7 @@ static void ScaleGenerationLoop(){
       }  else if(strstr(line, "remove scale")!=NULL){
           
           index=parse_index(line);
-          printf("%d",index);
+         // printf("%d",index);
           if(index==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
           else{remove_scale(user_saved, index);}
           

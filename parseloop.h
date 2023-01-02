@@ -3,7 +3,10 @@
 
 #include "types.h"
 
-extern void parseloop();
+extern void cmdline_parseloop();
+
+//test only 
+void file_parseloop(char * filename);
 
 
 #endif

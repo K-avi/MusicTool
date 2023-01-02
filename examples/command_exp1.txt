@@ -1,0 +1,13 @@
+MusicTool:commands
+
+scale rand
+
+
+harmo rand 4 
+
+chprog rand 
+
+harmo save 
+scale save 
+chprog save 
+aoezfizopze 

@@ -127,7 +127,9 @@ int main(){
 
  // chordloop();
 
- parseloop();
+
+  file_parseloop( "examples/command_exp1.txt\n");
+ //cmdline_parseloop();
 
   free_userinfo(user_saved);
  return 0;

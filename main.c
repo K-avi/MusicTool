@@ -33,7 +33,7 @@ int main()
   printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
-  parseloop();
+  cmdline_parseloop();
 
   free_userinfo(user_saved);
   return 0;

@@ -342,8 +342,86 @@ void clearglobals(){
     if(begin) free(begin);
 }
 
+void file_parseloop(char * filename){//parse MusicTool command from file; file must begin with "MusicTool:commands"
+    
+    if(!filename){
+        return;
+    }
 
-void parseloop(){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
+
+    
+
+    int i= strcspn(filename, "\n"), j=strlen(filename);
+    char* clean_filename;
+    if(i!=j){
+        clean_filename = malloc(( j) * sizeof(char));
+        memcpy(clean_filename, filename,  j);
+        clean_filename[i]='\0'; 
+
+    }else {  clean_filename= strdup(filename);}
+    
+    FILE *f=fopen(clean_filename, "r") ;
+
+
+    if(!f){
+        printf("error file doesn't \"%s\" exist; please pass a valid filename as argument.\n", filename);
+        free(clean_filename);
+        return;
+    }
+    char line[256];
+
+    
+    fgets(line, 256, f);
+   
+
+   
+    if(strncmp(line, "MusicTool:commands", 18)){
+        printf("error invalid start of file; please begin your file with \"MusicTool:commands\"\n");
+        free(clean_filename);
+        fclose(f); 
+        return;
+    }
+
+    CPT line_num=1;
+
+    while(fgets(line, 256, f)){
+        ushort i=0;
+      while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
+        i++;
+      }
+      if(line[i]== 10) { ++line_num; continue;}//empty line 
+      else if(!strncmp(&line[i], "scale ",6)){
+        
+        scaleparse(&line[i+6]);
+        
+      }else if(!strncmp(&line[i], "harmo",5)){
+        harmoparse(&line[i]+5);
+        
+      }else if(!strncmp(&line[i], "chprog", 6)){
+        chprogparse(&line[i+6]);
+        
+      }else if(!strncmp(&line[i], "help",4)){
+        helpparse(&line[i+4]);
+        
+        
+      }else {
+        printf("syntax error at line %d\n", line_num+1);
+        free(clean_filename);
+        fclose(f);
+        return;
+      }
+      line_num++;
+    }
+
+
+    free(clean_filename);
+    fclose(f);
+    printf("file read correctly!\n");
+    return;
+}
+
+
+void cmdline_parseloop(){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
 
    
 
@@ -383,6 +461,9 @@ void parseloop(){ //the main frontend loop function ; relies heavily on the scal
         printf("\nYou have exited MusicTool\n");
         clearglobals();
         break;
+      }else if(!strncmp(&line[i],"read ",5)){
+        file_parseloop(&line[i+5]);
+        printf("  >>>");
       }else if (line[0]==10){
         printf("  >>>");
       }else {
@@ -390,3 +471,4 @@ void parseloop(){ //the main frontend loop function ; relies heavily on the scal
       }
     }
 }
+

@@ -1,8 +1,11 @@
 #include "parseloop.h"
 #include "bitop.h"
+#include "chordgen.h"
+#include "chordprint.h"
 #include "globals.h"
 #include "parsing.h"
 #include "init.h"
+#include "rand.h"
 #include "scalegen.h"
 #include "user_info.h"
 #include "parsing.h"
@@ -214,10 +217,85 @@ void harmoparse (char * line){
 
 
 void chprogparse(char * line){
+    
+    ushort i=0; 
+    while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
+    if(line[i]==10 || line[i]=='\0'){ printf("syntax error\n"); return;}
+    
+    if(!strncmp(&line[i], "rand",4)){
+
+        l1=parse_index(line);
+        l2=parse_next(line);
+        if(tmp_chprog) {
+
+          printf("in fullrand %p\n", tmp_chprog);
+            free_chord_prog(tmp_chprog);
+        }
+
+       // printf("%d, %d\n", l1, l2);
+        if(l1==-1){
+        
+            tmp_chprog=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
+        }else if(l2==-1){
+            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , rand()%10+1   );
+        }else{
+            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , l2   );
+        }
+        
+        if(!tmp_chprog) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
+        else print_chord_prog(tmp_chprog);
+       
+      }else if(!strncmp(&line[i], "save [",6)) {
+
+         S_CHORD_PROG * ch_parsed= str_to_chord_prog(line);
+         if(!ch_parsed){
+            printf("couldn't parse a chord prog, please pass a correct chord prog\n");
+
+         }else{
+           save_chprog(ch_parsed, user_saved);
+           printf("chord prog saved at index %d\n", user_saved->progs_num);
+
+           printf("in save chprog [ %p\n", ch_parsed);
+           free_chord_prog(ch_parsed);
+         }
+       
+      }else if(!strncmp(&line[i], "save",4)) {
+
+         
+         if(tmp_chprog){
+           save_chprog(tmp_chprog, user_saved);
+           printf("chord prog saved at index %d\n", user_saved->progs_num);
+
+           printf("in save chprog %p\n", tmp_chprog);
+           print_chord_prog(tmp_chprog);
+           free_chord_prog(tmp_chprog);
+           tmp_chprog=NULL;
+
+         }else{
+           printf("no temporary scale saved\n");
+         }
+        
+      } else if(!strncmp(&line[i], "print ",6)) {
+
+         
+         indexx=parse_index(line);
+          if(indexx==-1) printf("index not recognised; no chprog will be printed, please pass an integer from 1 to the number of scales saved\n");
+          else{print_saved_prog(user_saved, indexx);}
+        
+
+      }  else if(!strncmp(&line[i], "remove ",7)){
+          
+          indexx=parse_index(line);
+         // printf("%d",index);
+          if(indexx==-1  || indexx==0) printf("index not recognised; no chprog will be removed, please pass an integer from 1 to the number of scales saved\n");
+          else{remove_chprog(user_saved, indexx);}
+         
+
+      }
 }
 
-void helpparse(char * line){
+void helpparse(char * line){ //prints the informations corresponding to a string starting by help passed from command line
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
@@ -239,6 +317,19 @@ void helpparse(char * line){
         printf("\ntype 'print n' to print the harmonised scale saved at index n \n");
         printf("\ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\n");
         printf("\ntype 'remove n' to remove the modes saved at index n\n");
+    }else if(!strncmp(&line[i], "chprog",6 )){
+        //printf("\ntype 'coherand x y' to generate a chord prog of length x using a scale of length y using a book of prebuilt chordprogs\n");
+        //printf("\ntype 'coherand x' to generate a chord prog of length x using a scale of rand length using a book of prebuilt chordprogs\n");
+        printf("\ntype 'rand x y' to generate a chord prog of length x using a scale of length y\n");
+        printf("\ntype 'rand x' to generate a chord prog of length x using a scale of a random length\n");
+        printf("\ntype 'rand' to generate a chord prog of a random length from a scale of random length \n");
+        printf("\ntype 'save [ I, IIm, .... ]' to save the chprog you passed after it if  save chprog is called without argument, the last generated scale will be saved\n");
+        printf("\ntype 'print saved chprog n' to print the nth chprog you saved\n");
+        printf("\ntype 'remove chprog n' to remove the chprog saved at index n\n");
+       // printf("\ntype 'extract scale n' to extract the scale from the chprog saved at index n\n");
+        //printf("\ntype 'extract scale [I......]' to extract the scale from the chprog passed as argument\n");
+    }else {
+        printf("syntax error");
     }
 
 }
@@ -254,8 +345,7 @@ void clearglobals(){
 
 void parseloop(){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
 
-    printf("\n Welcome to MusicTool, type 'help' for more informations\n");
-    printf("  >>>");
+   
 
     //overkill but usefull 
     setbuf(stdin, NULL);
@@ -284,7 +374,7 @@ void parseloop(){ //the main frontend loop function ; relies heavily on the scal
         harmoparse(&line[i]+5);
         printf("  >>>");
       }else if(!strncmp(&line[i], "chprog", 6)){
-        chprogparse(&line[i]);
+        chprogparse(&line[i+6]);
         printf("  >>>");
       }else if(!strncmp(&line[i], "help",4)){
         helpparse(&line[i+4]);

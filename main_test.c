@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "chordloop.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parseloop.h"
@@ -11,7 +10,6 @@
 #include "scalegen.h"
 #include "types.h"
 #include "bitop.h"
-#include "scaleloop.h"
 #include "init.h"
 #include "user_info.h"
 #include "chordgen.h"

@@ -6,7 +6,7 @@
 #include "scalegen.h"
 #include "types.h"
 #include "init.h"
-#include "scaleloop.h"
+#include "parseloop.h"
 #include "harmo.h"
 #include "parsing.h"
 #include "user_info.h"
@@ -30,60 +30,11 @@ int main()
   srand((unsigned) time(&t));
 
 
-
-  setbuf(stdin, NULL);
-  setbuf(stdout, NULL);
-
-  printf("Welcome to MusicTool! Type 'help' for more informations...\n");
-
-
-
-	char line[256];
-
+  printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
-	while (true) {
-		memset(&line[0], 0, sizeof(line));
+  parseloop();
 
-		fflush(stdout);
-		if (!fgets(line, 256, stdin)){
-			continue;
-		
-    }
-		if (strstr(line, "scale mode")!=NULL) {
-            ScaleLoop();
-			continue;
-		} else if (strstr(line, "chord mode")!=NULL)	{
-
-            printf("chord mode not done yet\n");
-		printf("  >>>");
-			continue;
-		} else if (strstr(line, "help")!=NULL)	{
-
-			printf("\ntype 'quit' to exit MusicTool \n");
-			printf("\ntype 'exit' to exit MusicTool \n");
-			printf("\ntype 'scale mode' to enter Scale Mode\n");
-			printf("\ntype 'chord mode' to enter Chord Mode\n");
-      printf("  >>>");
-
-			continue;
-		} else if(strstr(line, "quit")!=NULL)	{
-         free_userinfo(user_saved);
-		    printf("\nYou have exited MusicTool\n");
-
-			break;
-		} else if(strstr(line, "exit")!=NULL)	{
-         free_userinfo(user_saved);
-		    printf("\nYou have exited MusicTool\n");
-
-			  exit(0);
-
-		} else{
-      printf("command not parsed correctly\n");
-      printf("  >>>");
-    }
-	}
-
-	return 0;
-
+  free_userinfo(user_saved);
+  return 0;
 }

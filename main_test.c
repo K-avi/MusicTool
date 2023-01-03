@@ -128,15 +128,25 @@ int main(){
  // chordloop();
 
 
-  //file_command_parseloop( "examples/command_exp1.txt\n");
+  //file_command_parseloop( "   examples/command_exp1.txt\n\n");
 
+  readparse("env examples/environment_ex1.txt", user_saved);
 
-  file_environment_parseloop("examples/environment_ex2.txt", user_saved);
+ // file_environment_parseloop("examples/environment_ex1.txt", user_saved);
 
-  print_saved_scale(user_saved, 1);
+ /* print_saved_scale(user_saved, 1);
   print_saved_scale(user_saved, 2);
   print_saved_scale(user_saved, 3);
- //cmdline_parseloop();
+
+  printf("modes: \n");
+
+  print_saved_modes(user_saved, 1);
+
+  printf("chprog: \n");
+
+  print_saved_prog(user_saved, 1); 
+  print_saved_prog(user_saved, 2);
+ //cmdline_parseloop();*/
 
   free_userinfo(user_saved);
  return 0;

@@ -1,0 +1,8 @@
+MusicTool:commands
+
+
+
+
+#this file will load itself indefinitely ; watch out!  
+
+read examples/command_exp2.txt

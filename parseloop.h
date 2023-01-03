@@ -9,4 +9,5 @@ extern void cmdline_parseloop();
 extern void file_command_parseloop(char * filename);
 extern void file_environment_parseloop(char * filename, S_USERINFO * user_info);
 
+extern void readparse(char * str ,S_USERINFO* user_info);
 #endif

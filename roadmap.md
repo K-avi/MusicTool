@@ -1,80 +1,18 @@
-Ce qui est a faire ds le scale mode:
+Features needed for MusicTool 1.0: 
+    make sure u don't save the same stuff twice;
+    actual syntax checker 
+    more documentation maybe
 
-refaire API pr qu'elle soit mieux ( un seul mode avc tte les fonctions)
+Features for MusicTool 1.1: 
+    a library of utility function , retrieve inverse of scale, add a note to a scale , check if a chprog can be built from a scale , retrieve scale from chprog, do vector of scale ,... 
 
-/////chord mode:
+Features for MusicTool 1.2: 
+    implementing dodecaphonic series, 12 tone matrixes n operations on them 
 
-sst generation de triades a partir d'une gamme.
-
-sst generation accords avc n extensions a partir d'une gamme
-
-generation d'accords:
--> simple (random)
--> par blocs de triades preconcus (II ; V ; I etc)
--> complexe (peut etre que je le ferais ps mais l'idée
-c'est qu'il comprenne certains principes de transpositions d'accord et une version
-simplifiée de l'harmonie tonale; concept de Ton, S-D, Dom...)
-
-apres chord mode :
-
-possibilite d'ecrire resultats sur fichier .txt (les rendre interpretables pour faire systeme de sauvegarde???)
-
-possibilite d'ecrire resultats sur fichiers .midi (ps interpretables apres pcq trop dangereux)
-
-
-
-
-generation d'accords par pattern : 
-
-
-"base de donnees" avc progression d'accords préconçues: 
-
-ex: 
-
-IV V I //cadence parfaite
-II V I //jazse
-V I //imparfaite
-IV I //pelagiale qqch comme ça la
-I bVII bVI V //cadence anda
-VI IV V I  //ukulele bby
-VI I  //eheh
-VI III IV V I //eheheh
-V bII I //eheheheh
-I bIII IV //bluesy boi
-
-
-GENERATION PAR PATTERN : 
-
--doit faire fonction de comparaison 
+Features for MusicTool 1.3: 
+    a way to generate "coherent" chord progs by stacking coherent patterns(like a I IV V, II V I),...
+    a way to add said patterns to an environment.
+    generate chords w extensions or suspended chords
     
-    -> bool is_nth( CHORD_PROG chprog, CHORD_DEGREES chdeg, INDEX n)
-        -> droite si non 
-        ->gauche si oui 
-            ->incremente le compteur
-
--doit faire fonction de recherche 
-    -> PNode/bool search_prog( CHORD_PROG chprog, PNode tree)
-        ->return true if in tree; 
-
-        -> se base sur is nth; si j'arrive a n==chprog->length alors je contiens sinn non
-        -> si je contiens pas avant je renvoie false
-
--doit faire fonction d'ajout
-    -> void add_chprog( CHORD_PROG chprog , CHORD_DEGREES chdeg)
-        -> parcours jusqu'à ce que chprog ne corresp ps à chdeg 
-        -> ajoute les nodes 
-
-
--doit faire fonction de generation aleatoire 
-    -> CHORD_PROG* get_randchprog( LENGTH length, PNode tree)
-    ->cree une suite d'accord en parcourant un arbre 
-    ->bonchance
-
-
-
-
-DO A SYNTAX CHECKER FFS 
-HOW IS 
-scale rand epepjfpojeojesqpojfeapojvpojrej 11 fdneqioczqhcoieZIHCHZQ
-
-A VALID FUCKING LINE WTF 
+Features for MusicTool 1.4: 
+    writing stuff to midi files maybe ? 

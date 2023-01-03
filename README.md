@@ -20,3 +20,5 @@ Some key features I'd like to add before releasing the 1.0 version are:
 
 Due to the lack of an actual syntax checker the parsing from command line is a bit buggy. Everything that "should be" correct is 
 but some commands that "should be" incorrect sometimes aren't.
+
+To build MusicTool from source just type "make MusicTool" from command line.

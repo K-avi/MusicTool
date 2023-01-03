@@ -48,7 +48,7 @@ void print_env(S_USERINFO* user_info){
     if(tmp1){
         while(tmp1){
             if(tmp1->modes){
-                print_modes(tmp1->modes); 
+                print_scale(tmp1->modes[0]); 
             }
             tmp1=tmp1->next;
         }
@@ -96,7 +96,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     if(tmp1){
         while(tmp1){
             if(tmp1->modes){
-                fprint_modes(f,tmp1->modes); 
+                fprint_scale(f,tmp1->modes[0]); 
             }
             tmp1=tmp1->next;
         }

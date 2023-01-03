@@ -1,5 +1,6 @@
 #include "parsing.h"
 #include "types.h"
+#include <stdbool.h>
 #include <string.h>
 #include "init.h"
 #include "scalegen.h"
@@ -7,6 +8,7 @@
 #include "bitop.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 LENGTH parse_scale_length(const char* string){//returns the length of a scale if a char between 0 and 9 is 
 //in a string and 13 otherwise
@@ -453,4 +455,21 @@ S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string containing a chor
     free_str_tab(chord_tab, num_of_chord);
     return ch_prog;
 
+}
+
+
+unsigned char next_not_blank_comment( char *str, char chr){
+//when given a string returns 1 if the first not space or tabulation or comment (#) character is chr n 0 otherwise 
+//WARGNING: RETURNS  \n AS AN END OF LINE
+    if(!str ) return 0;
+    while(*str!='\0' && *str!='\n'){
+        if(*str=='#'){
+            return 2;
+        }
+        if(*str==' ' || *str=='\t' ) str++;
+        else if( *str == chr){
+            return 1; 
+        }else { return 0;}
+    }
+    return 2;
 }

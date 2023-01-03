@@ -128,7 +128,14 @@ int main(){
  // chordloop();
 
 
-  file_parseloop( "examples/command_exp1.txt\n");
+  //file_command_parseloop( "examples/command_exp1.txt\n");
+
+
+  file_environment_parseloop("examples/environment_ex2.txt", user_saved);
+
+  print_saved_scale(user_saved, 1);
+  print_saved_scale(user_saved, 2);
+  print_saved_scale(user_saved, 3);
  //cmdline_parseloop();
 
   free_userinfo(user_saved);

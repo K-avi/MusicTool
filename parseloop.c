@@ -342,7 +342,7 @@ void clearglobals(){
     if(begin) free(begin);
 }
 
-void file_parseloop(char * filename){//parse MusicTool command from file; file must begin with "MusicTool:commands"
+void file_command_parseloop(char * filename){//parse MusicTool command from file; file must begin with "MusicTool:commands"
     
     if(!filename){
         return;
@@ -389,7 +389,7 @@ void file_parseloop(char * filename){//parse MusicTool command from file; file m
       while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
         i++;
       }
-      if(line[i]== 10) { ++line_num; continue;}//empty line 
+      if(line[i]== 10 || line[i]=='#') { ++line_num; continue;}//empty line or comment
       else if(!strncmp(&line[i], "scale ",6)){
         
         scaleparse(&line[i+6]);
@@ -402,7 +402,9 @@ void file_parseloop(char * filename){//parse MusicTool command from file; file m
         
       }else if(!strncmp(&line[i], "help",4)){
         helpparse(&line[i+4]);
-        
+      
+      }else if(!strncmp(&line[i], "read",4)){
+        file_command_parseloop(&line[i+4]);
         
       }else {
         printf("syntax error at line %d\n", line_num+1);
@@ -418,6 +420,132 @@ void file_parseloop(char * filename){//parse MusicTool command from file; file m
     fclose(f);
     printf("file read correctly!\n");
     return;
+}
+
+
+void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might change behavior of env command to make it also work in command line
+
+  if(!filename){
+        return;
+    }
+
+    int i= strcspn(filename, "\n"), j=strlen(filename);
+    char* clean_filename;
+    if(i!=j){
+        clean_filename = malloc(( j) * sizeof(char));
+        memcpy(clean_filename, filename,  j);
+        clean_filename[i]='\0'; 
+
+    }else{ clean_filename= strdup(filename);}
+    
+    FILE *f=fopen(clean_filename, "r") ;
+
+
+    if(!f){
+        printf("error file doesn't \"%s\" exist; please pass a valid filename as argument.\n", filename);
+        free(clean_filename);
+        return;
+    }
+    char line[256];
+    fgets(line, 256, f);
+   
+    if(strncmp(line, "MusicTool:environment", 18)){
+        printf("error invalid start of file; please begin your file with \"MusicTool:environment\"\n");
+        free(clean_filename);
+        fclose(f); 
+        return;
+    }
+
+    CPT line_num=1;
+
+    while(fgets(line, 256, f)){
+        ushort i=0;
+      while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
+        i++;
+      }
+      if(line[i]== 10 || line[i]=='#') { ++line_num; continue;//empty line or comment
+        
+      }else if(!strncmp(&line[i], "scale env", 9)){
+
+        //check that '(' is the next not space \t \n character
+        char* tmp= &line[i+9];
+        ushort line_env= line_num+1;
+        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+
+        if(nxt_chr==1){
+         while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
+            i=0;
+            while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
+               i++;
+            }
+            if(line[i]== 10 || line[i]=='#' || line[i]=='\0') { 
+              ++line_num; continue;//empty line or comment
+            }else{
+              save_scale( parse_scale(&line[i]), user_info);
+            }
+
+          }
+          if(!f){
+            free(clean_filename);
+            fclose(f);
+            return;
+          }
+        }else if(nxt_chr==2) {
+          while(fgets(line, 256, f)){
+            nxt_chr= next_not_blank_comment(line, '(');
+           
+            if(nxt_chr==1){
+              while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){
+               
+                i=0;
+                while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
+                  i++;
+                }
+                if(line[i]== 10 || line[i]=='#') { 
+                  ++line_num; continue;//empty line or comment
+                }else{
+                  save_scale( parse_scale(&line[i]), user_info);
+                }
+
+              }
+              if(!f){
+                free(clean_filename);
+                fclose(f);
+                return;
+              }
+            }else if( nxt_chr==2){
+              continue;
+            }else{
+               printf("syntax error at line: %d no open parentheses after scale env\n", line_env);
+               free(clean_filename);
+               fclose(f);
+               return;
+            }
+            line_num++;
+          }
+        }else{
+           printf("syntax error at line %d\n", line_num+1);
+          free(clean_filename);
+          fclose(f);
+          return;
+        }
+        
+
+      }else if(!strncmp(&line[i], "harmo env", 9)){
+
+      }else if(!strncmp(&line[i], "chprog env", 9)){
+          
+      }else {
+        printf("syntax error at line %d\n", line_num+1);
+        free(clean_filename);
+        fclose(f);
+        return;
+      }
+      line_num++;
+
+    }
+    free(clean_filename);
+    fclose(f);
 }
 
 
@@ -462,7 +590,7 @@ void cmdline_parseloop(){ //the main frontend loop function ; relies heavily on 
         clearglobals();
         break;
       }else if(!strncmp(&line[i],"read ",5)){
-        file_parseloop(&line[i+5]);
+        file_command_parseloop(&line[i+5]);
         printf("  >>>");
       }else if (line[0]==10){
         printf("  >>>");

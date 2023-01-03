@@ -1,0 +1,18 @@
+MusicTool:environment 
+
+scale env
+
+#this is a comment 
+
+(
+
+
+    #this is a comment as well
+
+{0 2 4 5 7 9 11}
+{ 0 1 2 3 5 6 8 10 }
+
+{0 2 4 5 7 9 10 11 }
+
+
+)

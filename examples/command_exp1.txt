@@ -3,6 +3,8 @@ MusicTool:commands
 scale rand
 
 
+#this is a comment 
+
 harmo rand 4 
 
 chprog rand 

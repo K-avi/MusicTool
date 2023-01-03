@@ -1,0 +1,24 @@
+MusicTool:environment 
+
+scale env(
+
+
+{0 2 4 5 7 9 11}
+{ 0 1 2 3 5 6 8 10 }
+{0 2 4 5 7 9 10 11 }
+)
+
+
+#harmo env(
+
+#{0 1 3 4 5 6 10 11}
+#)
+
+
+#chprog env(
+
+#[II, V, I]
+
+#[Im , IVm, V]
+
+#)

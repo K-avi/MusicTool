@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "bitop.h"
 #include "types.h"
 #include "harmo.h"
@@ -40,10 +39,17 @@ S_MODES generate_modes( S_SCALE scale){ //generates and return all of the modes 
     }
     return rep;
 }
-//need to do the parsing function for modes
+
 void print_modes(S_MODES modes){
     CPT i;
     for(i=0; i<get_length_kerni(modes[0]); i++){
         print_scale(modes[i]);
+    }
+}
+
+void fprint_modes( FILE *f, S_MODES modes){//same as print_modes but u choose the buffer
+    CPT i;
+    for(i=0; i<get_length_kerni(modes[0]); i++){
+        fprint_scale(f,modes[i]);
     }
 }

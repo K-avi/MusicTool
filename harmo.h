@@ -2,10 +2,12 @@
 #define HARMO_H_INCLUDED
 
 #include "types.h"
+#include <stdio.h>
 
 extern void print_bits(S_SCALE x);
 
 extern void print_modes(S_MODES  modes);
+extern void fprint_modes( FILE* f, S_MODES modes);
 
 extern S_MODES  generate_modes( S_SCALE scale);
 

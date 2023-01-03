@@ -1,9 +1,9 @@
-#include "types.h"
+
 #include "scalegen.h"
 #include "bitop.h"
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdio.h>
+
 
 bool IsValidNote( NOTE note){ //checks wether a note is valid or not (valid meaning that it's value is between 0 and 11
     return (note >=1 && note <=11);
@@ -105,5 +105,16 @@ void print_scale( const S_SCALE scale){ //prints the notes of a scale and it's l
         if(GET_NTH(scale, i)) printf("%d ", i+1);
     }
 
-    printf("}\nthe scale's length is %d\n", get_length_kerni(scale));
+    printf("}\n");
+}
+
+void fprint_scale( FILE* f,const S_SCALE scale ){//same as print scale but u can choose the buffer where scale is printed 
+
+    int i;
+    fprintf(f,"\n{ 0 ");
+    for(CPT i=0; i<11; i++){
+        if(GET_NTH(scale, i)) fprintf(f,"%d ", i+1);
+    }
+
+    fprintf(f,"}\n");
 }

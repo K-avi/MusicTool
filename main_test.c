@@ -17,6 +17,7 @@
 #include "misc.h"
 #include "chordprint.h"
 #include "parseloop.h"
+#include "writeenv.h"
 
 
 
@@ -134,8 +135,8 @@ int main(){
 
  // file_environment_parseloop("examples/environment_ex1.txt", user_saved);
 
- /* print_saved_scale(user_saved, 1);
-  print_saved_scale(user_saved, 2);
+  print_saved_scale(user_saved, 4);
+  /*print_saved_scale(user_saved, 2);
   print_saved_scale(user_saved, 3);
 
   printf("modes: \n");
@@ -148,6 +149,11 @@ int main(){
   print_saved_prog(user_saved, 2);
  //cmdline_parseloop();*/
 
+  //print_env(user_saved);
+
+  //fprint_env( stdout, user_saved);
+  write_env("test.txt", user_saved);
+  
   free_userinfo(user_saved);
  return 0;
 }

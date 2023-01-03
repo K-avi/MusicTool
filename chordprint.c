@@ -1,6 +1,5 @@
 #include "chordprint.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "chordgen.h"
 #include "harmo.h"
@@ -111,5 +110,23 @@ void print_chord_prog( S_CHORD_PROG * chord_prog){
         free(curchord);
     }
     printf(" ]\n");
+}
+
+void fprint_chord_prog(FILE* f , S_CHORD_PROG * chord_prog){//same as print chprog but u can choose the buffer
+
+    if(!chord_prog) return;
+    if(f==NULL) return;
+
+    char * curchord= NULL;
+    fprintf(f,"[ ");
+    for(CPT i=0; i<chord_prog->length; i++){
+        curchord =chord_to_str(chord_prog->chord_prog[i]);
+
+        if(i!=chord_prog->length-1) fprintf(f,"%s, ", curchord) ;
+        else fprintf(f,"%s", curchord) ;
+
+        free(curchord);
+    }
+    fprintf(f," ]\n");
 }
 

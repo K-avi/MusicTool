@@ -33,5 +33,7 @@ extern void remove_modes( S_USERINFO * user_info, CPT index );
 
 extern S_CHORD_PROG * duplicate_chprog( S_CHORD_PROG * chprog);
 
+extern CPT modes_in_saved (S_MODES mode, S_SAVED_MODES * saved_modes);
+
 
 #endif // USER_INFO_H_INCLUDED

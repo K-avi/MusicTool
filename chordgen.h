@@ -12,4 +12,6 @@ extern DEGREES get_deg_from_chdeg( CHORD_DEGREES deg);
 
 extern CHORD generate_chord(TRIADS_IN_SCALE triads, CHORD_DEGREES deg);
 
+extern bool equals_chprog( S_CHORD_PROG* chpr1, S_CHORD_PROG* chpr2);
+
 #endif

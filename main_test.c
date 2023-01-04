@@ -131,11 +131,11 @@ int main(){
 
   //file_command_parseloop( "   examples/command_exp1.txt\n\n");
 
-  readparse("env examples/environment_ex1.txt", user_saved);
+ // readparse("env examples/environment_ex1.txt", user_saved);
 
  // file_environment_parseloop("examples/environment_ex1.txt", user_saved);
 
-  print_saved_scale(user_saved, 4);
+  //print_saved_scale(user_saved, 4);
   /*print_saved_scale(user_saved, 2);
   print_saved_scale(user_saved, 3);
 
@@ -152,8 +152,23 @@ int main(){
   //print_env(user_saved);
 
   //fprint_env( stdout, user_saved);
-  write_env("test.txt", user_saved);
-  
-  free_userinfo(user_saved);
+ // write_env("test.txt", user_saved);
+
+  S_MODES m1= generate_modes(1370); 
+  S_MODES m2= generate_modes(1370);
+
+ // printf("%d\n", equals_harmo(m1, m2));
+  //S_CHORD_PROG *ch1= str_to_chord_prog("[I, IV,V]");
+ // S_CHORD_PROG *ch2= str_to_chord_prog("[I, V,V]");
+
+  //printf("%d\n", equals_chprog(ch1, ch2));
+
+  save_modes(m1, user_saved);
+   save_modes(m1, user_saved);
+  //print_saved_modes(user_saved, 1);
+  //print_modes(user_saved->saved_modes->next->modes);
+  //modes_in_saved(m1, user_saved->saved_modes);
+  //printf("%d\n",scale_comp_lexi(1370 , i[6]));
+
  return 0;
 }

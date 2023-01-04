@@ -170,3 +170,18 @@ CHORD generate_chord(TRIADS_IN_SCALE triads, CHORD_DEGREES deg){//generates a ch
 
   return ret;
 }
+
+bool equals_chprog( S_CHORD_PROG* chpr1, S_CHORD_PROG* chpr2){//returns 1 if two chprog contain the same chords 
+//0 otherwise.
+  if(! (chpr1 && chpr2)) return 0;
+  if(! (chpr1->chord_prog && chpr2->chord_prog)) return 0;
+
+  if(chpr1->length != chpr2->length) return 0;
+
+  for (CPT i=0; i< chpr1->length; i++){
+    if(chpr1->chord_prog[i]!=chpr2->chord_prog[i]) return 0;
+  }
+
+  return 1;
+
+}

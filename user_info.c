@@ -9,9 +9,29 @@
 #include <stdio.h>
 #include <string.h>
 
+
+
+CPT scale_in_saved (S_SCALE scale, S_SAVED_SCALES * saved_scales){//returns the index+1 (to avoid problems if the first saved scale is scale) if a scale is present 
+//in a saved scale struct 0 otherwise
+
+	if(!saved_scales) return 0;
+
+	S_SAVED_SCALES*tmp= saved_scales; 
+	CPT cpt=1;
+
+	while (tmp) {
+	 	if(EQUALS_SCALE(scale, tmp->scale )) return cpt;
+		tmp=tmp->next;
+		cpt++;
+	}
+	return 0;
+}
+
 void add_scale(S_SAVED_SCALES * saved_scales, S_SCALE scale){
 
 	if(!saved_scales) return;
+
+	if( scale_in_saved(scale, saved_scales)) return;
 	S_SAVED_SCALES *tmp=saved_scales; 
 	
 	if(tmp->next){
@@ -36,6 +56,10 @@ void print_saved_scale( S_USERINFO * user_data, LENGTH index){
 	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return; }
 	print_scale(tmp->scale);
 }
+
+
+
+
 ///////////////////////MODES/////////////////////////
 
 void set_modes( S_SAVED_MODES * saved_modes, S_MODES modes){//duplicates modes in saved_modes->modes ; kinda dangerous tbh
@@ -94,6 +118,24 @@ S_SCALE get_scale_of_modes( S_USERINFO * user_data, CPT modes_num, CPT scale_num
 	}else return tmp->modes[scale_num];
 }// maybe tested
 
+CPT modes_in_saved (S_MODES mode, S_SAVED_MODES * saved_modes){//returns the index+1 of the mode  if a mode is present 
+//in a saved modes struct 0 otherwise
+
+	if(! (mode && saved_modes)) return 0;
+	
+	CPT cpt=1;
+
+	S_SAVED_MODES*tmp= saved_modes; 
+
+	while (tmp) {
+			
+	 	if( equals_harmo(mode, tmp->modes)) return cpt;
+		tmp=tmp->next;
+		cpt++;
+	}
+	return 0;
+}
+
 
 
 ////////////CHPROG //////////////
@@ -143,23 +185,48 @@ void print_saved_prog( S_USERINFO * user_data, INDEX index){
 }//not tested
 
 
+CPT chprog_in_saved (S_CHORD_PROG* chprog, S_SAVED_PROGS * saved_progs){//returns the index +1 of chprog if a chprog is present 
+//in a saved progs struct 0 otherwise
+
+	if(! (chprog && saved_progs)) return 0;
+
+	S_SAVED_PROGS*tmp= saved_progs; 
+	CPT cpt=1; 
+
+	while (tmp) {
+	 	if( equals_chprog(chprog, tmp->ch_prog)) return cpt;
+		cpt++;
+		tmp=tmp->next;
+	}
+	return 0;
+}
+
 ////////////////USER INFO ///////////////////
 
 void save_scale( S_SCALE scale, S_USERINFO * user_info){
   //used to save a scale in the user data structure returns an error if the slots to save scales are all fille
+  INDEX index= scale_in_saved(scale, user_info->saved_scales);
+  if(index) { printf("scale already in struct at index %d ; no scale saved\n", index-1); return;}
   user_info->scales_num++;
   add_scale(user_info->saved_scales, scale);
+  printf("scale saved at index %d", user_info->scales_num);
 }
-
 void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in the data structure
 	//used to save a scale in the user data structure returns an error if the slots to save scales are all 
+	INDEX index= modes_in_saved(modes, user_info->saved_modes);
+	
+	if(index) { printf("modes already in struct at index %d ; no modes saved\n", index-1); return;}
 	user_info->modes_num++;
 	add_mode(user_info->saved_modes, modes);
+	printf("modes saved at index %d", user_info->modes_num);
 }
 
 void save_chprog(S_CHORD_PROG* chprog, S_USERINFO * user_info){//used to save a chprog in the data struct
+	INDEX index= chprog_in_saved(chprog, user_info->saved_progs);
+  	if(index) { printf("chord prog already in struct at index %d ; no chord prog saved\n", index-1); return;}
 	user_info->progs_num++;
 	add_chprog(user_info->saved_progs, chprog);
+	printf("chprog saved at index %d", user_info->progs_num);
 }//not tested 
 
 void remove_scale(  S_USERINFO * user_info, CPT index ){ //removes scale at index passed as argument if it exists
@@ -242,10 +309,7 @@ void remove_chprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at in
 		}
 	}
 	user_info->progs_num--;
-}//not tested 
+}
 
-
-
-////////////////////// CHPROG ///////////////////
 
 

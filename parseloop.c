@@ -184,11 +184,11 @@ void harmoparse (char * line){
         tmp_saved_scale=parse_scale(line);
 
         print_scale(tmp_saved_scale);
-        printf("\nand saved at index %d\n", user_saved->modes_num);
+        //printf("\nand saved at index %d\n", user_saved->modes_num);
 
         if (parsed_modes) free(parsed_modes);
         parsed_modes=generate_modes(tmp_saved_scale);
-        printf("parsed is %p\n", parsed_modes);
+        //printf("parsed is %p\n", parsed_modes);
 
         save_modes(parsed_modes,user_saved);
       
@@ -196,7 +196,7 @@ void harmoparse (char * line){
 
         printf("\nsmodes in memory as\n" );
         print_modes(tmp_saved_mode);
-        printf("\nand saved at index %d\n", compt_harmo++);
+        //printf("\nand saved at index %d\n", compt_harmo++);
         save_modes(tmp_saved_mode,user_saved);
         
       }else{
@@ -255,7 +255,7 @@ void chprogparse(char * line){
 
          }else{
            save_chprog(ch_parsed, user_saved);
-           printf("chord prog saved at index %d\n", user_saved->progs_num);
+           //printf("chord prog saved at index %d\n", user_saved->progs_num);
 
            //printf("in save chprog [ %p\n", ch_parsed);
            free_chord_prog(ch_parsed);
@@ -266,7 +266,7 @@ void chprogparse(char * line){
          
          if(tmp_chprog){
            save_chprog(tmp_chprog, user_saved);
-           printf("chord prog saved at index %d\n", user_saved->progs_num);
+          // printf("chord prog saved at index %d\n", user_saved->progs_num);
 
            //printf("in save chprog %p\n", tmp_chprog);
            print_chord_prog(tmp_chprog);
@@ -339,7 +339,7 @@ void helpparse(char * line){ //prints the informations corresponding to a string
         printf("\ntype : \"write env [filename]\" to write the current environment to a file. If the file already exists, it must begin with \"MusicTool:env\". If it doesn't , a new file is created.\n");
    
     }else {
-        printf("syntax error");
+        printf("syntax error\n");
     }
 
 }

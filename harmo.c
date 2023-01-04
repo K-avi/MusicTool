@@ -41,6 +41,7 @@ S_MODES generate_modes( S_SCALE scale){ //generates and return all of the modes 
 }
 
 void print_modes(S_MODES modes){
+    if(!modes) return;
     CPT i;
     for(i=0; i<get_length_kerni(modes[0]); i++){
         print_scale(modes[i]);
@@ -48,8 +49,21 @@ void print_modes(S_MODES modes){
 }
 
 void fprint_modes( FILE *f, S_MODES modes){//same as print_modes but u choose the buffer
+    if(!modes) return;
     CPT i;
     for(i=0; i<get_length_kerni(modes[0]); i++){
         fprint_scale(f,modes[i]);
     }
+}
+
+bool equals_harmo( S_MODES modes1, S_MODES modes2){//returns 1 if two modes are equals 0 otherwise 
+//modes are considered equal if they contain the modes of the same scale even if said modes are in a different order 
+//for example a S_MODES containing the modes of locrian scale n one containing those of the major scale are 
+// considered EQUALS bc they contain the same scales, just in a different order.
+    if ( !(modes1 && modes2)) return 0;
+
+    S_SCALE scl1= get_normal_scale_modes(modes1, get_length_kerni(modes1[0]) ); 
+    S_SCALE scl2= get_normal_scale_modes(modes2, get_length_kerni(modes2[0]));
+
+    return EQUALS_SCALE(scl1, scl2);
 }

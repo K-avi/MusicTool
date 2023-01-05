@@ -65,7 +65,7 @@ char * set_to_first_bracket( char* str){//sets a str to the first iteration of '
 }
 
 S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if no scale is found or if there are invalid chars in the scale
-    if(string==NULL) return 0;
+    if(string==NULL) return ERROR_FLAG;
     S_SCALE ret=0;
     NOTE note=0;
     char *tmp= set_to_first_bracket(string);
@@ -83,8 +83,8 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if
             //if(note>11) return ERROR_FLAG;
             add_note(&ret, note);
             while(isdigit(*tmp)) tmp++; //avoids problem with 10 or eleven
-        }else if( !(*tmp==' ' || *tmp=='\t' || *tmp!='\n') ) {return ERROR_FLAG;}
-        tmp++;
+        }else if( !(*tmp==' ' || *tmp=='\t' || *tmp!='\n'  || *tmp!='}' || *tmp!='\0')) { return ERROR_FLAG;}
+        if(*tmp!='}')tmp++;
     }  
  
     if(*tmp!='}' || !zero_check) return ERROR_FLAG;

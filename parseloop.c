@@ -311,10 +311,10 @@ void helpparse(char * line){ //prints the informations corresponding to a string
 
     }else if(!strncmp(&line[i], "harmo", 5)){
         printf("\ntype 'harmo rand x' to generate an harmonised scale of length x with x being an integer between 1 and 12\n");
-        printf("\ntype 'harmo rand x' to generate an harmonised scale of random length\n");
+        printf("\ntype 'harmo rand' to generate an harmonised scale of random length\n");
         printf("\ntype 'harmo scale { 0 ... }' to harmonise a scale passed as argument \n");
         printf("\ntype 'harmo saved scale n' to harmonise the nth scale you saved\n");
-        printf("\ntype 'save modes { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\n");
+        printf("\ntype 'save { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\n");
         printf("\ntype 'print n' to print the harmonised scale saved at index n \n");
         printf("\ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\n");
         printf("\ntype 'remove n' to remove the modes saved at index n\n");
@@ -349,7 +349,7 @@ void clearglobals(){
     if(tmp_saved_mode) free(tmp_saved_mode);
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
-    if(begin) free(begin);
+   // if(begin) free(begin);
 }
 
 void file_command_parseloop(char * filename){//parse MusicTool command from file; file must begin with "MusicTool:commands"

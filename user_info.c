@@ -209,7 +209,7 @@ void save_scale( S_SCALE scale, S_USERINFO * user_info){
   if(index) { printf("scale already in struct at index %d ; no scale saved\n", index-1); return;}
   user_info->scales_num++;
   add_scale(user_info->saved_scales, scale);
-  printf("scale saved at index %d", user_info->scales_num);
+  printf("scale saved at index %d\n", user_info->scales_num);
 }
 void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in the data structure
 	//used to save a scale in the user data structure returns an error if the slots to save scales are all 
@@ -218,7 +218,7 @@ void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in t
 	if(index) { printf("modes already in struct at index %d ; no modes saved\n", index-1); return;}
 	user_info->modes_num++;
 	add_mode(user_info->saved_modes, modes);
-	printf("modes saved at index %d", user_info->modes_num);
+	printf("modes saved at index %d\n", user_info->modes_num);
 }
 
 void save_chprog(S_CHORD_PROG* chprog, S_USERINFO * user_info){//used to save a chprog in the data struct
@@ -226,7 +226,7 @@ void save_chprog(S_CHORD_PROG* chprog, S_USERINFO * user_info){//used to save a 
   	if(index) { printf("chord prog already in struct at index %d ; no chord prog saved\n", index-1); return;}
 	user_info->progs_num++;
 	add_chprog(user_info->saved_progs, chprog);
-	printf("chprog saved at index %d", user_info->progs_num);
+	printf("chprog saved at index %d\n", user_info->progs_num);
 }//not tested 
 
 void remove_scale(  S_USERINFO * user_info, CPT index ){ //removes scale at index passed as argument if it exists

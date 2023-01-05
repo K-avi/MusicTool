@@ -176,8 +176,10 @@ int main(){
   //printf("%b\n", parse_scale(" 4 3 2 1 0}"));
   //print_scale( parse_scale("{  0 44 4 3 2 1 } "));
 
-  printf("%d %d %d %d %d\n", printcheck(" 1 "), removecheck("10"), savescalecheck(" {0 2 4 5 7 9 11 }"), scalecheck("rnd"), scalecheck("rand 07 1"));
- 
+  //printf("%d %d %d %d %d\n", printcheck(" 1 "), removecheck("10"), savescalecheck(" {0 2 4 5 7 9 11 }"), scalecheck("rnd"), scalecheck("rand 07 1"));
+ print_chord_prog(str_to_chord_prog("[I , IV, V]"));
+
+ printf("1");
  free_userinfo(user_saved);
   return 0;
 

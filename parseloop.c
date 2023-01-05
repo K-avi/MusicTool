@@ -127,7 +127,7 @@ void harmoparse (char * line){
 
       
 
-      begin=set_to_beginning(line);
+      begin=set_to_first_bracket(line);
       if(begin!=NULL){
 
         if (tmp_saved_mode)free(tmp_saved_mode); 

@@ -104,6 +104,7 @@ S_SCALE * make_scale( NOTE *array, LENGTH length){ //generates a scale from an a
 
 void print_scale( const S_SCALE scale){ //prints the notes of a scale and it's length in a nice way :)
     int i;
+    if(ERROR_FLAG & scale ) return;
     printf("\n{ 0 ");
     for(CPT i=0; i<11; i++){
         if(GET_NTH(scale, i)) printf("%d ", i+1);

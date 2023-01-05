@@ -1,5 +1,6 @@
 #include "parsing.h"
 #include "types.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <string.h>
 #include "init.h"
@@ -14,7 +15,7 @@ LENGTH parse_scale_length(const char* string){//returns the length of a scale if
 //in a string and 13 otherwise
 
     LENGTH ret=13;
-    while (*string!='\n' && string && *string!='\0'){
+    while ( *string!='\0'){
         
         if( *string>='1' && *string<='9' ){
             ret= atoi(string);
@@ -28,7 +29,7 @@ LENGTH parse_scale_length(const char* string){//returns the length of a scale if
 SIGNED_LENGTH parse_index(const char* string){//parses the index to print a scale/mode
 
     SIGNED_LENGTH ret=-1;
-    while (*string!='\n' && string && *string!='\0'){
+    while (*string!='\0'){
         
         if( *string>='1' && *string<='9' ){
             ret= atoi(string);
@@ -42,7 +43,7 @@ SIGNED_LENGTH parse_index(const char* string){//parses the index to print a scal
 SIGNED_LENGTH parse_next(const char* string){//returns atoi of the second number in a string; -1 otherwise
     SIGNED_LENGTH ret=-1;
     CPT cpt=0;
-    while (*string!='\n' && string && *string!='\0'){
+    while ( *string!='\0'){
         if( *string>='1' && *string<='9' && cpt){
             ret= atoi(string);
             break;
@@ -55,29 +56,38 @@ SIGNED_LENGTH parse_next(const char* string){//returns atoi of the second number
     return ret;
 }
 
-char * set_to_beginning( char* str){//sets a str to the first iteration of '0'; returns a null string otherwhise.
+char * set_to_first_bracket( char* str){//sets a str to the first iteration of '0'; returns a null string otherwhise.
   int i=0;
-  while(str[i]!='0' && str[i]!='\0' && str[i]!='\n') i++;
+  while(str[i]!='{' && str[i]!='\0') i++;
 
-  if(str[i]=='0') return &str[i];
+  if(str[i]=='{') return &str[i];
   return NULL;
 }
 
-S_SCALE parse_scale(char *string){ //parses a scale; returns null scale if no scale is found
+S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if no scale is found or if there are invalid chars in the scale
     if(string==NULL) return 0;
     S_SCALE ret=0;
     NOTE note=0;
-    char *tmp= set_to_beginning(string);
+    char *tmp= set_to_first_bracket(string);
+    
+    if(!tmp) return ERROR_FLAG;
+    tmp++;
 
-    while(*tmp!='}' && tmp!=NULL){
-        
-        if(*tmp>='1' && *tmp<='9'){ 
+    CPT zero_check =0; //checks that '0' is present in the scale
+
+    while(*tmp!='}' && *tmp!='\0' ){
+      
+        if(*tmp>='0' && *tmp<='9'){ 
+            if(*tmp=='0') zero_check=1;
             note=atoi(tmp)%12;
+            //if(note>11) return ERROR_FLAG;
             add_note(&ret, note);
-            if(note >9) tmp++; //avoids problem with 10 or eleven
-        }
+            while(isdigit(*tmp)) tmp++; //avoids problem with 10 or eleven
+        }else if( !(*tmp==' ' || *tmp=='\t' || *tmp!='\n') ) {return ERROR_FLAG;}
         tmp++;
     }  
+ 
+    if(*tmp!='}' || !zero_check) return ERROR_FLAG;
     return ret;
 }
 

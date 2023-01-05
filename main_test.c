@@ -18,6 +18,7 @@
 #include "chordprint.h"
 #include "parseloop.h"
 #include "writeenv.h"
+#include "syntaxcheck.h"
 
 
 
@@ -154,8 +155,8 @@ int main(){
   //fprint_env( stdout, user_saved);
  // write_env("test.txt", user_saved);
 
-  S_MODES m1= generate_modes(1370); 
-  S_MODES m2= generate_modes(1370);
+  //S_MODES m1= generate_modes(1370); 
+ // S_MODES m2= generate_modes(1370);
 
  // printf("%d\n", equals_harmo(m1, m2));
   //S_CHORD_PROG *ch1= str_to_chord_prog("[I, IV,V]");
@@ -163,12 +164,21 @@ int main(){
 
   //printf("%d\n", equals_chprog(ch1, ch2));
 
-  save_modes(m1, user_saved);
-   save_modes(m1, user_saved);
+ // save_modes(m1, user_saved);
+   //save_modes(m1, user_saved);
   //print_saved_modes(user_saved, 1);
   //print_modes(user_saved->saved_modes->next->modes);
   //modes_in_saved(m1, user_saved->saved_modes);
   //printf("%d\n",scale_comp_lexi(1370 , i[6]));
 
- return 0;
+ // printf("%d\n", atoi("a12fpoezpojrojzj"));
+
+  //printf("%b\n", parse_scale(" 4 3 2 1 0}"));
+  //print_scale( parse_scale("{  0 44 4 3 2 1 } "));
+
+  printf("%d %d %d %d %d\n", printcheck(" 1 "), removecheck("10"), savescalecheck(" {0 2 4 5 7 9 11 }"), scalecheck("rnd"), scalecheck("rand 07 1"));
+ 
+ free_userinfo(user_saved);
+  return 0;
+
 }

@@ -24,8 +24,8 @@ int main()
    
  
   //initialises the user saved info structure
-  user_saved=malloc(sizeof(S_USERINFO));
-  init_userinfo(user_saved);
+  user_data=malloc(sizeof(S_USERINFO));
+  init_userinfo(user_data);
 
   /* Intializes random number generator */
   time_t t;
@@ -35,8 +35,8 @@ int main()
   printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
-  cmdline_parseloop();
+  cmdline_parseloop(user_data);
 
-  free_userinfo(user_saved);
+  free_userinfo(user_data);
   return 0;
 }

@@ -32,8 +32,8 @@ int main(){
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
 
-  user_saved=malloc(sizeof(S_USERINFO));
-  init_userinfo(user_saved);
+  user_data=malloc(sizeof(S_USERINFO));
+  init_userinfo(user_data);
 
   //CHORD_DEGREES chord= get_degrees(1370);
   //print_bits(chord);
@@ -177,10 +177,22 @@ int main(){
   //print_scale( parse_scale("{  0 44 4 3 2 1 } "));
 
   //printf("%d %d %d %d %d\n", printcheck(" 1 "), removecheck("10"), savescalecheck(" {0 2 4 5 7 9 11 }"), scalecheck("rnd"), scalecheck("rand 07 1"));
- print_chord_prog(str_to_chord_prog("[I , IV, V]"));
+ // print_chord_prog(str_to_chord_prog("[I , IV, V]"));
 
- printf("1");
- free_userinfo(user_saved);
+
+  printf("scheck1 : %d\n", syntaxcheck("scale save { 0 2 4 5 7 9 11 }\n"));
+
+  printf("scheck2: %d\n", syntaxcheck("chprog rand\n"));
+
+  printf("scheck3: %d\n", syntaxcheck("read command zfekfekz "));
+
+
+  printf("%d", harmocheck(" save { 0 2 3 4 1 9 }"));
+
+  printf(" rez is : %d\n" ,two_num_args_check(" 1 5 "));
+  
+ //printf("test\n");
+ free_userinfo(user_data);
   return 0;
 
 }

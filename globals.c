@@ -2,7 +2,7 @@
 #include "types.h"
 #include <stdlib.h>
 
-S_USERINFO * user_saved=NULL ; //user_saved stuff
+S_USERINFO * user_data=NULL ; //user_saved stuff
 
 CPT nb_entries=0;  //nb entries currently in chord_book 
 CPT nb_entries_max=0; //maxnum of entries in chordbook

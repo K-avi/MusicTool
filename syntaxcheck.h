@@ -15,4 +15,8 @@ extern bool removecheck(char *str);
 
 extern bool printcheck(char *str);
 
+extern bool harmocheck(char * str);
+
+extern bool two_num_args_check(char * str);
+
 #endif

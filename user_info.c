@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 
 
 
@@ -56,6 +57,7 @@ void print_saved_scale( S_USERINFO * user_data, LENGTH index){
 	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of scale is : %d\n", user_data->scales_num); return; }
 	print_scale(tmp->scale);
 }
+
 
 
 
@@ -309,6 +311,57 @@ void remove_chprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at in
 		}
 	}
 	user_info->progs_num--;
+}
+
+
+S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index){//retrieves the scale contained at "index"
+//n ERROR_FLAG otherwise.
+
+	if(user_data->scales_num<index) return ERROR_FLAG; 
+
+	S_SAVED_SCALES *tmp = user_data->saved_scales; 
+	u_char i=0;
+	while (tmp && (i<index)) {
+		tmp=tmp->next;
+		i++;
+	}
+	if(!tmp) return ERROR_FLAG; 
+	return tmp->scale;
+}
+
+
+S_MODES get_modes( S_USERINFO *user_data, INDEX index){//retrieves the mode contained at index n NULL otherwise
+
+	if(!user_data) return NULL;
+	if(!user_data->saved_modes) return NULL;
+	if(user_data->modes_num<index) return NULL;
+
+
+	S_SAVED_MODES*tmp = user_data->saved_modes; 
+	u_char i=0;
+	while (tmp && (i<index)) {
+		tmp=tmp->next;
+		i++;
+	}
+	if(!tmp) return NULL; 
+	return tmp->modes;
+}
+
+S_CHORD_PROG* get_chprog( S_USERINFO *user_data, INDEX index){//retrieves the chprog contained at index n NULL otherwise
+
+	if(!user_data) return NULL;
+	if(!user_data->saved_progs) return NULL;
+	if(user_data->progs_num<index) return NULL;
+
+
+	S_SAVED_PROGS *tmp = user_data->saved_progs; 
+	u_char i=0;
+	while (tmp && (i<index)) {
+		tmp=tmp->next;
+		i++;
+	}
+	if(!tmp) return NULL; 
+	return tmp->ch_prog;
 }
 
 

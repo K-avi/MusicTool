@@ -5,6 +5,10 @@
 
 #include <stdbool.h>
 
+#define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')
+
+#define END_OF_LINE_CHAR( chr) (chr == '\0' || chr=='#')
+
 //different renames of char to make reading easier;
 typedef unsigned char NOTE; //generic uchar to rpz notes
 typedef unsigned char LENGTH; // -/- length

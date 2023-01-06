@@ -28,6 +28,9 @@ extern S_SCALE get_scale_of_modes ( S_USERINFO * user_data, CPT modes_num, CPT s
 extern void remove_scale( S_USERINFO * user_info, CPT index );
 extern void remove_modes( S_USERINFO * user_info, CPT index );
 
+extern S_CHORD_PROG* get_chprog( S_USERINFO *user_data, INDEX index);
+extern S_MODES get_modes( S_USERINFO *user_data, INDEX index);
+extern S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index);
 
 //test only 
 

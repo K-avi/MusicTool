@@ -15,3 +15,12 @@ Features for MusicTool 1.3:
 
 Features for MusicTool 1.4: 
     writing stuff to midi files maybe ? 
+
+
+
+ERROR MESSAGES FLAGS FOR SYNTAXCHECKER!!!
+
+
+
+
+MODIFY PARSE FUNCTIONS TO TAKE USER INFO AS ARGUMENT !!!!!!!

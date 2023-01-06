@@ -12,9 +12,7 @@
 
 //  SYNTAX CHECKING DOESNT ACCOUNT FOR LINES THAT CONTAIN A COMMAND N THEN A # WILL HAVE TO FIX
 
-#define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')
 
-#define END_OF_LINE_CHAR( chr) (chr == '\0' || chr=='#')
 
 
 
@@ -34,6 +32,7 @@ bool printcheck(char *str){//syntax check for the print commands
     if(*tmp=='\0') return 0;
 
     //number? 
+    if(!isdigit(*tmp)) return 0;
     while(isdigit(*tmp)) tmp++;
 
     
@@ -73,7 +72,7 @@ bool savescalecheck(char *str){//syntax check for saving scale and modes
     char *tmp=str;
     while( *tmp==' '  || *tmp=='\n' || *tmp== '\t') tmp++;
 
-    if( *tmp =='\0') return 0;
+    if( *tmp =='\0') return 1;
 
 
     if(*tmp=='{'){
@@ -101,7 +100,7 @@ bool saveprogcheck(char *str){//syntax check for saving chprogs
     char *tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++;
 
-    if( END_OF_LINE_CHAR(*tmp)) return 0;
+    if( END_OF_LINE_CHAR(*tmp)) return 1;
 
 
     if(*tmp=='['){
@@ -255,32 +254,43 @@ bool harmocheck(char * str){
 
     if( END_OF_LINE_CHAR(*tmp)) return 0;
 
-    else if(!strncmp(tmp, "remove", 6)){ // harmo remove N
+    if(!strncmp(tmp, "remove", 6)){ // harmo remove N
         return removecheck(tmp+6);
     }else if(!strncmp(tmp, "print", 5)){ // harmo print N
         return printcheck(tmp+5);
     }else if(!strncmp (tmp ,"saved",5)){ //harmo saved scale N
+        tmp+=5;
         while(NEUTRAL_CHAR(*tmp)) tmp++;
 
         if(!strncmp(tmp, "scale", 5)){
+             
             return one_num_arg_check(tmp+5);
         }
         else return 0;
     }else if(!strncmp (tmp ,"save",4)){ //harmo save N || harmo save as scale I J
-
+        tmp+=4;
+       
         while(NEUTRAL_CHAR(*tmp)) tmp++;
         if(*tmp=='{'){  //case:harmo save N
-            return savescalecheck(tmp+4);
+    
+            return savescalecheck(tmp);
         }else if(!strncmp(tmp, "as", 2)){ //case : harmo save as scale I J
             tmp+=2; 
+
+            printf("%s\n", tmp);
             
             while(NEUTRAL_CHAR(*tmp))tmp++; 
-            if(!strncmp(tmp,  "scale", 4)) return two_num_args_check(tmp+4);
+            if(!strncmp(tmp,  "scale", 5)) {
+                printf("%s\n", tmp);
+                return two_num_args_check(tmp+5);
+            }
             else return 0;
         
-        } 
+        }else if( END_OF_LINE_CHAR(*tmp) ){return 1;}
     }else if( !strncmp(tmp, "rand", 4)){ // harmo rand || harmo rand N
         return zero_one_arg_check(tmp+4);
+    }else if( ! strncmp(tmp , "scale", 5)){
+        return savescalecheck(tmp+5);
     }
 
     return false;
@@ -305,7 +315,7 @@ bool chprogcheck(char * str){ //checks that a string containing a chprog command
     }else if(!strncmp(tmp, "print", 5)){
         return printcheck(tmp+5);
     }else if(!strncmp (tmp ,"save",4)){
-        return savescalecheck(tmp+4);
+        return saveprogcheck(tmp+4);
     }
     return false; 
 }
@@ -428,6 +438,8 @@ bool syntaxcheck(char *str){
         ret =writecheck(tmp+5);
     }else if (!strncmp(tmp, "env",3)){
         ret =envcheck(tmp+3);
+    }else if (!strncmp(tmp, "quit",4)){
+        ret =1;
     }else ret=commentcheck(tmp) | emptycheck(tmp);
     return ret;
 }

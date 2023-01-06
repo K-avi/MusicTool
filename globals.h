@@ -5,7 +5,7 @@
 
 
 
-extern  S_USERINFO * user_saved;
+extern  S_USERINFO * user_data;
 extern bool EXIT_INFO;
 extern unsigned short compt_scale;
 extern unsigned short compt_harmo;

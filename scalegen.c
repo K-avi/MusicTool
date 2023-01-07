@@ -84,7 +84,7 @@ S_SCALE generate_ran_scale(LENGTH length){ //generates a random scale of 'length
 }
 
 S_SCALE gen_ran_scale_var(){ //generates a random scale of a random length between 1 and 12
-    return random()%MAXLENGTH;
+    return rand()%MAXLENGTH;
 }
 
 

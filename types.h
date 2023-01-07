@@ -5,6 +5,12 @@
 
 #include <stdbool.h>
 
+#ifdef WIN32 
+typedef unsigned char u_char; 
+typedef unsigned short u_short; 
+typedef unsigned short ushort; 
+#endif
+
 #define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')
 
 #define END_OF_LINE_CHAR( chr) (chr == '\0' || chr=='#')
@@ -18,6 +24,7 @@ typedef signed char TRIADS_BITS; // specific use ; symbolises the 4 bits of a ch
 typedef signed char DEGREES_BITS; // -/- that contains the degree
 typedef unsigned char INDEX; // generic index
 typedef unsigned char CHORD; //chord rpz : 
+
 /*
 first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
 3 diminished and 4 augmented
@@ -104,6 +111,16 @@ typedef struct{
     CPT modes_num;
 }S_USERINFO;
 
+
+
+
+//////////////////////////////////////////////// SYNTAX_FLAGS
+
+
+
+#define SYNTAX_OK 1 
+#define SYNTAX_NO_ARG 2 
+#define SYNTAX_INVALID_CHAR 3 
 
 
 #endif

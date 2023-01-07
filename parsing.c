@@ -11,6 +11,23 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+
+#ifdef WIN32 
+
+char * strndup( char * str, size_t chars){
+    if(!str) return NULL;
+    char * buffer; 
+    int n; 
+    buffer=(char*) malloc(chars+1); 
+
+    if(buffer){
+        for(n=0; ((n<chars) && (str[n]!=0)); n++) buffer[n]= str[n];
+        
+    }
+    return buffer;
+}
+#endif
+
 LENGTH parse_scale_length(const char* string){//returns the length of a scale if a char between 0 and 9 is 
 //in a string and 13 otherwise
 

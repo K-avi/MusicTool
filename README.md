@@ -13,7 +13,8 @@ However it has most of the features I was planning on having at first which incl
 -a way to load/write an environment from/to a file
 -a basic save system
 -a way to check if a scale/harmo/chprog already exists in an environment n if so not save/write it again.
+-a very basic syntax checker 
 
-before releasing the 1.0 version of MusicTool I'd like to finish implementing the syntax checker. 
+The syntax checker might be buggy , if you encounter any problems/weird behavior feel free to contact me.
 
 To build MusicTool from source just type "make MusicTool" from command line (assuming make is installed on your computer).

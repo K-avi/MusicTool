@@ -27,8 +27,8 @@ extern SYNTAX_ERROR parenthesis_check( FILE * f);
 
 extern SYNTAX_ERROR env_check(char * str);
 
-//test 
+#ifdef DEBUG
 extern SYNTAX_ERROR env_scale_check ( char *str) ;
 extern char* file_to_string( char* str);
-
+#endif
 #endif

@@ -1,9 +1,10 @@
 Features needed for MusicTool 1.0: 
-    actual syntax checker 
     more documentation maybe
 
 Features for MusicTool 1.1: 
     a library of utility functions , retrieve inverse of scale, add a note to a scale , check if a chprog can be built from a scale , retrieve scale from chprog, do vector of scale ,... 
+
+    calling MusicTool with arguments like -read -rand -harmo,...
 
 Features for MusicTool 1.2: 
     implementing dodecaphonic series, 12 tone matrixes n operations on them 
@@ -15,12 +16,3 @@ Features for MusicTool 1.3:
 
 Features for MusicTool 1.4: 
     writing stuff to midi files maybe ? 
-
-
-
-ERROR MESSAGES FLAGS FOR SYNTAXCHECKER!!!
-
-
-
-
-MODIFY PARSE FUNCTIONS TO TAKE USER INFO AS ARGUMENT !!!!!!!

@@ -32,11 +32,9 @@ extern S_CHORD_PROG* get_chprog( S_USERINFO *user_data, INDEX index);
 extern S_MODES get_modes( S_USERINFO *user_data, INDEX index);
 extern S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index);
 
-//test only 
-
+#ifdef DEBUG
 extern S_CHORD_PROG * duplicate_chprog( S_CHORD_PROG * chprog);
-
 extern CPT modes_in_saved (S_MODES mode, S_SAVED_MODES * saved_modes);
-
+#endif
 
 #endif // USER_INFO_H_INCLUDED

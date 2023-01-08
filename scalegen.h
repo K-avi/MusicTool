@@ -36,10 +36,8 @@ extern S_SCALE get_prime_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_complementary_scale(S_SCALE scale);
 
-
-//testing only 
-
+#ifdef DEBUG
 extern SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2);
-
+#endif
 
 #endif

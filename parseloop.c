@@ -11,7 +11,6 @@
 #include "user_info.h"
 #include "parsing.h"
 #include "harmo.h"
-#include "types.h"
 #include "writeenv.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -88,12 +87,9 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
     }  else if(!strncmp(&line[i], "remove",6)){
           
           indexx=parse_index(line);
-         // printf("%d",index);
           if(indexx==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
           else{remove_scale(user_saved, indexx);}
-          
-          
-        
+             
     } else {
         printf("runtime scaleparse error\n");
         
@@ -182,15 +178,12 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
       }
       else if(strstr(line, "0")!=NULL){
 
-        printf("\nscale parsed as\n" );
+        printf("\nscale parsed as" );
         tmp_saved_scale=parse_scale(line);
-
         print_scale(tmp_saved_scale);
-        //printf("\nand saved at index %d\n", user_saved->modes_num);
 
         if (parsed_modes) free(parsed_modes);
         parsed_modes=generate_modes(tmp_saved_scale);
-        //printf("parsed is %p\n", parsed_modes);
 
         save_modes(parsed_modes,user_saved);
       
@@ -198,7 +191,6 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
 
         printf("\nsmodes in memory as\n" );
         print_modes(tmp_saved_mode);
-        //printf("\nand saved at index %d\n", compt_harmo++);
         save_modes(tmp_saved_mode,user_saved);
         
       }else{
@@ -241,11 +233,11 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         l2=parse_next(line);
         if(tmp_chprog) {
 
-          //printf("in fullrand %p\n", tmp_chprog);
+          
             free_chord_prog(tmp_chprog);
         }
 
-       // printf("%d, %d\n", l1, l2);
+     
         if(l1==-1){
         
             tmp_chprog=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
@@ -266,9 +258,6 @@ void chprogparse(char * line , S_USERINFO* user_saved){
 
          }else{
            save_chprog(ch_parsed, user_saved);
-           //printf("chord prog saved at index %d\n", user_saved->progs_num);
-
-           //printf("in save chprog [ %p\n", ch_parsed);
            free_chord_prog(ch_parsed);
          }
        
@@ -314,41 +303,20 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
     if(line[i]==10 || line[i]=='\0'){ 
         printf("MusicTool is a simple interpreter that does music oriented operations.\nMusicTool currently supports 5 types of commands.\ncommand starting with the keyword \"scale\" do operations on scales.\ncommands starting with the keyword \"harmo\" do operations on harmonised scales.\nCommand starting with the keyword \"chprog\" do operations on chord progressions.\nCommands starting with read do file parsing.\nCommands starting with write do file writing.\nTo see the list of functions for each keyword please type \"help\" followed by one of the 5 keywords.\nIf you wish to quit MusicTool, simply type \"quit\"\n");
     }else if(!strncmp(&line[i], "scale", 5)){
-       /* printf("\ntype 'scale rand x' to generate a scale of x length with x being an integer between 1 and 12\n");
-        printf("\ntype 'scale rand' to generate a scale of a random length \n");
-        printf("\ntype 'scale save { 0 .... }' to save the scale you passed after it if  save scale is called without argument, the last generated scale will be saved\n");
-        printf("\ntype 'scale print n' to print the nth scale you saved\n");
-        printf("\ntype 'scale remove n' to remove the scale saved at index n\n");*/
+      
         printf("\ntype 'scale rand x' to generate a scale of x length with x being an integer between 1 and 12\ntype 'scale rand' to generate a scale of a random length\ntype 'scale save { 0 .... }' to save the scale you passed after it if  save scale is called without argument, the last generated scale will be saved\ntype 'scale print n' to print the nth scale you saved\ntype 'scale remove n' to remove the scale saved at index n\n");
 
     }else if(!strncmp(&line[i], "harmo", 5)){
-        /*printf("\ntype 'harmo rand x' to generate an harmonised scale of length x with x being an integer between 1 and 12\n");
-        printf("\ntype 'harmo rand' to generate an harmonised scale of random length\n");
-        printf("\ntype 'harmo scale { 0 ... }' to harmonise a scale passed as argument \n");
-        printf("\ntype 'harmo saved scale n' to harmonise the nth scale you saved\n");
-        printf("\ntype 'save { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\n");
-        printf("\ntype 'print n' to print the harmonised scale saved at index n \n");
-        printf("\ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\n");
-        printf("\ntype 'remove n' to remove the modes saved at index n\n");*/
-
+       
         printf("\ntype 'harmo rand x' to generate an harmonised scale of length x with x being an integer between 1 and 12\ntype 'harmo rand' to generate an harmonised scale of random length\ntype 'harmo scale { 0 ... }' to harmonise a scale passed as argument \ntype 'harmo saved scale n' to harmonise the nth scale you saved\ntype 'save { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\ntype 'print n' to print the harmonised scale saved at index n \ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\ntype 'remove n' to remove the modes saved at index n\n");        
     }else if(!strncmp(&line[i], "chprog",6 )){
-        //printf("\ntype 'coherand x y' to generate a chord prog of length x using a scale of length y using a book of prebuilt chordprogs\n");
-        //printf("\ntype 'coherand x' to generate a chord prog of length x using a scale of rand length using a book of prebuilt chordprogs\n");
-       /* printf("\ntype 'chprog rand x y' to generate a chord prog of length x using a scale of length y\n");
-        printf("\ntype 'chprog rand x' to generate a chord prog of length x using a scale of a random length\n");
-        printf("\ntype 'chprog rand' to generate a chord prog of a random length from a scale of random length \n");
-        printf("\ntype 'chprog save [ I, IIm, .... ]' to save the chprog you passed after it if  save chprog is called without argument, the last generated chprog will be saved\n");
-        printf("\ntype 'chprog print n' to print the nth chprog you saved\n");
-        printf("\ntype 'chprog remove n' to remove the chprog saved at index n\n");*/
+       
 
         printf("\ntype 'chprog rand x y' to generate a chord prog of length x using a scale of length y\ntype 'chprog rand x' to generate a chord prog of length x using a scale of a random length\ntype 'chprog rand' to generate a chord prog of a random length from a scale of random length \ntype 'chprog save [ I, IIm, .... ]' to save the chprog you passed after it if  save chprog is called without argument, the last generated chprog will be saved\ntype 'chprog print n' to print the nth chprog you saved\ntype 'chprog remove n' to remove the chprog saved at index n\n");
        // printf("\ntype 'extract scale n' to extract the scale from the chprog saved at index n\n");
         //printf("\ntype 'extract scale [I......]' to extract the scale from the chprog passed as argument\n");
     }else if(!strncmp(&line[i], "read",4 )){
-        
-        /*printf("\ntype : \"read command [filename]\" to interpret commands from a file. The file must begin with \"MusicTool:command\"\n");
-        printf("\ntype: \"read env [filename]\" to load an environment from a file. The file must begin with \"MusicTool:environment\"\n");*/
+      
         printf("\ntype : \"read command [filename]\" to interpret commands from a file. The file must begin with \"MusicTool:command\"\ntype: \"read env [filename]\" to load an environment from a file. The file must begin with \"MusicTool:environment\"\n");
     }else if(!strncmp(&line[i], "write",4 )){
         
@@ -365,7 +333,7 @@ void clearglobals(){
     if(tmp_saved_mode) free(tmp_saved_mode);
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
-   // if(begin) free(begin);
+  
 }
 
 void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"

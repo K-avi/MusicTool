@@ -17,14 +17,14 @@ extern char* file_to_string( char* str);
 extern char* syntax_error_flag_to_str(SYNTAX_ERROR flag );
 
 
-/*  test only*/
+#ifdef DEBUG
 extern CHORD word_bits_to_chord (WORD_BITS word);
 extern WORD_BITS str_to_wordbits( char * str);
 
 extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length);
 
 extern void free_str_tab(char ** str_tab, LENGTH length);
-
+#endif
 
 
 #endif // PARSING_H_INCLUDED

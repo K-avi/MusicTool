@@ -34,6 +34,7 @@ int main(){
 
   user_data=malloc(sizeof(S_USERINFO));
   init_userinfo(user_data);
+  free_userinfo(user_data);
 
   //CHORD_DEGREES chord= get_degrees(1370);
   //print_bits(chord);
@@ -180,19 +181,32 @@ int main(){
  // print_chord_prog(str_to_chord_prog("[I , IV, V]"));
 
 
-  printf("scheck1 : %d\n", syntaxcheck("scale save { 0 2 4 5 7 9 11 }\n"));
+  //printf("scheck1 : %d\n", syntaxcheck("scale save { 0 2 4 5 7 9 11 }\n"));
+// printf("scheck2: %d\n", syntaxcheck("chprog rand\n"));
 
-  printf("scheck2: %d\n", syntaxcheck("chprog rand\n"));
-
-  printf("scheck3: %d\n", syntaxcheck("read command zfekfekz "));
+ // printf("scheck3: %d\n", syntaxcheck("read command zfekfekz "));
 
 
-  printf("%d", harmocheck(" save { 0 2 3 4 1 9 }"));
+  //printf("%d", harmocheck(" save { 0 2 3 4 1 9 }"));
 
-  printf(" rez is : %d\n" ,two_num_args_check(" 1 5 "));
+ // printf(" rez is : %d\n" ,two_num_args_check(" 1 5 "));
   
  //printf("test\n");
- free_userinfo(user_data);
+ //free_userinfo(user_data);
+
+ //FILE *f = fopen("test.txt", "r"); 
+    //int check= parenthesis_check(f);
+//printf("%d\n", check);
+ //fclose(f);
+
+ //printf("%d\n", parse_scale(" { a 2 { 0 1 3 5 7 } \n { 0 2 3} \n"));
+
+  char * file= file_to_string("examples/environment_ex1.txt");
+
+  printf("%s\n", file);
+  SYNTAX_ERROR ttest= env_check(file);
+  //printf("%d\n", ttest );
+  free(file);
   return 0;
 
 }

@@ -13,7 +13,6 @@
 #include "harmo.h"
 #include "types.h"
 #include "writeenv.h"
-#include "syntaxcheck.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,7 +41,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
-    if(line[i]==10 || line[i]=='\0'){ printf("syntax error\n"); return;}
+    if(line[i]==10 || line[i]=='\0'){ printf("scale parse error\n"); return;}
 
     if (!strncmp(&line[i], "rand",4)) {
 
@@ -96,7 +95,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
           
         
     } else {
-        printf("syntax error\n");
+        printf("runtime scaleparse error\n");
         
     }
 }
@@ -106,7 +105,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
-    if(line[i]==10 || line[i]=='\0'){ printf("syntax error\n"); return;}
+    if(line[i]==10 || line[i]=='\0'){ printf("runtime harmoparse error\n"); return;}
 
     if (!strncmp(&line[i], "rand",4)) {
 
@@ -222,7 +221,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
           
 
     }else {
-        printf("syntax error\n");
+        printf("runtime harmoparse error 2\n");
     }
     
 	
@@ -234,7 +233,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
-    if(line[i]==10 || line[i]=='\0'){ printf("syntax error\n"); return;}
+    if(line[i]==10 || line[i]=='\0'){ printf("runtime chprogparse error\n"); return;}
     
     if(!strncmp(&line[i], "rand",4)){
 
@@ -356,7 +355,7 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
         printf("\ntype : \"write env [filename]\" to write the current environment to a file. If the file already exists, it must begin with \"MusicTool:env\". If it doesn't , a new file is created.\n");
    
     }else {
-        printf("syntax error\n");
+        printf("runtime helpparse error\n");
     }
 
 }
@@ -422,16 +421,21 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
    
     CPT line_num=1;
     ushort l=0;
+ 
+    SYNTAX_ERROR syntax_flag= SYNTAX_OK;
 
     while(fgets(line, 256, f)){
 
       l=0;
-       if(!syntaxcheck(line)) {
-        printf("syntax error [placeholder message] at line %d\n", line_num+1); 
+      syntax_flag=syntaxcheck(line);
+      if(syntax_flag) {
+       
+        printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
+        
         printf("  >>>");
-        break;
+        return;
 
-       }
+      }
         
       while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ){
         l++;
@@ -455,7 +459,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
         file_command_parseloop(&line[l+5], user_saved);
         
       }else {
-        printf("syntax error at line %d\n", line_num+1);
+        printf("runtime file reading error at line %d\n", line_num+1);
         free(clean_filename);
         fclose(f);
         return;
@@ -472,12 +476,16 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
 
 
 void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might change behavior of env command to make it also work in command line
+//syntax checking ugly af; will have to redo smtg more coherent at some point
+
 
    if(!filename){
         return;
     }
 
     ushort k=0; 
+ 
+    
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
     if(filename[k]=='\n' || filename[k]=='\0'){
@@ -497,11 +505,23 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
         clean_filename[i]='\0'; 
 
     }else {  clean_filename= strdup(name_start);}
+
+    char * str_syntax_check= file_to_string(clean_filename);
+
+    SYNTAX_ERROR  syntax_flag= env_check(str_syntax_check);
+    free(str_syntax_check);
+    if(syntax_flag){
+   
+      printf("syntax error : %s\n",syntax_error_flag_to_str(syntax_flag));
+      free(clean_filename);
+     
+      return ;
+    }
     FILE *f=fopen(clean_filename, "r") ;
 
 
     if(!f){
-        printf("error file doesn't \"%s\" exist; please pass a valid filename as argument.\n", filename);
+        printf("error file \"%s\" doesn't exist; please pass a valid filename as argument.\n", filename);
         free(clean_filename);
         return;
     }
@@ -521,20 +541,16 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
         ushort i=0;
 
 
-        /*if(!syntaxcheck(line)) {
-        printf("syntax error [placeholder message] at line %d\n", line_num+1); 
-        printf("  >>>");
-        break;
-
-        }*/
       while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
         i++;
       }
       if(line[i]== '\n' || line[i]=='#') { ++line_num; continue;//empty line or comment
         
-      }else if(!strncmp(&line[i], "scale env", 9)){
+      }else if(!strncmp(&line[i], "env scale", 9)){
 
         //check that '(' is the next not space \t \n character
+
+        printf("1");
         char* tmp= &line[i+9];
         ushort line_env= line_num+1;
         u_char nxt_chr= next_not_blank_comment( tmp, '(');
@@ -590,7 +606,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
               continue;
             }else{
             
-               printf("syntax error at line: %d no open parentheses after scale env\n", line_num);
+               printf("runtime error at line: %d no open parentheses after scale env\n", line_num);
                free(clean_filename);
                fclose(f);
                return;
@@ -598,14 +614,14 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             line_num++;
           }
         }else{
-           printf("syntax error at line %d\n", line_num+1);
+           printf("runtime error at line %d\n", line_num+1);
           free(clean_filename);
           fclose(f);
           return;
         }
         
 
-      }else if(!strncmp(&line[i], "harmo env", 9)){
+      }else if(!strncmp(&line[i], "env harmo", 9)){
         //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
         ushort line_env= line_num+1;
@@ -661,7 +677,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             }else if( nxt_chr==2){
               continue;
             }else{
-               printf("syntax error at line: %d no open parentheses after harmo env\n", line_env);
+               printf("runtime error at line: %d no open parentheses after harmo env\n", line_env);
                free(clean_filename);
                fclose(f);
                return;
@@ -669,12 +685,12 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             line_num++;
           }
         }else{
-           printf("syntax error at line %d\n", line_num+1);
+           printf("runtime error at line %d\n", line_num+1);
           free(clean_filename);
           fclose(f);
           return;
         }
-      }else if(!strncmp(&line[i], "chprog env", '\n')){
+      }else if(!strncmp(&line[i], "env chprog", 9)){
           //check that '(' is the next not space \t \n character
         char* tmp= &line[i+10];
         ushort line_env= line_num+1;
@@ -734,7 +750,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             }else if( nxt_chr==2){
               continue;
             }else{
-               printf("syntax error at line: %d no open parentheses after chprog env\n", line_env);
+               printf("runtime error at line: %d no open parentheses after chprog env\n", line_env);
                free(clean_filename);
                fclose(f);
                return;
@@ -742,13 +758,13 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             line_num++;
           }
         }else{
-           printf("syntax error at line %d\n", line_num+1);
+           printf("runtime error at line %d\n", line_num+1);
           free(clean_filename);
           fclose(f);
           return;
         }
       }else {
-        printf("syntax error at line %d\n", line_num+1);
+        printf("runtime error at line %d\n", line_num+1);
         free(clean_filename);
         fclose(f);
         return;
@@ -797,7 +813,7 @@ void writeparse(char * str , S_USERINFO* user_info){
     }else write_env(&str[i], user_info);
 
   }else{
-    printf("syntax error\n");
+    printf("runtime writeparse error\n");
      return;
   }
 }
@@ -811,6 +827,8 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
     setbuf(stdout, NULL);
     char line[256];
     ushort i=0;
+   
+    SYNTAX_ERROR syntax_error= SYNTAX_OK;
 
     while (true){
         
@@ -826,8 +844,12 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       while(NEUTRAL_CHAR(line[i])){
         i++;
       }
-      if(!syntaxcheck(line)) {
-        printf("syntax error [placeholder message]\n"); 
+      syntax_error= syntaxcheck(line);
+      if(syntax_error) {
+      
+       // printf("%d\n", syntax_error);
+        printf("syntax error : %s\n",syntax_error_flag_to_str(syntax_error));
+        
         printf("  >>>");
         continue;
       }

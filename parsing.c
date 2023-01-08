@@ -93,18 +93,20 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if
     CPT zero_check =0; //checks that '0' is present in the scale
 
     while(*tmp!='}' && *tmp!='\0' ){
-      
+       
         if(*tmp>='0' && *tmp<='9'){ 
             if(*tmp=='0') zero_check=1;
             note=atoi(tmp)%12;
             //if(note>11) return ERROR_FLAG;
             add_note(&ret, note);
             while(isdigit(*tmp)) tmp++; //avoids problem with 10 or eleven
-        }else if( !(*tmp==' ' || *tmp=='\t' || *tmp!='\n'  || *tmp!='}' || *tmp!='\0')) { return ERROR_FLAG;}
+        }else if( !(*tmp==' ' || *tmp=='\t' || *tmp=='\n'  || *tmp=='}' || *tmp=='\0')) { return ERROR_FLAG;}
         if(*tmp!='}')tmp++;
     }  
  
-    if(*tmp!='}' || !zero_check) return ERROR_FLAG;
+    if(*tmp!='}' )return ERROR_FLAG;
+    if(!zero_check) return ERROR_FLAG;
+   
     return ret;
 }
 
@@ -499,4 +501,55 @@ unsigned char next_not_blank_comment( char *str, char chr){
         }else { return 0;}
     }
     return 2;
+}
+
+
+char* syntax_error_flag_to_str(SYNTAX_ERROR flag ){
+    if(!flag ) return NULL; //case syntax ok; shouldn't be passed
+    switch (flag) {
+    case SYNTAX_INVALID_SCALE : return "scale passed isn't valid\n";
+    case SYNTAX_NO_ARG : return "no args passed\n"; //passed 0 args when one or more needed
+    case SYNTAX_INVALID_CHAR: return "invalid char\n";  //passed invalid chars
+    case SYNTAX_UNCLOSED_SCALE: return "scale was opened but never closed\n";  //scale opened n never closed
+    case SYNTAX_UNCLOSED_PROG : return "chprog was opened but never closed\n";  //chprog opened n never closed 
+    case SYNTAX_TOO_MUCH_ARGS : return "too much arguments given\n";//too much args passed 
+    case SYNTAX_TOO_FEW_ARGS : return "too few arguments given\n"; //passed too few args 
+    case SYNTAX_INVALID_PROG:return "invalid chprog\n"; //invalid prog
+    case SYNTAX_GENERIC_ERROR: return "generic error\n";//generic error
+    case SYNTAX_INVALID_ARG: return "argument passed isn't valid\n"; //invalid argument error
+
+
+    case SYNTAX_TWO_PAR_OPEN: return "two parenthesis opened\n";  //two ( (  not separated by a ) in an env file.
+    case SYNTAX_TWO_PAR_CLOSED: return "two parenthesis closed\n";  //same with ))
+    case SYNTAX_UNMATCHED_OPENED_PAR :return "parenthesis was opened but never closed \n"; //par opened never closed. 
+    case SYNTAX_UNMATCHED_CLOSED_PAR: return "parenthesis was closed but never open\n"; //par closed never opened
+    case SYNTAX_UNCLOSED_ENV: return "environment was never closed\n";
+    case SYNTAX_MISSING_PAR: return "parenthesis missing\n";
+    case SYNTAX_INVALID_SOF: return "invalid start of file\n";
+    default: return NULL;
+
+    }
+}
+
+char* file_to_string( char* str){
+
+    if(!str) return NULL;
+    char * buffer = 0;
+    long length;
+    FILE * f = fopen (str, "rb");
+
+    if (f){
+    fseek (f, 0, SEEK_END);
+    length = ftell (f);
+    fseek (f, 0, SEEK_SET);
+    buffer = malloc (length+1);
+    if (buffer){
+        fread (buffer, 1, length, f);
+    }
+    fclose (f);
+    }else{ return NULL;}
+
+    if(!buffer ) return NULL;
+    buffer[length]='\0';
+    return buffer;
 }

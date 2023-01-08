@@ -1,8 +1,6 @@
 MusicTool:environment
 env scale (
 
-{ 0 1 5 8 }
-
 { 0 2 4 5 7 9 11 }
 
 { 0 1 2 3 5 6 8 10 }
@@ -10,29 +8,8 @@ env scale (
 { 0 2 4 5 7 9 10 11 }
 
 { 0 1 4 5 6 8 9 }
-)
-env harmo (
 
 { 0 1 5 8 }
-
-{ 0 1 3 4 5 6 10 11 }
-)
-env chprog (
-[ Vm, II+, bV, bIIIm, bII-, Vm, II+, Vm, III-, bV+ ]
-[ II, V, I ]
-[ Im, IVm, V ]
-)
-env scale (
-
-{ 0 1 5 8 }
-
-{ 0 2 4 5 7 9 11 }
-
-{ 0 1 2 3 5 6 8 10 }
-
-{ 0 2 4 5 7 9 10 11 }
-
-{ 0 1 4 5 6 8 9 }
 
 { 0 1 8 10 }
 
@@ -40,17 +17,49 @@ env scale (
 )
 env harmo (
 
-{ 0 1 5 8 }
-
 { 0 1 3 4 5 6 10 11 }
+
+{ 0 1 5 8 }
 
 { 0 1 8 10 }
 
 { 0 1 3 5 6 8 9 11 }
 )
 env chprog (
-[ Vm, II+, bV, bIIIm, bII-, Vm, II+, Vm, III-, bV+ ]
 [ II, V, I ]
 [ Im, IVm, V ]
+[ Vm, II+, bV, bIIIm, bII-, Vm, II+, Vm, III-, bV+ ]
+[ VIm, III+, bV-, II, bVI+, III+, II+, I+, II, I+ ]
+)
+env scale (
+
+{ 0 2 4 5 7 9 11 }
+
+{ 0 1 2 3 5 6 8 10 }
+
+{ 0 2 4 5 7 9 10 11 }
+
+{ 0 1 4 5 6 8 9 }
+
+{ 0 1 5 8 }
+
+{ 0 1 8 10 }
+
+{ 0 4 6 7 10 }
+)
+env harmo (
+
+{ 0 1 3 4 5 6 10 11 }
+
+{ 0 1 5 8 }
+
+{ 0 1 8 10 }
+
+{ 0 1 3 5 6 8 9 11 }
+)
+env chprog (
+[ II, V, I ]
+[ Im, IVm, V ]
+[ Vm, II+, bV, bIIIm, bII-, Vm, II+, Vm, III-, bV+ ]
 [ VIm, III+, bV-, II, bVI+, III+, II+, I+, II, I+ ]
 )

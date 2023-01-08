@@ -130,3 +130,87 @@ LENGTH *select_random_degrees(S_SCALE scale, LENGTH scale_length, CPT num){
   }
   return ret;
 }*/
+
+
+
+/*SYNTAX_ERROR parenthesis_check( FILE * f){//checks that each parenthesis opened is closed n
+//that one parenthesis is opened at a time in a FILE
+    if(!f) return SYNTAX_GENERIC_ERROR;
+    printf("reached\n");
+    u_char openpar=1; 
+    u_char closedpar=0;
+    char line[256];
+    char *tmp;
+
+    int cpt=0;
+    while( fgets(line, 256,f)){
+      //  printf("%s\n", line);
+        tmp=line;
+       // printf("%s\n", tmp);
+       // printf("%lu\n", strlen(tmp));
+       printf("%d : %s\n",  ++cpt, tmp);
+       for(int i=0; i<strlen(tmp); i++){
+           printf("\t %d\n", *tmp);
+       }
+      
+        while(!END_OF_LINE_CHAR(*tmp) || *tmp!='\n'){
+
+            printf("%c", *tmp); 
+            tmp++;
+            /*printf("1\n");
+            while(*tmp!='(' || *tmp!=')' || !END_OF_LINE_CHAR(*tmp) || *tmp!='\n'){
+                printf("%c",*tmp);
+                tmp++;
+            }
+            printf("2\n");
+            if(END_OF_LINE_CHAR(*tmp) || *tmp!='\n') break;
+
+            else{
+                if(*tmp=='(') {
+                    if(!openpar) return SYNTAX_UNMATCHED_OPENED_PAR;
+                    openpar=0; 
+                    closedpar=1;
+                }else if(*tmp ==')'){
+                     printf("in" );
+                    if(!closedpar) return SYNTAX_UNMATCHED_CLOSED_PAR; 
+                    openpar=1; 
+                    closedpar=0;
+                }
+
+                
+            }
+        //}
+        
+    }
+
+    //if( (!openpar) || closedpar) return SYNTAX_GENERIC_ERROR;
+    return SYNTAX_OK;
+}*/
+/*bool envcheck( char * str , bool *begin, bool*end ){ //not yet 
+
+    char * tmp= str; 
+
+    while(*tmp==' ' || *tmp=='\t') tmp++; 
+
+    if(END_OF_LINE_CHAR(*tmp) || *tmp=='\n') return SYNTAX_OK; //\n isnt neutral cuz reading from file
+
+    else if(!strncmp(tmp, "env",3)){
+        tmp+=3;
+
+        while(*tmp==' ' || *tmp=='\t') {
+            tmp++;
+        }
+        if(strncmp(tmp, "scale", 5)){
+            if(!)
+            tmp+=5;
+            while(*tmp=='\t' || *tmp==' ') tmp++;
+            if( ! (END_OF_LINE_CHAR(*tmp) || *tmp==' ' )) return SYNTAX_INVALID_CHAR;
+
+        }else if(strncmp(tmp, "harmo", 5)){
+
+        }else if(strncmp(tmp, "chprog", 6)){
+
+        }else return SYNTAX_GENERIC_ERROR;
+    }
+    return SYNTAX_INVALID_ARG;
+}*/

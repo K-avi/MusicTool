@@ -1,6 +1,6 @@
 MusicTool:environment 
 
-scale env
+env scale
 
 #this is a comment 
 

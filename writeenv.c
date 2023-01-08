@@ -25,7 +25,7 @@
 void print_env(S_USERINFO* user_info){
     if(!user_info) return;
 
-    printf("scale env (\n");
+    printf("env scale (\n");
 
     S_SAVED_SCALES * tmp= user_info->saved_scales;
 
@@ -44,7 +44,7 @@ void print_env(S_USERINFO* user_info){
     S_SAVED_MODES * tmp1= user_info->saved_modes;
     
   
-    printf("harmo env (\n");
+    printf("env harmo (\n");
     if(tmp1){
         while(tmp1){
             if(tmp1->modes){
@@ -58,7 +58,7 @@ void print_env(S_USERINFO* user_info){
     S_SAVED_PROGS * tmp2= user_info->saved_progs;
     if(!tmp2) return;
     tmp2=tmp2->next;
-     printf("chprog env (\n");
+     printf("env chprog (\n");
     if(tmp2){
         while(tmp2){
             if(tmp2->ch_prog){
@@ -77,7 +77,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     if(!user_info) return 0;
     if(f==NULL) return 0;
 
-    fprintf(f,"scale env (\n");
+    fprintf(f,"env scale (\n");
 
     S_SAVED_SCALES * tmp= user_info->saved_scales;
     
@@ -92,7 +92,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     fprintf(f,")\n");
 
     S_SAVED_MODES * tmp1= user_info->saved_modes;
-     fprintf(f,"harmo env (\n");
+     fprintf(f,"env harmo (\n");
     if(tmp1){
         while(tmp1){
             if(tmp1->modes){
@@ -104,7 +104,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     fprintf(f,")\n");
 
     S_SAVED_PROGS * tmp2= user_info->saved_progs;
-     fprintf(f,"chprog env (\n");
+     fprintf(f,"env chprog (\n");
     if(tmp2){
         while(tmp2){
             if(tmp2->ch_prog){

@@ -9,6 +9,7 @@
 typedef unsigned char u_char; 
 typedef unsigned short u_short; 
 typedef unsigned short ushort; 
+typedef unsigned int uint;
 #endif
 
 #define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')
@@ -24,7 +25,7 @@ typedef signed char TRIADS_BITS; // specific use ; symbolises the 4 bits of a ch
 typedef signed char DEGREES_BITS; // -/- that contains the degree
 typedef unsigned char INDEX; // generic index
 typedef unsigned char CHORD; //chord rpz : 
-
+typedef unsigned char SYNTAX_ERROR;
 /*
 first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
 3 diminished and 4 augmented
@@ -112,15 +113,41 @@ typedef struct{
 }S_USERINFO;
 
 
+//macro functions for environment syntax check
+
+#define NEUTRAL_CHAR_ENV( chr) ((chr)==' ' || chr=='\t')
+#define EOL_ENV( chr) ((chr)=='\n')
+#define EOF_ENV( chr) ((chr)=='\0')
+#define COMMENT_ENV( chr) ((chr)=='#')
+
 
 
 //////////////////////////////////////////////// SYNTAX_FLAGS
 
 
+//some of the error messages are defined but never used !
 
-#define SYNTAX_OK 1 
-#define SYNTAX_NO_ARG 2 
-#define SYNTAX_INVALID_CHAR 3 
+#define SYNTAX_OK 0 //case when no error
+#define SYNTAX_INVALID_SCALE 1
+#define SYNTAX_NO_ARG 2 //passed 0 args when one or more needed
+#define SYNTAX_INVALID_CHAR 3  //passed invalid chars
+#define SYNTAX_UNCLOSED_SCALE 4  //scale opened n never closed
+#define SYNTAX_UNCLOSED_PROG 5  //chprog opened n never closed 
+#define SYNTAX_TOO_MUCH_ARGS 6 //too much args passed 
+#define SYNTAX_TOO_FEW_ARGS 7 //passed too few args 
+#define SYNTAX_INVALID_PROG 8 //invalid prog
+#define SYNTAX_GENERIC_ERROR 9//generic error
+#define SYNTAX_INVALID_ARG 10 //invalid argument error
+
+////env only error
+#define SYNTAX_TWO_PAR_OPEN 11  //two ( (  not separated by a ) in an env file.
+#define SYNTAX_TWO_PAR_CLOSED 12  //same with ))
+#define SYNTAX_UNMATCHED_OPENED_PAR 13 //par opened never closed. 
+#define SYNTAX_UNMATCHED_CLOSED_PAR 14 //par closed never opened
+#define SYNTAX_UNCLOSED_ENV 15
+#define SYNTAX_MISSING_PAR 16
+//#define SYNTAX_INVALID_SCALE 17
+#define SYNTAX_INVALID_SOF 17 //invalid start of file
 
 
 #endif

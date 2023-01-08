@@ -13,6 +13,8 @@ extern SIGNED_LENGTH parse_next (const char* string);
 extern CHORD str_to_chord( char * str);
 extern S_CHORD_PROG* str_to_chord_prog( char* str);
 extern unsigned char next_not_blank_comment( char *str, char chr);
+extern char* file_to_string( char* str);
+extern char* syntax_error_flag_to_str(SYNTAX_ERROR flag );
 
 
 /*  test only*/

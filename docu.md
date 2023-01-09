@@ -1,3 +1,77 @@
+DOCU: EN 
+
+summary: 
+
+I: Introduction
+
+II: what objecs can MusicTool represent?  
+  1: abstract scales 
+  2: abstract harmo 
+  3: abstract chprog 
+
+III: how to use MusicTool from command line ?
+  1: the scale command 
+  2: the harmo command 
+  3: the chprog command
+  4: the read / write commands
+  5: additionnal commands/syntax elements
+
+IV: writing MusicTool files: 
+  1: writing command files
+  2: writing environment files
+
+
+
+I: 
+    MusicTool is a simple command line and file interpreter coded in C.
+    Like it's name suggests it's main purpose is to be a tool for Music operations such as scale generation,
+    chord prog generations and analyzing various properties of musical sets and objects.
+
+II.1: what are the MusicTool scales? 
+    to represented musical scales, MusicTool uses sets of numbers%12. 
+    Each number present in the set represents a note present in the scale, with the number indicating how many semitones separate the fundamental note of the scale from the note.
+    for example , the major scale would be represented as { 0 2 4 5 7 9 11 }. 
+    If we take C as the fundamental note of the major scale, it would be C D E F G A B
+
+    How are scales encoded ? 
+    Scales are stored on 11 bits as unsigned short integers. It is assumed that every scale contains a fundamental note, 
+    each other note present in the scale is stored as a bit set to 1. If the first bit of the u_short is set it means that the scale 
+    contains a minor second, if the second is set a major second, ...
+    
+    This representation is different from the standart pitch class set representation , if you want to learn more on 
+    abstract set and pitch class set you can visit this website : https://ianring.com/musictheory/scales/
+
+II.2: what are MusicTool harmonised scales?
+    
+    If you need to learn about the notion of a mode in Music Theory please visit : https://en.wikipedia.org/wiki/Mode_(music) 
+    harmonised scale are a list of abstract scale. And are stored as such. 
+    I assumed that it was more to store the whole harmonised scale once it is generated 
+    rather than storing it as it's fundamental mode and generating it each time it is called for an operation. 
+    Harmonised scale being a list of u_shorts of length between 2 and 11 they don't take much space. I might change this implementation 
+    if I realise it's more interresting to store them as their fundamental mode and generate them if need be (to print them for example)
+
+II.3: what are MusicTool chprog ? 
+    
+    A chprog is a list of abstract triads using the degree notation of chords. An abstract triad consists on the root degree of the
+    triad relative to a tonic chord and the type of the triad. 
+    Due to it being easier to store , the triads are noted as such : 
+    major triad: [DEGREE]
+    minor triad: [DEGREE]m
+    diminished triad: [DEGREE]-
+    augmented triad: [DEGREE]+ 
+    I didn't use ° to represent the diminished chord bc it's an UTF-8 character and I didn't feel like working with them.
+    
+    chprogs are noted between brackets. 
+    For example: the chprog [ IVm, V, Im] represents the chord progression from a minor triad located at the fourth degree of a scale
+    to a  major one located at the fifth to another major one located on the tonic. 
+    if we take the C harmonic minor scale, the progression [ IVm , V, I]  would be Fm, G, Cm
+
+
+
+
+
+
+DOCU: FR 
 g 
 
 on cherche a harmoniser une gamme representee dans un ushort. 

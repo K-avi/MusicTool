@@ -2,7 +2,7 @@
 #define TYPES_H
 
 
-
+//#define DEBUG
 #include <stdbool.h>
 
 #ifdef WIN32 

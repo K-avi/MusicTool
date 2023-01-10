@@ -247,9 +247,9 @@ SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argumen
 
     while(NEUTRAL_CHAR( *tmp)) tmp++; //whatever next 
 
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK; 
+    if(END_OF_LINE_CHAR(*tmp) ||  *tmp=='\n') return SYNTAX_OK; 
 
-    return SYNTAX_TOO_MUCH_ARGS; //too much args error
+    return SYNTAX_INVALID_ARG; //too much args error
 }
 
 
@@ -580,7 +580,7 @@ SYNTAX_ERROR env_chprog_check ( char *str) {//checks the syntax of the substring
 }
 SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as one beeeg string.
 
-    if(!str) return SYNTAX_GENERIC_ERROR;
+    if(!str) return SYNTAX_INVALID_ARG;
     char * tmp= str;
     SYNTAX_ERROR scheck=0;
 

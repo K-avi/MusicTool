@@ -24,6 +24,8 @@
 
 #include <wchar.h>
 
+
+
 int main(){
 
   time_t t;
@@ -34,7 +36,7 @@ int main(){
 
   user_data=malloc(sizeof(S_USERINFO));
   init_userinfo(user_data);
-  free_userinfo(user_data);
+  
 
   //CHORD_DEGREES chord= get_degrees(1370);
   //print_bits(chord);
@@ -201,12 +203,17 @@ int main(){
 
  //printf("%d\n", parse_scale(" { a 2 { 0 1 3 5 7 } \n { 0 2 3} \n"));
 
-  char * file= file_to_string("examples/environment_ex1.txt");
+  //char * file= file_to_string("examples/environment_ex1.txt");
 
-  printf("%s\n", file);
-  SYNTAX_ERROR ttest= env_check(file);
+ // printf("%s\n", file);
+ // SYNTAX_ERROR ttest= env_check(file);
   //printf("%d\n", ttest );
-  free(file);
+  //free(file);
+
+  //file_environment_parseloop("examples/environment_ex1.txt   ", user_data );
+  file_command_parseloop("examples/command_ex1.txt", user_data);
+
+  free_userinfo(user_data);
   return 0;
 
 }

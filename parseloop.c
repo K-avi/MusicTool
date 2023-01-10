@@ -216,7 +216,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
         printf("runtime harmoparse error 2\n");
     }
     
-	
+    
 }
 
 
@@ -353,9 +353,12 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     }
 
     char* name_start= &filename[k];
+
+
+   // printf("%s\n", &filename[k]);
     
 
-    int i= strcspn(name_start, "\n"), j=strlen(name_start);
+    int i= strcspn(name_start, "\n#\t "), j=strlen(name_start);
     char* clean_filename;
     if(i!=j){
         clean_filename = malloc(( j) * sizeof(char));
@@ -364,6 +367,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
 
     }else {  clean_filename= strdup(filename);}
     
+   // printf("%s\n", clean_filename);
     FILE *f=fopen(clean_filename, "r") ;
 
 
@@ -399,8 +403,9 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       if(syntax_flag) {
        
         printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
+        free(clean_filename);
+        fclose(f);
         
-        printf("  >>>");
         return;
 
       }
@@ -464,7 +469,9 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
     char* name_start= &filename[k];
     
 
-    int i= strcspn(name_start, "\n"), j=strlen(name_start);
+
+
+    int i= strcspn(name_start, " \n\t#"), j=strlen(name_start);
     
     char* clean_filename;
     if(i!=j){

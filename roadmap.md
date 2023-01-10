@@ -1,5 +1,5 @@
 Features needed for MusicTool 1.0: 
-    more documentation maybe
+    done! 
 
 Features for MusicTool 1.1: 
     a library of utility functions , retrieve inverse of scale, add a note to a scale , check if a chprog can be built from a scale , retrieve scale from chprog, do vector of scale ,... 

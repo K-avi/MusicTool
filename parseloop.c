@@ -8,6 +8,7 @@
 #include "rand.h"
 #include "scalegen.h"
 #include "syntaxcheck.h"
+#include "types.h"
 #include "user_info.h"
 #include "parsing.h"
 #include "harmo.h"
@@ -336,118 +337,6 @@ void clearglobals(){
   
 }
 
-void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"
-    
-    
-
-    if(!filename){
-        return;
-    }
-
-    ushort k=0; 
-    while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
-
-    if(filename[k]=='\n' || filename[k]=='\0'){
-      printf("please pass a filename as argument");
-      return;
-    }
-
-    char* name_start= &filename[k];
-
-
-   // printf("%s\n", &filename[k]);
-    
-
-    int i= strcspn(name_start, "\n#\t "), j=strlen(name_start);
-    char* clean_filename;
-    if(i!=j){
-        clean_filename = malloc(( j) * sizeof(char));
-        memcpy(clean_filename, name_start,  j);
-        clean_filename[i]='\0'; 
-
-    }else {  clean_filename= strdup(filename);}
-    
-   // printf("%s\n", clean_filename);
-    FILE *f=fopen(clean_filename, "r") ;
-
-
-    if(!f){
-        printf("error file \"%s\" doesn't exist; please pass a valid filename as argument.\n", filename);
-        free(clean_filename);
-        return;
-    }
-    char line[256];
-
-    
-    fgets(line, 256, f);
-   
-
-   
-    if(strncmp(line, "MusicTool:commands", 18)){
-        printf("error invalid start of file; please begin your file with \"MusicTool:commands\"\n");
-        free(clean_filename);
-        fclose(f); 
-        return;
-    }
-
-   
-    CPT line_num=1;
-    ushort l=0;
- 
-    SYNTAX_ERROR syntax_flag= SYNTAX_OK;
-
-    while(fgets(line, 256, f)){
-
-      l=0;
-      syntax_flag=syntaxcheck(line);
-      if(syntax_flag) {
-       
-        printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
-        free(clean_filename);
-        fclose(f);
-        
-        return;
-
-      }
-        
-      while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ){
-        l++;
-      }
-      if(line[l]== 10 || line[l]=='#') { ++line_num; continue;}//empty line or comment
-      else if(!strncmp(&line[l], "scale ",6)){
-        
-        scaleparse(&line[l+6], user_saved);
-        
-      }else if(!strncmp(&line[l], "harmo",5)){
-        harmoparse(&line[l]+5, user_saved);
-        
-      }else if(!strncmp(&line[l], "chprog", 6)){
-        chprogparse(&line[l+6], user_saved);
-        
-      }else if(!strncmp(&line[l], "help",4)){
-        helpparse(&line[l+4]);
-      
-      }else if(!strncmp(&line[l], "read ",5)){
-       // printf("in");
-        file_command_parseloop(&line[l+5], user_saved);
-        
-      }else {
-        printf("runtime file reading error at line %d\n", line_num+1);
-        free(clean_filename);
-        fclose(f);
-        return;
-      }
-      line_num++;
-    }
-
-
-    free(clean_filename);
-    fclose(f);
-    printf("file read correctly!\n");
-    return;
-}
-
-
 void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might change behavior of env command to make it also work in command line
 //syntax checking ugly af; will have to redo smtg more coherent at some point
 
@@ -751,6 +640,129 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
     fclose(f);
     printf("environment loaded succesfully!\n");
 }
+
+void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"
+    
+    
+
+    if(!filename){
+        printf("filename incorrect\n");
+        return;
+    }
+
+    ushort k=0; 
+    while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
+
+    if(filename[k]=='\n' || filename[k]=='\0'){
+      printf("please pass a filename as argument");
+      return;
+    }
+
+    char* name_start= &filename[k];
+
+
+   // printf("%s\n", &filename[k]);
+    
+
+    int i= strcspn(name_start, "\n#\t "), j=strlen(name_start);
+    char* clean_filename;
+    if(i!=j){
+        clean_filename = malloc(( j) * sizeof(char));
+        memcpy(clean_filename, name_start,  j);
+        clean_filename[i]='\0'; 
+
+    }else {  clean_filename= strdup(filename);}
+    
+   // printf("%s\n", clean_filename);
+    FILE *f=fopen(clean_filename, "r") ;
+
+
+    if(!f){
+        printf("error file \"%s\" doesn't exist; please pass a valid filename as argument.\n", filename);
+        free(clean_filename);
+        return;
+    }
+    char line[256];
+
+    
+    fgets(line, 256, f);
+   
+
+   
+    if(strncmp(line, "MusicTool:commands", 18)){
+        printf("error invalid start of file; please begin your file with \"MusicTool:commands\"\n");
+        free(clean_filename);
+        fclose(f); 
+        return;
+    }
+
+   
+    CPT line_num=1;
+    ushort l=0;
+ 
+    SYNTAX_ERROR syntax_flag= SYNTAX_OK;
+
+    while(fgets(line, 256, f)){
+
+      l=0;
+      syntax_flag=syntaxcheck(line);
+      if(syntax_flag) {
+       
+        printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
+        free(clean_filename);
+        fclose(f);
+        
+        return;
+
+      }
+        
+      while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ){
+        l++;
+      }
+      if(line[l]== 10 || line[l]=='#') { ++line_num; continue;}//empty line or comment
+      else if(!strncmp(&line[l], "scale ",6)){
+        
+        scaleparse(&line[l+6], user_saved);
+        
+      }else if(!strncmp(&line[l], "harmo",5)){
+        harmoparse(&line[l]+5, user_saved);
+        
+      }else if(!strncmp(&line[l], "chprog", 6)){
+        chprogparse(&line[l+6], user_saved);
+        
+      }else if(!strncmp(&line[l], "help",4)){
+        helpparse(&line[l+4]);
+      
+      }else if(!strncmp(&line[l], "read",4)){
+    
+        l+=4;
+        while(NEUTRAL_CHAR(line[l])) l++;
+
+        if(!strncmp(&line[l], "command", 7)){
+          
+          file_command_parseloop(&line[l+7], user_saved);
+        }else if(!strncmp(&line[l], "environment",11)){
+          file_environment_parseloop(&line[l+11],user_saved);
+        }
+        
+      }else {
+        printf("runtime file reading error at line %d\n", line_num+1);
+        free(clean_filename);
+        fclose(f);
+        return;
+      }
+      line_num++;
+    }
+
+
+    free(clean_filename);
+    fclose(f);
+    printf("file read correctly!\n");
+    return;
+}
+
+
+
 
 
 void readparse(char * str ,S_USERINFO* user_saved){

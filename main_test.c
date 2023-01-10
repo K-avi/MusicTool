@@ -211,8 +211,11 @@ int main(){
   //free(file);
 
   //file_environment_parseloop("examples/environment_ex1.txt   ", user_data );
-  file_command_parseloop("examples/command_ex1.txt", user_data);
+  //file_command_parseloop("examples/command_ex1.txt", user_data);
+  //int *i = malloc(100);
+  //i[101]= 10;
 
+  
   free_userinfo(user_data);
   return 0;
 

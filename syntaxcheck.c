@@ -247,7 +247,7 @@ SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argumen
 
     while(NEUTRAL_CHAR( *tmp)) tmp++; //whatever next 
 
-    if(END_OF_LINE_CHAR(*tmp) ||  *tmp=='\n') return SYNTAX_OK; 
+    if(END_OF_LINE_CHAR(*tmp) ) return SYNTAX_OK; 
 
     return SYNTAX_INVALID_ARG; //too much args error
 }
@@ -381,6 +381,7 @@ SYNTAX_ERROR readcheck( char * str){
     if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS; 
 
     else if (!strncmp(tmp, "command", 7)){
+        //printf("checking");
         return filename_check(tmp+7);
     }else if (!strncmp(tmp, "env", 3)){
         return filename_check(tmp+3);

@@ -342,6 +342,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
 
 
    if(!filename){
+        printf("null pointer as filename\n");
         return;
     }
 
@@ -737,12 +738,15 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     
         l+=4;
         while(NEUTRAL_CHAR(line[l])) l++;
+       
 
         if(!strncmp(&line[l], "command", 7)){
           
           file_command_parseloop(&line[l+7], user_saved);
-        }else if(!strncmp(&line[l], "environment",11)){
-          file_environment_parseloop(&line[l+11],user_saved);
+
+        }else if(!strncmp(&line[l], "env",3)){
+         
+          file_environment_parseloop(&line[l+3],user_saved);
         }
         
       }else {

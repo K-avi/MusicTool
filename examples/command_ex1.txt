@@ -12,4 +12,5 @@ chprog rand
 harmo save 
 scale save 
 chprog save 
-aoezfizopze 
+
+read env examples/environment_ex3.txt 

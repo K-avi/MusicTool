@@ -2,145 +2,156 @@
 
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+      
         <title>mtool docu</title>
 
-         <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- css --><!doctype html>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css" >
+        
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!--custom css-->
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/styles_var.css">
+
     </head>
 
     <body>
 
-        <h1 >
+        <h1 class="text-center">
             MusicTool: documentation
         </h1>
-
-        <h2>
-            summary: 
-        </h2>
-        <div>
-            <div>
-                <ul>
-                    <li>
-                        <a href="#p1">
-                        I: Introduction
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#p2">
-                            II: what objecs can MusicTool represent?
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="#p21">
-                                1: abstract scales 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p22">
-                                2: abstract harmo 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p23">
-                                3: abstract chprog 
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+        <div class="card text-white bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <h2 class="text-left blue" >
+                    summary: 
+                </h2>
+                <br/>
+            </div>
+            <div class="card-body">
                 
-            
-                    <li>
-                        <a href="#p3">
-                        III: how to use MusicTool from command line ?
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="#p31">
-                                1: the scale command
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p32">
-                                2: the harmo command 
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p33">
-                                3: the chprog command
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p34">
-                                4: the read / write commands
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#p35">
-                                5: additionnal commands/syntax elements
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     
-                    <li>
-                        <a href="#p4">
-                            IV: writing MusicTool files: 
-                        </a>
                         <ul>
                             <li>
-                                <a href="#p41">
-                                1: writing command files
+                                <a href="#p1" class="text-justify">
+                                I: Introduction
                                 </a>
                             </li>
                             <li>
-                                <a href="p42">
-                                2: writing environment files
+                                <a href="#p2">
+                                    II: what objecs can MusicTool represent?
                                 </a>
+                                <ul>
+                                    <li>
+                                        <a href="#p21">
+                                        1: abstract scales 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p22">
+                                        2: abstract harmo 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p23">
+                                        3: abstract chprog 
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        
+                    
+                            <li>
+                                <a href="#p3">
+                                III: how to use MusicTool from command line ?
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="#p31">
+                                        1: the scale command
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p32">
+                                        2: the harmo command 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p33">
+                                        3: the chprog command
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p34">
+                                        4: the read / write commands
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p35">
+                                        5: additionnal commands/syntax elements
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <a href="#p4">
+                                    IV: writing MusicTool files: 
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="#p41">
+                                        1: writing command files
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p42">
+                                        2: writing environment files
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                    </li>
-                </ul>
+                    
+                
             </div>
         </div>
 
-
+        <br/>
         <div id="p1">
             <h2>
+            <u>
                I: Introduction:
+            </u>
             </h2>
-            <p>
+            <br/>
+            <p class="text-left">
                 MusicTool is a simple command line and file interpreter coded in C.
                 Like it's name suggests it's main purpose is to be a tool for Music operations such as scale generation,
                 chord prog generations and analyzing various properties of musical sets and objects.
             </p>
         </div>
-
+        <br/>
         <hr/>
-
+        <br/>
         <div id="p2">
             <h2>
-                II: what objecs can MusicTool represent?
+            <u>
+                II: what objecs can MusicTool represent :
+            </u>
             </h2>
             <br/>
 
             <div id="p21">
                 <h4>
+                <em>
                     II.1: what are the MusicTool scales : 
+                </em>
                 </h4>
-                <p>
+                <p class="text-left">
                     to represented musical scales, MusicTool uses sets of numbers%12. 
                     Each number present in the set represents a note present in the scale, with the number indicating how many semitones separate the fundamental note of the scale from the note.
                     for example , the major scale would be represented as { 0 2 4 5 7 9 11 }. 
@@ -158,9 +169,11 @@
 
             <div id="p22">
                 <h4>
+                <em>
                     II.2: what are MusicTool harmonised scales:
+                </em>
                 </h4>
-                <p>
+                <p class="text-left">
                     If you need to learn about the notion of a mode in Music Theory please visit the <a href="https://en.wikipedia.org/wiki/Mode_(music)" target="blank">wikipedia article on modes</a>
                     harmonised scale are a list of abstract scale. And are stored as such. 
                     I assumed that it was more to store the whole harmonised scale once it is generated 
@@ -171,9 +184,11 @@
             </div>
             <div id="p23">
                 <h4>
+                <em>
                     II.3: what are MusicTool chprog :
+                </em>
                 </h4>
-                <p>
+                <p class="text-left">
                     A chprog is a list of abstract triads using the degree notation of chords. An abstract triad consists on the root degree of the
                     triad relative to a tonic chord and the type of the triad. 
                     Due to it being easier to store , the triads are noted as such : 
@@ -190,47 +205,165 @@
 
                 </p>
             </div>
-
+            <br/>
+            <hr/>
+            <br/>
             <div id="p3">
                 <h2>
+                <u>
                     III: Using MusicTool from command line:
+                </u>
                 </h2>
-
+                <br/>
                 <div id="p31">
                     <h4>
+                    <em>
                         III.1: The scale keyword
+                    </em>
                     </h4>
-                    <p>
-
+                    <p class="text-left">
+                        The scale keyword is used to pass commands on scale. The commands currently available are : 
+                        -rand : rand generates random scale; 
+                                it can be passed with or without argument, if passed with an integer argument the scale  
+                                generated will be the length of the argument, otherwise the length of the scale and 
+                                the scale itself will be random. rand also makes the generated scale 
+                                the current temporary saved scale
+                        -save : save is used to save scales , if passed with a scale argument the scale passed will
+                                be saved;
+                                if passed without argument, the interpreter will check if there is currently a temporary
+                                scale saved and save it if it's the case. 
+                        -print : print has to be passed with one integer argument , it will print the scale stored at the 
+                                index passed;
+                        -remove : remove has to be passed with one integer argument, it will remove the scale stored at
+                                the index passed as argument if it exists and reindex the saved scales.
                     </p>
                 </div>
                 <div id="p32">
                     <h4>
+                    <em>
                         III.2: The harmo keyword
+                    </em>
                     </h4>
-                    <p>
-
+                    <p class="text-left">
+                        The harmo keyword is used to pass commands on harmonised scales. The commands currently available are: 
+                        -rand : rand generates a random harmonised sscale; 
+                                it can be passed with or without argument, if passed with an integer argument the harmonised scale  
+                                generated will be the length of the argument, otherwise the length of the harmonised scale and 
+                                the harmonised scale itself will be random. rand also makes the generated harmonised scale 
+                                the current temporary saved harmonised scale
+                        -save : save is used to save scales , if passed with a scale argument the scale passed will
+                                be harmonised and saved as an harmonised scale;
+                                if passed without argument, the interpreter will check if there is currently a temporary
+                                harmonised scale saved and save it if it's the case. 
+                        -save as scale : save as scale must be passed with two integers argument J I, it will save the
+                                Ith mode of the Jth harmonised scale as a scale if it exists and do nothing otherwise.  
+                        -scale : must be passed with one scale argument, will generate the harmonised scale of the scale
+                                passed as arg. And make it the current temporary saved harmonised scale
+                        -saved scale : must be passed with one integer argument, harmonises the saved scale stored at the
+                                    index passed if it exists and generates it's harmonised scale. The harmonised scale
+                                    generated is saved as the temporary saved harmonised scale  
+                        -print : print has to be passed with one integer argument , it will print the harmonised scale 
+                                stored at the index passed if it exists.
+                        -remove : remove has to be passed with one integer argument, it will remove the harmonised scale 
+                                stored at the index passed as argument if it exists and reindex the saved harmonised
+                                scales. 
                     </p>
                 </div>
                 <div id="p33">
                     <h4>
+                    <em>
                         III.3: The chprog keyword
+                    </em>
                     </h4>
+                    <p class="text-left">
+                        The chprog keyword is used to pass commands on chord progs. At the moment the only type of chord 
+                        progs available are triads. The commands currenlty available are : 
+                        
+                        -rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
+                                will generate a chprog of length I from a scale of length J; 
+                                if passed with one argument x will generate a random chord prog of random length from a
+                                scale of length x 
+                                if passed with none will generate a prog of rand length from a rand scale.
+                        -save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
+                                if passed without will save the temporary saved chprog if it exists.
+                        -print : passed with one integer argument prints the chprog stored at index n if it exists. 
+                        -remove : passed with one integer argument removes the chprog stored at index n if it exists 
+                                  and reindexes the remaining saved progs.
+
+                    </p>
                 </div>
                 <div id="p34">
                     <h4>
+                    <em>
                         III.4: The read/write keywords
+                    </em>
                     </h4>
-                    <p>
-
+                    <p class="text-left">
+                        -read command: must be passed with one filename argument, will read and execute the commands on a
+                                    MusicTool:command file if it exists. 
+                        -read env: must be passed with one filename argument, will load the environment stored on a 
+                                MusicTool:filename file and add it to the current environment if it exists. 
+                        -write env: must be passed with one filename argument. If the file passed already exists, 
+                                    and is a MusicTool:environment file will append the current environment to the one
+                                    stored on the environment file. If the file passed as argument doesn't exist, 
+                                    will create it and write the current environment on it. 
                     </p>
                 </div>
                 <div id="p35">
                     <h4>
-                        III.5: Other keywords
+                    <em>
+                        III.5: Other keywords/syntax elements
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        -help keyword : the help keyword can be passed without argument or with a string argument. if 
+                    passed without keyword it will print out general informations on MusicTool, 
+                    if passed with a the string of another keyword it will print out informations 
+                    on that keyword. 
+                        -quit keyword: must be passed without arguments. Exits MusicTool 
+                        -commentaries : MusicTool supports one line commentaries, everything after a '#' character in a
+                                        line will be considered as a commentary and won't be interpreted.
+
+                    </p>
+                </div>
+            </div>
+            <br/>
+            <hr/>
+            <br/>
+            <div id="p4">
+                <h2>
+                <u>
+                    IV: Writing MusicTool files :
+                </u>
+                </h2>
+                <br/>
+                <div id="p41">
+                    <h4>
+                    <em>
+                        IV.1: writing command files: 
+                    </em>
                     </h4>
                     <p>
+                        MusicTool commands can be written on files. A file that contains MusicTool commands must begin by 
+                        "MusicTool:commands". The commands available and their syntax are the same than the command line ones.
+                    </p>
+                </div>
 
+                <div id="p42">
+                    <h4>
+                    <em>
+                        IV.2: writing environment files: 
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        MusicTool environment can be written on files from command line with the command "write env" or by hand. An environment file must begin by "MusicTool:environment". to write an environment, you must begin by the keyword "env" followed by the type of the objects. The beginning and the end of the
+                        environment are marked by parenthesis 
+                        For example, to write a scale environment you must write "env scale" then open a parenthesis then 
+                        write the scales you want to load as MusicTool scale. 
+                        writing down harmonised scales works the same as scales except the environment must begin by 
+                        env harmo" 
+                        finally writing down a chprog env works the same except the env must begin by "env chprog".
+                        Multiple environments can be written in a single environment file.
                     </p>
                 </div>
             </div>

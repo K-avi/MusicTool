@@ -4,12 +4,12 @@ summary:
 
 I: Introduction
 
-II: what objecs can MusicTool represent?  
+II: what objecs can MusicTool represent : 
   1: abstract scales 
   2: abstract harmo 
   3: abstract chprog 
 
-III: how to use MusicTool from command line ?
+III: how to use MusicTool from command line :
   1: the scale command 
   2: the harmo command 
   3: the chprog command
@@ -66,9 +66,103 @@ II.3: what are MusicTool chprog ?
     to a  major one located at the fifth to another major one located on the tonic. 
     if we take the C harmonic minor scale, the progression [ IVm , V, I]  would be Fm, G, Cm
 
+III.1: the scale keyword: 
 
+    The scale keyword is used to pass commands on scale. The commands currently available are : 
+    -rand : rand generates random scale; 
+            it can be passed with or without argument, if passed with an integer argument the scale  
+            generated will be the length of the argument, otherwise the length of the scale and 
+            the scale itself will be random. rand also makes the generated scale 
+            the current temporary saved scale
+    -save : save is used to save scales , if passed with a scale argument the scale passed will
+            be saved;
+            if passed without argument, the interpreter will check if there is currently a temporary
+            scale saved and save it if it's the case. 
+    -print : print has to be passed with one integer argument , it will print the scale stored at the 
+             index passed;
+    -remove : remove has to be passed with one integer argument, it will remove the scale stored at
+              the index passed as argument if it exists and reindex the saved scales.
 
+III.2: the harmo keyword: 
+    The harmo keyword is used to pass commands on harmonised scales. The commands currently available are: 
+    -rand : rand generates a random harmonised sscale; 
+            it can be passed with or without argument, if passed with an integer argument the harmonised scale  
+            generated will be the length of the argument, otherwise the length of the harmonised scale and 
+            the harmonised scale itself will be random. rand also makes the generated harmonised scale 
+            the current temporary saved harmonised scale
+    -save : save is used to save scales , if passed with a scale argument the scale passed will
+            be harmonised and saved as an harmonised scale;
+            if passed without argument, the interpreter will check if there is currently a temporary
+            harmonised scale saved and save it if it's the case. 
+    -save as scale : save as scale must be passed with two integers argument J I, it will save the
+            Ith mode of the Jth harmonised scale as a scale if it exists and do nothing otherwise.  
+    -scale : must be passed with one scale argument, will generate the harmonised scale of the scale
+             passed as arg. And make it the current temporary saved harmonised scale
+    -saved scale : must be passed with one integer argument, harmonises the saved scale stored at the
+                   index passed if it exists and generates it's harmonised scale. The harmonised scale
+                  generated is saved as the temporary saved harmonised scale  
+    -print : print has to be passed with one integer argument , it will print the harmonised scale 
+             stored at the index passed if it exists.
+    -remove : remove has to be passed with one integer argument, it will remove the harmonised scale 
+              stored at the index passed as argument if it exists and reindex the saved harmonised
+              scales. 
 
+III.3: the chprog keyword: 
+    The chprog keyword is used to pass commands on chord progs. At the moment the only type of chord 
+    progs available are triads. The commands currenlty available are : 
+    
+    -rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
+            will generate a chprog of length I from a scale of length J; 
+            if passed with one argument x will generate a random chord prog of random length from a
+            scale of length x 
+            if passed with none will generate a prog of rand length from a rand scale.
+    -save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
+            if passed without will save the temporary saved chprog if it exists.
+
+    -print : passed with one integer argument prints the chprog stored at index n if it exists. 
+    -remove : passed with one integer argument removes the chprog stored at index n if it exists 
+              and reindexes the remaining saved progs.
+III.4: the read and write keyword : 
+    The read keyword can read from MusicTool files, the write keyword write on them.
+
+    -read command: must be passed with one filename argument, will read and execute the commands on a
+                   MusicTool:command file if it exists. 
+    -read env: must be passed with one filename argument, will load the environment stored on a 
+               MusicTool:filename file and add it to the current environment if it exists. 
+    -write env: must be passed with one filename argument. If the file passed already exists, 
+                and is a MusicTool:environment file will append the current environment to the one
+                stored on the environment file. If the file passed as argument doesn't exist, 
+                will create it and write the current environment on it. 
+
+III.5: other keywords: 
+
+    -help keyword : the help keyword can be passed without argument or with a string argument. if 
+                    passed without keyword it will print out general informations on MusicTool, 
+                    if passed with a the string of another keyword it will print out informations 
+                    on that keyword. 
+    -quit keyword: must be passed without arguments. Exits MusicTool 
+    -commentaries : MusicTool supports one line commentaries, everything after a '#' character in a
+                    line will be considered as a commentary and won't be interpreted.
+
+IV: Writing MusicTool files :
+
+IV.1: writing command files: 
+
+  MusicTool commands can be written on files. A file that contains MusicTool commands must begin by 
+  "MusicTool:commands". The commands available and their syntax are the same than the command line ones.
+
+IV.2: writing environment files: 
+  
+  MusicTool environment can be written on files from command line with the command "write env" or by hand. An environment file must begin by "MusicTool:environment". to write an environment, you must begin by the keyword "env" followed by the type of the objects. The beginning and the end of the
+  environment are marked by parenthesis 
+  For example, to write a scale environment you must write "env scale" then open a parenthesis then 
+  write the scales you want to load as MusicTool scale. 
+  writing down harmonised scales works the same as scales except the environment must begin by 
+  env harmo" 
+  finally writing down a chprog env works the same except the env must begin by "env chprog".
+  Multiple environments can be written in a single environment file.
+   
+    
 
 
 DOCU: FR 

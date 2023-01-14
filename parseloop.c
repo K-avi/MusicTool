@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/types.h>
 #include <stdlib.h>
 
@@ -24,6 +25,7 @@
 //scale globals
 S_SCALE tmp_saved_scale=0;
 S_SCALE scale_to_save=0;
+S_SCALE generated_scale=0;
 LENGTH length=0;
 SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
 
@@ -91,10 +93,41 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
           if(indexx==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
           else{remove_scale(user_saved, indexx);}
              
+    
+    }else if (!strncmp(&line[i],"invert" , 6)){
+        i+=6;
+        while (NEUTRAL_CHAR(line[i])) {
+          i++;
+        }
+        if(line[i]=='{'){
+          printf("%s\n", &line[i]);
+          generated_scale=parse_scale(&line[i]);
+          if(generated_scale!=ERROR_FLAG){
+            tmp_saved_scale=get_inverse_scale(generated_scale, get_length_kerni(generated_scale));
+            print_scale(tmp_saved_scale);
+          }else{
+            printf("please parse a valid scale\n");
+          }
+        }else if(!strncmp(&line[i], "saved", 5)){
+          i+=5;
+          while(NEUTRAL_CHAR(line[i])){
+            i++;
+          }
+          indexx=parse_index(&line[i]);
+          if(indexx!=-1){
+            generated_scale=get_saved_scale(user_saved, indexx); 
+            if(generated_scale!=ERROR_FLAG){
+              tmp_saved_scale=get_inverse_scale(generated_scale, get_length_kerni(generated_scale));
+              print_scale(tmp_saved_scale);
+            }else{
+              printf("placeholder error in inverse saved\n");
+            }
+          }
+        }
+
     } else {
         printf("runtime scaleparse error\n");
-        
-    }
+    }   
 }
 
 void harmoparse (char * line , S_USERINFO* user_saved ){

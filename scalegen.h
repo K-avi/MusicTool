@@ -38,6 +38,16 @@ extern S_SCALE get_complementary_scale(S_SCALE scale);
 
 #ifdef DEBUG
 extern SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2);
+extern unsigned short inverse_bit (S_SCALE scale );
+
+extern S_INTERVAL_STRUCTURE get_interval_struct(S_SCALE scale);
+extern int length_intv_struct(S_INTERVAL_STRUCTURE intervals);
+
+extern void  print_intv_struct(S_INTERVAL_STRUCTURE intervals);
+extern PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET scale, CPT n);
+
+
+
 #endif
 
 #endif

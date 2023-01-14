@@ -62,17 +62,17 @@ TRIADS_IN_SCALE * get_triads_length( S_SCALE scale, LENGTH length){// same as ge
   return ret;
 }
 
-CHORD_DEGREES get_degrees( S_SCALE scale){//returns the degrees from which u can generate a triad in a scale
+PITCH_CLASS_SET get_degrees( S_SCALE scale){//returns the degrees from which u can generate a triad in a scale
 //stored as a ushort   
     if(!scale) return 0;
 
     LENGTH length = get_length(scale);
 
-    CHORD_DEGREES ret= scale << 1;
+    PITCH_CLASS_SET ret= scale << 1;
     
     ret|= 1;
 
-    CHORD_DEGREES mask= ret;
+    PITCH_CLASS_SET mask= ret;
     //print_bits(ret);
     INDEX pos;
 
@@ -145,14 +145,14 @@ void free_chord_prog(S_CHORD_PROG* source){
 
 //from rand.c cuz makes more sense here
 
- DEGREES get_deg_from_chdeg( CHORD_DEGREES deg){//converts a degree stored in chord_degrees format to degrees format; 
+ DEGREES get_deg_from_chdeg( PITCH_CLASS_SET deg){//converts a degree stored in chord_degrees format to degrees format; 
 //in order to use it to generate the first 4 bits of a CHORD.
 
     DEGREES ret= nth_bit_pos(deg, 1);
     return ret;
 }//tested
 
-CHORD generate_chord(TRIADS_IN_SCALE triads, CHORD_DEGREES deg){//generates a chord from a triad and a degree 
+CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a chord from a triad and a degree 
   
   if(!triads || !deg) return 0;
 
@@ -185,3 +185,52 @@ bool equals_chprog( S_CHORD_PROG* chpr1, S_CHORD_PROG* chpr2){//returns 1 if two
   return 1;
 
 }
+
+
+void print_pcs( const PITCH_CLASS_SET pcs){ //prints the notes of a scale and it's length in a nice way :)
+    int i;
+    if(ERROR_FLAG_PCS & pcs ) return;
+    printf("\n{  ");
+    for(CPT i=0; i<12; i++){
+        if(GET_NTH(pcs, i)) printf("%d ", i);
+    }
+
+    printf("}\n");
+}
+
+
+
+PITCH_CLASS_SET chord_to_pcs(CHORD chord){
+  //turns a chord into it's triad in chord degrees notation.
+
+  if(!chord ) return 0;
+  
+  BITS triad= chord >>4;
+  BITS degree = chord & 15;
+
+ PITCH_CLASS_SET ret= 0;
+
+  switch (triad){
+  case MIN: ret= MINOR_PCS; break;
+  case MAJ: ret= MAJOR_PCS; break;
+  case AUG: ret= AUG_PCS; break;
+  case DIM: ret=DIM_PCS; break;
+  default:  ret=0;
+  }
+  if(!ret )return 0;
+
+
+  print_pcs(ret);
+  return rot_pcs(ret, degree);
+}
+
+PITCH_CLASS_SET chprog_to_pcs(const S_CHORD_PROG* chprog){
+  PITCH_CLASS_SET ret= 0;
+  for (INDEX cpt =0; cpt < chprog->length ; cpt ++){
+    
+  // print_pcs(chord_to_pcs(chprog->chord_prog[cpt]));
+    ret|= chord_to_pcs(chprog->chord_prog[cpt]);
+  }
+  return ret;
+} 
+

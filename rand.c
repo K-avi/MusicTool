@@ -31,7 +31,7 @@ TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads){//selects a random tr
   return (1<<ret);
 }
 
-CHORD_DEGREES select_rand_degree( CHORD_DEGREES deg){//selects ONE random degree in a CHORD_DEGREES short
+PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random degree in a PITCH_CLASS_SET short
 
   if(!deg) return 0;
   LENGTH length= count_bits(deg);
@@ -50,7 +50,7 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
 
     print_scale(scale);
     if (!scale || !length) return NULL;
-    CHORD_DEGREES deg_w_chord= get_degrees(scale);
+    PITCH_CLASS_SET deg_w_chord= get_degrees(scale);
     //_bits(deg_w_chord);
 
     
@@ -98,13 +98,13 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
 
     }else{//u can generate two or more chords
 
-        CHORD_DEGREES curdeg= select_rand_degree(deg_w_chord);
+        PITCH_CLASS_SET curdeg= select_rand_degree(deg_w_chord);
         S_SCALE curmode = rot(scale , nth_bit_pos(curdeg, 1));//bad bc I calculate index multiple times
         //i should change the design so that i get an index that I use to get the triads n stuff
         TRIADS_IN_SCALE curtriads= triads_at_fund(curmode);
         TRIADS_IN_SCALE seltriads= select_rand_triads(curtriads);
 
-        CHORD_DEGREES prevdeg=curdeg;
+        PITCH_CLASS_SET prevdeg=curdeg;
 
         for(CPT i=0; i<length; i++){
 

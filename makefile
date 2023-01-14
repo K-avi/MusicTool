@@ -16,6 +16,10 @@ test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o chordgen.o rand
 MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o main.o
 	$(CC) -o $@ $(CFLAGS) $^
 
+
+mtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o main.o
+	$(CC) -o $@ $(CFLAGS) $^
+	
 %.o:%.c %.h
 	$(CC)  $(GCC_FLAGS) -c  $<
 

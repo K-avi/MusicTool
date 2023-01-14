@@ -2,7 +2,7 @@
 #define TYPES_H
 
 
-//#define DEBUG
+#define DEBUG
 #include <stdbool.h>
 
 #ifdef WIN32 
@@ -26,6 +26,7 @@ typedef signed char DEGREES_BITS; // -/- that contains the degree
 typedef unsigned char INDEX; // generic index
 typedef unsigned char CHORD; //chord rpz : 
 typedef unsigned char SYNTAX_ERROR;
+typedef unsigned char BITS; //generic uchar 
 /*
 first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
 3 diminished and 4 augmented
@@ -59,7 +60,7 @@ typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a
 typedef unsigned char TRIADS_IN_SCALE; //used to know which triads are contained in a scale 
 /* lsb is set if minor chord, is in the scale 7 bit if major chord, 6th bit if dim chord, 5th if augmented chord */
 
-typedef unsigned short CHORD_DEGREES; //used to know which degrees are in a scale. 
+typedef unsigned short PITCH_CLASS_SET; //used to know which degrees are in a scale. 
 //behaves similarly to S_SCALE but w an important difference: the LSB corresponds to the fundamental note in the scale 
 
 /* for example: the I IV V chord pattern would be stored as 
@@ -111,6 +112,18 @@ typedef struct{
     CPT scales_num;
     CPT modes_num;
 }S_USERINFO;
+
+typedef unsigned long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bytes so this makes me kinda sad
+
+//the interval structure is divided into 4 bits sections containing numbers from 1 to 11 .
+//from bit 48 onward bits are flags. 
+//special case : a scale containing only 1 note is translated into an empty interval structure which 
+//is printed as [12]
+
+//S_INTERVAL_STRUCTURE of { 0 2 4 5 7 9 11} (maj scale)
+// (40x0)  0001 0010 0010 0001 0010 0010 
+
+#define INTERVAL_STRUCT_ERRFLAG 0x1000000000000
 
 
 //macro functions for environment syntax check

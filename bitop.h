@@ -71,4 +71,15 @@ enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_b
 
 #define ERROR_WORD 32768
 
+//for PITCH_CLASS_SET : 
+
+#define MINOR_PCS 0x89 // 0000 0000 1000 1001
+#define MAJOR_PCS 0x91 // 0000 0000 1001 0001
+#define DIM_PCS 0x49 // 0000 0000 0100 1001
+#define AUG_PCS 0x111 // 0000 0001 0001 0001
+
+#define PCS_TO_SCALE(pcs)  ((pcs)>>1)
+#define ERROR_FLAG_PCS 0xF000
+
+
 #endif

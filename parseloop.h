@@ -10,5 +10,6 @@ extern void file_command_parseloop(char * filename, S_USERINFO* user_saved);
 extern void file_environment_parseloop(char * filename, S_USERINFO * user_info);
 
 extern void readparse(char * str ,S_USERINFO* user_info);
+extern void scaleparse(char *str, S_USERINFO*user_info);
 #endif
 #endif

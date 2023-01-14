@@ -1,6 +1,7 @@
 
 #include "scalegen.h"
 #include "bitop.h"
+#include "chordgen.h"
 #include "harmo.h"
 #include "types.h"
 #include "misc.h"
@@ -170,10 +171,27 @@ S_SCALE get_normal_scale_modes(S_MODES modes, LENGTH length){//same as get norma
     return ret;
 }
 
+unsigned short inverse_bit (S_SCALE scale ){
+    //returns the inverse of the first bit set in a scale; check out the definition of the inverse of 
+    //an interval for more info
+    if(!scale ) return scale; 
+    CPT i=0;
+    
+    while(!(scale & ( 1<<i))){
+        i++;
+    }
+    return (1<< (10-i));
+}//tested 
+
 S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length){//returns the inverse (I0) of a scale passed as argument.
-    INDEX i = nth_bit_pos(scale,length-1); 
-    return rot(scale, i+1);
-}
+    
+    
+    S_SCALE ret=0;  
+    for(int i=0; i<12; i++){
+        ret|= inverse_bit( (scale &(1<<i)));
+    }
+    return ret;
+}//tested 
 
 
 S_SCALE get_prime_scale(S_SCALE scale, LENGTH length){//returns the prime of the scale passed as argument
@@ -183,13 +201,84 @@ S_SCALE get_prime_scale(S_SCALE scale, LENGTH length){//returns the prime of the
     S_SCALE ret= (scale_comp_lexi(scl_norm, scl_inv)==1) ? scl_norm : scl_inv; 
 
     return ret;
-}
+}//works 
 
 S_SCALE get_complementary_scale(S_SCALE scale){ //returns the complementary of a scale passed as argument AS A SCALE N NOT A PITCH CLASS!!!
     
     if(!scale ) return FULLSCALE;
-    CHORD_DEGREES chdeg= (scale<<1) | 1; 
+    PITCH_CLASS_SET chdeg= (scale<<1) | 1; 
     chdeg^=4095; //bc 4095 is 12 bits set to one if I xor chdeg I get the bits of the compl scale
 
     return chdeg>>(nth_bit_pos(chdeg, 1)+1); 
+}//works 
+
+S_INTERVAL_STRUCTURE get_interval_struct(S_SCALE scale){
+    //converts a scale to an interval struct 
+    if(ERROR_FLAG & scale) return (long)INTERVAL_STRUCT_ERRFLAG;
+    if(!scale) return 0;
+
+    PITCH_CLASS_SET scale_deg = ( scale <<1 )| 1;
+    LENGTH l= get_length_kerni(scale_deg);
+
+    S_INTERVAL_STRUCTURE ret=0;
+
+    unsigned char curbits, prevbits=nth_bit_pos(scale_deg, 1);
+    
+    INDEX shift=0; 
+
+    for(CPT i=0; i<l; i++ ){
+        curbits= nth_bit_pos(scale_deg, i+1); 
+        ret|=(curbits-prevbits)<<(4*(shift));
+        shift++;
+        prevbits=curbits;
+    }
+    
+    //printf("%d , %d \n,",nth_bit_pos(scale_deg, l) ,(4*l));
+    ret= ret>>4;
+    u_long lon= ((long)(12-nth_bit_pos(scale_deg, l))<<(4*(l-2)));
+    ret|= lon; //no idea why this works but eh it does 
+    return  ret;
+} //tested and works
+
+int length_intv_struct(S_INTERVAL_STRUCTURE intervals){
+    //returns the length of an interval structure
+    if(!intervals) return 1 ;
+    if(intervals & INTERVAL_STRUCT_ERRFLAG) return 0;
+
+    LENGTH l=0; 
+    while( (intervals>>(4*l) & 15)){//15 is 1111
+        l++;
+    }
+    return l;
+}//works 
+
+
+
+void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval struct
+    if(intervals & INTERVAL_STRUCT_ERRFLAG) return; 
+    if(!intervals) {printf("[12\n]"); return;}
+    printf("[ ");
+    for (CPT i=0; i<length_intv_struct(intervals); i++){
+        printf("%lu " , (intervals>>(4*i)&15));
+    }
+    printf("]\n");
+    return ;
+}//will be change to something cleaner at some point
+
+
+
+
+
+PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET pcs, CPT n){//rotates the first 12 bits of a scale by n 
+
+
+   
+    if(n==0) return pcs;
+    S_SCALE head = pcs & (61440);
+    S_SCALE body = pcs & (4095); 
+
+    S_SCALE tail = pcs & (( 1 >> (n-1)) -1);
+   // S_SCALE zer= 1<< 12; 
+   
+    return (head | tail >> (12-n) | ( body) << n ) & (~ ERROR_FLAG_PCS);
 }

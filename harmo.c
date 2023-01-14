@@ -6,7 +6,7 @@
 #include "init.h"
 #include "scalegen.h"
 
-void print_bits(S_SCALE x){  //might turn into a macro 
+void print_bits(unsigned long x){  //might turn into a macro 
     int i;
     for(i=8*sizeof(x)-1; i>=0; i--) {
         (x & (1 << i)) ? putchar('1') : putchar('0');

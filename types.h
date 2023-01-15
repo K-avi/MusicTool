@@ -11,6 +11,8 @@ typedef unsigned char u_char;
 typedef unsigned short u_short; 
 typedef unsigned short ushort; 
 typedef unsigned int uint;
+typedef unsigned long u_long; 
+typedef unsigned long ulong;
 #endif
 
 #define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')

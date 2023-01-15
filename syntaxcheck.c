@@ -231,6 +231,29 @@ SYNTAX_ERROR saved_one_arg_check (char * str){//checks that a string is of the f
 
 }
 
+SYNTAX_ERROR intvcheck(char * str){//checks that an intv command is of the form 
+//" intv struct " or "intv vector" with a scale or 1 arg or saved n
+    char * tmp=str;
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
+    if(!strncmp(tmp, "struct", 6)){
+        tmp+=6; 
+        while(NEUTRAL_CHAR( *tmp)) tmp++;
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+        else if(*tmp=='{') return parsescalecheck(tmp);
+        else return saved_one_arg_check(tmp);
+    }else if (!strncmp(tmp, "vector", 6)){
+        tmp+=6;
+        while(NEUTRAL_CHAR( *tmp)) tmp++;
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+        else if(*tmp=='{') return parsescalecheck(tmp);
+        else return saved_one_arg_check(tmp);
+    }else{
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS; 
+        else return SYNTAX_INVALID_ARG;
+    }
+
+}
+
 SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK || 
 
     char * tmp=str; 
@@ -270,6 +293,8 @@ SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK ||
        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
        else if(*tmp!='{') return saved_one_arg_check(tmp);
        else return parsescalecheck(tmp);
+    }else if (!strncmp( tmp, "intv", 4)){
+        return intvcheck(tmp+4);
     }
 
     return SYNTAX_INVALID_ARG;

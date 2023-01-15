@@ -1,3 +1,6 @@
+This version of the documentation is obsolete and no longer updated ; please refer to docu.html instead
+
+
 DOCU: EN 
 
 summary: 

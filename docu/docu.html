@@ -223,32 +223,47 @@
                     </h4>
                     <p class="text-left">
                         The scale keyword is used to pass commands on scale. The commands currently available are : 
-                        <br/>-rand : rand generates random scale; 
+                        <br/><br/>-rand : rand generates random scale; 
                                 it can be passed with or without argument, if passed with an integer argument the scale  
                                 generated will be the length of the argument, otherwise the length of the scale and 
                                 the scale itself will be random. rand also makes the generated scale 
                                 the current temporary saved scale
-                        <br/>-save : save is used to save scales , if passed with a scale argument the scale passed will
+                        <br/><br/>-save : save is used to save scales , if passed with a scale argument the scale passed will
                                 be saved;
                                 if passed without argument, the interpreter will check if there is currently a temporary
                                 scale saved and save it if it's the case. 
-                        <br/>-print : print has to be passed with one integer argument , it will print the scale stored at the 
+                        <br/><br/>-print : print has to be passed with one integer argument , it will print the scale stored at the 
                                 index passed;
-                        <br/>-remove : remove has to be passed with one integer argument, it will remove the scale stored at
+                        <br/><br/>-remove : remove has to be passed with one integer argument, it will remove the scale stored at
                                 the index passed as argument if it exists and reindex the saved scales.
-                        <br/>-invert : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
+                        <br/><br/>-invert : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
                                 If passed with an argument calculates the inverse of the scale passed or saved at index n and saves it into tmp saved.
                                 if passed without argument calculates the inverse of the temp saved scale and stores it in temp saved scale.
 
-                        <br/>-comp : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
+                        <br/><br/>-comp : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
                                 If passed with an argument it calculates the complementary of the scale passed or saved at index n and saves it into tmp saved.
                                 if passed without argument calculates the complementary of the temp saved scale and stores it in temp saved scale.
 
 
-                        <br/>-prime : can be passed with a scale argument or "saved n" with n being the index of a saved scale.
+                        <br/><br/>-prime : can be passed with a scale argument or "saved n" with n being the index of a saved scale.
                                 If passed with an argument it calculates the prime form of the scale passed or saved at index n and saves it into tmp saved.
                                 if passed without argument calculates the prime form of the temp saved scale and stores it in temp saved scale.
-
+                        
+                        <div class="float-center">
+                            -intv : can be passed with the keyword "struct" or the keyword "vector": 
+                            <ul>
+                                <li>
+                                    intv struct calculates the interval structure of a scale. It can be passed with a scale argument , without argument or with "saved n" with a scale argument it will calculate the interval struct of the scale passed. 
+                                    with "saved n" it will calculate the interval struct of the scale saved at index n if it exists. w/o argument it will calculate the interval struct of tmp saved
+                                    scale if it exists.
+                                </li>
+                                <li>
+                                    intv vector calculates the interval vector of a scale. It can be passed with a scale argument , without argument or with "saved n" with a scale argument it will calculate the interval vector of the scale passed. 
+                                    with "saved n" it will calculate the interval vector of the scale saved at index n if it exists. w/o argument it will calculate the interval vector of tmp saved
+                                    scale if it exists.
+                                </li>
+                            </ul>
+                        </div>
                     </p>
                 </div>
                 <div id="p32">
@@ -259,25 +274,25 @@
                     </h4>
                     <p class="text-left">
                         The harmo keyword is used to pass commands on harmonised scales. The commands currently available are: 
-                        <br/>-rand : rand generates a random harmonised sscale; 
+                        <br/><br/>-rand : rand generates a random harmonised sscale; 
                                 it can be passed with or without argument, if passed with an integer argument the harmonised scale  
                                 generated will be the length of the argument, otherwise the length of the harmonised scale and 
                                 the harmonised scale itself will be random. rand also makes the generated harmonised scale 
                                 the current temporary saved harmonised scale
-                        <br/>-save : save is used to save scales , if passed with a scale argument the scale passed will
+                        <br/><br/>-save : save is used to save scales , if passed with a scale argument the scale passed will
                                 be harmonised and saved as an harmonised scale;
                                 if passed without argument, the interpreter will check if there is currently a temporary
                                 harmonised scale saved and save it if it's the case. 
-                        <br/>-save as scale : save as scale must be passed with two integers argument J I, it will save the
+                        <br/><br/>-save as scale : save as scale must be passed with two integers argument J I, it will save the
                                 Ith mode of the Jth harmonised scale as a scale if it exists and do nothing otherwise.  
-                        <br/>-scale : must be passed with one scale argument, will generate the harmonised scale of the scale
+                        <br/><br/>-scale : must be passed with one scale argument, will generate the harmonised scale of the scale
                                 passed as arg. And make it the current temporary saved harmonised scale
-                        <br/>-saved scale : must be passed with one integer argument, harmonises the saved scale stored at the
+                        <br/><br/>-saved scale : must be passed with one integer argument, harmonises the saved scale stored at the
                                     index passed if it exists and generates it's harmonised scale. The harmonised scale
                                     generated is saved as the temporary saved harmonised scale  
-                        <br/>-print : print has to be passed with one integer argument , it will print the harmonised scale 
+                        <br/><br/>-print : print has to be passed with one integer argument , it will print the harmonised scale 
                                 stored at the index passed if it exists.
-                        <br/>-remove : remove has to be passed with one integer argument, it will remove the harmonised scale 
+                        <br/><br/>-remove : remove has to be passed with one integer argument, it will remove the harmonised scale 
                                 stored at the index passed as argument if it exists and reindex the saved harmonised
                                 scales. 
                     </p>
@@ -292,15 +307,15 @@
                         The chprog keyword is used to pass commands on chord progs. At the moment the only type of chord 
                         progs available are triads. The commands currenlty available are : 
                         
-                        <br/>-rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
+                        <br/><br/>-rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
                                 will generate a chprog of length I from a scale of length J; 
                                 if passed with one argument x will generate a random chord prog of random length from a
                                 scale of length x 
                                 if passed with none will generate a prog of rand length from a rand scale.
-                        <br/>-save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
+                        <br/><br/>-save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
                                 if passed without will save the temporary saved chprog if it exists.
-                        <br/>-print : passed with one integer argument prints the chprog stored at index n if it exists. 
-                        <br/>-remove : passed with one integer argument removes the chprog stored at index n if it exists 
+                        <br/><br/>-print : passed with one integer argument prints the chprog stored at index n if it exists. 
+                        <br/><br/>-remove : passed with one integer argument removes the chprog stored at index n if it exists 
                                   and reindexes the remaining saved progs.
 
                     </p>
@@ -312,11 +327,11 @@
                     </em>
                     </h4>
                     <p class="text-left">
-                        <br/>-read command: must be passed with one filename argument, will read and execute the commands on a
+                        <br/><br/>-read command: must be passed with one filename argument, will read and execute the commands on a
                                     MusicTool:command file if it exists. 
-                        <br/>-read env: must be passed with one filename argument, will load the environment stored on a 
+                        <br/><br/>-read env: must be passed with one filename argument, will load the environment stored on a 
                                 MusicTool:filename file and add it to the current environment if it exists. 
-                        <br/>-write env: must be passed with one filename argument. If the file passed already exists, 
+                        <br/><br/>-write env: must be passed with one filename argument. If the file passed already exists, 
                                     and is a MusicTool:environment file will append the current environment to the one
                                     stored on the environment file. If the file passed as argument doesn't exist, 
                                     will create it and write the current environment on it. 
@@ -329,12 +344,12 @@
                     </em>
                     </h4>
                     <p class="text-left">
-                        <br/>-help keyword : the help keyword can be passed without argument or with a string argument. if 
+                        <br/><br/>-help keyword : the help keyword can be passed without argument or with a string argument. if 
                         passed without keyword it will print out general informations on MusicTool, 
                         if passed with a the string of another keyword it will print out informations 
                         on that keyword. 
-                        <br/>-quit keyword: must be passed without arguments. Exits MusicTool 
-                        <br/>-commentaries : MusicTool supports one line commentaries, everything after a '#' character in a
+                        <br/><br/>-quit keyword: must be passed without arguments. Exits MusicTool 
+                        <br/><br/>-commentaries : MusicTool supports one line commentaries, everything after a '#' character in a
                                         line will be considered as a commentary and won't be interpreted.
 
                     </p>

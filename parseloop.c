@@ -172,7 +172,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
             print_scale(tmp_saved_scale);
           }else printf("no temporary saved scale to retrieve\n");
         }else printf("runtime error in scale comp\n");
-        
+
     } else if(!strncmp(&line[i], "prime",5)){
        i+=5;
         while (NEUTRAL_CHAR(line[i])) {
@@ -212,13 +212,56 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
             print_scale(tmp_saved_scale);
           }else printf("no temporary saved scale to retrieve\n");
         }else printf("runtime error in scale prime\n");
+
+
+
     } else if(!strncmp(&line[i], "intv",4)){
         i+=4;
         while(NEUTRAL_CHAR(line[i])) i++; 
         if(!strncmp(&line[i], "struct", 6)) {
-          //case if passed w/o arg ; w scale arg ; with saved n arg
-          
-        }
+            i+=6;
+            while (NEUTRAL_CHAR(line[i]))  i++;
+            
+            if(line[i]=='{'){
+              //printf("%s\n", &line[i]);
+              generated_scale=parse_scale(&line[i]);
+            
+              if( ! (generated_scale&ERROR_FLAG)){
+                generated_intv_struct= get_interval_struct(generated_scale);
+                printf("interval struct of parsed scale is:\n");
+                print_intv_struct(generated_intv_struct);
+              }else{
+                printf("please parse a valid scale\n");
+              }
+            }else if(!strncmp(&line[i], "saved", 5)){
+              i+=5;
+              while(NEUTRAL_CHAR(line[i])){
+                i++;
+              }
+              indexx=parse_index(&line[i]);
+              if(indexx!=-1){
+                generated_scale=get_saved_scale(user_saved, indexx); 
+                if( !( generated_scale & ERROR_FLAG)){
+                  generated_intv_struct=get_interval_struct(generated_scale);
+                  printf("interval struct of saved scale is:");
+                  print_intv_struct(generated_intv_struct);
+                }else{
+                  printf("placeholder error in intv struct saved\n");
+                }
+              }
+            }else if(END_OF_LINE_CHAR(line[i])){
+              if(tmp_saved_scale){
+                generated_intv_struct=get_interval_struct(tmp_saved_scale);
+                printf("interval struct of tmp saved scale is:\n"); 
+                print_intv_struct(generated_intv_struct);
+              }else printf("no temporary saved scale to retrieve\n");
+            }else printf("runtime error in scale intv struct\n");
+
+        }else if(!strncmp(&line[i], "vector",6)){
+          i+=6;
+          printf("scale intv vector not yet implemented\n");
+
+        }else printf("runtime error in scale intv\n");
     }else {
         printf("runtime scaleparse error\n");
     }   
@@ -432,7 +475,7 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
         printf("MusicTool is a simple interpreter that does music oriented operations.\nMusicTool currently supports 5 types of commands.\ncommand starting with the keyword \"scale\" do operations on scales.\ncommands starting with the keyword \"harmo\" do operations on harmonised scales.\nCommand starting with the keyword \"chprog\" do operations on chord progressions.\nCommands starting with read do file parsing.\nCommands starting with write do file writing.\nTo see the list of functions for each keyword please type \"help\" followed by one of the 5 keywords.\nIf you wish to quit MusicTool, simply type \"quit\"\n");
     }else if(!strncmp(&line[i], "scale", 5)){
       
-        printf("\ntype 'scale rand x' to generate a scale of x length with x being an integer between 1 and 12\ntype 'scale rand' to generate a scale of a random length\ntype 'scale save { 0 .... }' to save the scale you passed after it if  save scale is called without argument, the last generated scale will be saved\ntype 'scale print n' to print the nth scale you saved\ntype 'scale remove n' to remove the scale saved at index n\n'scale inverse' to calculate the inverse of the scale passed and save it in the tmp saved scale.\n'scale comp' to calcultate the complementary of a scale and save it in tmp, comp can be passed with a scale argument or \"saved n\" n being the number of the saved scale u want to get the inverse of.\n'scale prime' calculates the prime form of a scale and behaves similarly\n");
+        printf("\ntype 'scale rand x' to generate a scale of x length with x being an integer between 1 and 12\ntype 'scale rand' to generate a scale of a random length\ntype 'scale save { 0 .... }' to save the scale you passed after it if  save scale is called without argument, the last generated scale will be saved\ntype 'scale print n' to print the nth scale you saved\ntype 'scale remove n' to remove the scale saved at index n\n'scale inverse' to calculate the inverse of the scale passed and save it in the tmp saved scale. invert can also be passed w/o argument in which case it will calculate the invert of tmp saved scale or w 'saved n' to calculate the invert of the nth saved scale.\n'scale comp' to calcultate the complementary of a scale and save it in tmp, comp can be passed with a scale argument, \"saved n\" n being the number of the saved scale u want to get the inverse of or w/o argument to calculate the comp of tmp and replace it in tmp\n'scale prime' calculates the prime form of a scale and behaves similarly\n");
 
     }else if(!strncmp(&line[i], "harmo", 5)){
        

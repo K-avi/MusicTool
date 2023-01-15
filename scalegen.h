@@ -35,7 +35,7 @@ extern S_SCALE get_normal_scale_modes(S_MODES modes, LENGTH length);
 extern S_SCALE get_prime_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_complementary_scale(S_SCALE scale);
-
+extern S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length);
 #ifdef DEBUG
 extern SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2);
 extern unsigned short inverse_bit (S_SCALE scale );
@@ -46,7 +46,7 @@ extern int length_intv_struct(S_INTERVAL_STRUCTURE intervals);
 extern void  print_intv_struct(S_INTERVAL_STRUCTURE intervals);
 extern PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET scale, CPT n);
 
-
+extern S_SCALE move_note(S_SCALE scale, LENGTH length);
 
 #endif
 

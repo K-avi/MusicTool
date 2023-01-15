@@ -2,26 +2,30 @@ Features needed for MusicTool 1.0:
     done! 
 
 Features for MusicTool 1.1: 
+   
     a library of utility functions , retrieve inverse of scale, add a note to a scale , check if a chprog can be built from a scale , retrieve scale from chprog, do vector of scale ,... 
 
-    calling MusicTool with arguments like -read -rand -harmo,...
+    calling MusicTool like a shell command with arguments like -read -rand -harmo,...
 
 
 Features for MusicTool 1.2: 
+    
     implementing dodecaphonic series, 12 tone matrixes n operations on them 
+    maybe implementing PCS? 
 
 Features for MusicTool 1.3: 
+    
     a way to generate "coherent" chord progs by stacking coherent patterns(like a I IV V, II V I),...
     a way to add said patterns to an environment.
     generate chords w extensions or suspended chords
 
 Features for MusicTool 1.4: 
+    
     writing stuff to midi files maybe ? 
 
 
 
 
-IMPLEMENTING PCS OBJECTS AT SOME POINT ??????
 mtool 1.1 utility functions: 
 
 
@@ -36,6 +40,7 @@ mtool 1.1 utility functions:
     -get scale from chprog 
 
 -print env: 
+    
     -print all env 
     -print all scales
     -all harmos
@@ -57,15 +62,43 @@ status prime :
 
 status interval structure from scale: 
 
--backend done 
+    implemented
 
 status PCS/scale from chprog: 
 
--backend done
+    implemented
 
 
-Might implement PCS as their own thing in frontend ?????
+status generate nearby scale :
+
+    function written; 
+    not added in parseloop; 
+    not added in syntaxchecker
+
+status intv vector from scale: 
+
+    not done
+
+status scale print env: 
+    
+    not done 
+
+status harmo print env: 
+    
+    not done 
+
+status chprog print env: 
+
+    not done 
+
+status global print env? : 
+
+    not sure to implement; not done
 
 
-print env function written; has to be added as a runtime command n in the syntaxchecker; 
-easy to retrieve print scales/harmos/chprogs from it
+
+1.1: functions implementented: 4/11
+
+status shell mtool : 
+
+    not started

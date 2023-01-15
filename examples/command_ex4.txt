@@ -1,0 +1,15 @@
+MusicTool:commands
+
+
+#this example file shows the other new functions added in 1.1
+
+chprog toscale [ I , IV, V]
+
+chprog rand 
+chprog toscale 
+
+chprog save 
+chprog toscale saved 1
+
+scale save
+scale print 1

@@ -101,7 +101,7 @@ SYNTAX_ERROR parsescalecheck(char *str){//syntax check for parsing scales and mo
     return SYNTAX_NO_ARG;
 }
 
-SYNTAX_ERROR saveprogcheck(char *str){//syntax check for saving chprogs
+SYNTAX_ERROR parseprogcheck(char *str){//syntax check for saving chprogs
 
     char *tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++;
@@ -371,6 +371,17 @@ SYNTAX_ERROR harmocheck(char * str){
     return SYNTAX_INVALID_ARG;
 
 }
+
+SYNTAX_ERROR toscalecheck(char* str){
+    
+    char* tmp=str;
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
+    
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+    else if(*tmp!='[') return saved_one_arg_check(tmp);
+    else return parseprogcheck(tmp);
+
+}
 SYNTAX_ERROR chprogcheck(char * str){ //checks that a string containing a chprog command's syntax is correct
 
 
@@ -390,7 +401,9 @@ SYNTAX_ERROR chprogcheck(char * str){ //checks that a string containing a chprog
     }else if(!strncmp(tmp, "print", 5)){
         return printcheck(tmp+5);
     }else if(!strncmp (tmp ,"save",4)){
-        return saveprogcheck(tmp+4);
+        return parseprogcheck(tmp+4);
+    }else if(!strncmp (tmp, "toscale", 7)){
+        return toscalecheck(tmp+7);
     }
     return SYNTAX_INVALID_ARG; 
 }

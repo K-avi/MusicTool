@@ -173,7 +173,11 @@ int main(){
  S_SCALE scl= parse_scale("{ 0 2 4 5 7 9 11}");
 
 
- print_scale(get_complementary_scale(scl));
+ //print_scale(get_complementary_scale(scl));
+
+ /*for (int i =0; i<10; i++){
+  print_scale(generate_nearby_scale(scl, get_length_kerni(scl)));
+ }*/
    //S_INTERVAL_STRUCTURE intv1= get_interval_struct(scl);
  //print_intv_struct(intv1);
   //print_scale(  get_inverse_scale(scl, 7));

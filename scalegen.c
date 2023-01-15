@@ -45,6 +45,31 @@ void add_rand_note(S_SCALE* scale){ //adds a random note to a scale
 
 }
 
+S_SCALE add_note_nopointer(S_SCALE scale, NOTE note){ //adds a note to a scale
+
+
+    if(!IsValidNote(note)) return scale;
+
+    if(!IsInScale(scale, note)){
+        scale= SET_NTH(scale, (note-1)) ;
+    }
+    return scale;
+
+}
+
+S_SCALE add_rand_note_nopointer(S_SCALE scale){ //adds a random note to a scale
+
+    if(scale >= FULLSCALE) return scale;
+    else{
+        NOTE note= rand()%12;
+        while(IsInScale(scale,  note)){
+            note=rand()%12;
+        }
+        return add_note_nopointer(scale, note);
+    }
+
+}
+
 
 
 LENGTH get_length( S_SCALE scale){//takes  flags into account
@@ -265,10 +290,6 @@ void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval str
     return ;
 }//will be change to something cleaner at some point
 
-
-
-
-
 PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET pcs, CPT n){//rotates the first 12 bits of a scale by n 
 
     if(n==0) return pcs;
@@ -280,3 +301,84 @@ PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET pcs, CPT n){//rotates the first 12 bits
    
     return (head | tail >> (12-n) | ( body) << n ) & (~ ERROR_FLAG_PCS);
 }
+
+S_SCALE move_note(S_SCALE scale, LENGTH length){//doesnt check for case where 
+//popped-1 n popped+1 r already set; which might cause a problem down the line idk
+   
+    S_SCALE ret=scale;
+    INDEX ran= rand()%length;
+    INDEX popped =nth_bit_pos(ret,ran );
+    ret=POP_BIT(ret,popped);
+
+    //print_scale(ret);
+    if(popped==11){ //really weird behavior tbh
+        ret=SET_NTH(ret, 10);
+               
+    }else if (popped==0){ 
+        ret=SET_NTH(ret, 1); 
+               
+    }else {
+        //printf("in");
+        ran= rand()%2; //choose wether to set 1 above or beneath
+        if(ran==0){
+            ret=SET_NTH(ret,  (popped+1));
+        }else {
+            ret=SET_NTH(ret, (popped-1));
+                        
+        }
+    }
+    return ret;
+}
+
+S_SCALE delete_nearby(S_SCALE scale, LENGTH length){
+    if( (!scale) || (!length)){
+        return ERROR_FLAG;
+    }
+    S_SCALE ret=scale;
+    INDEX ran= rand()%length;
+    INDEX popped =nth_bit_pos(ret,ran );
+    ret=POP_BIT(ret,popped);
+    return ret;
+}
+
+S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length){//generates a nearby scale from the scale passed as arg ; 
+//a nearby scale is a scale that has 1 more/less note than another scale or that has one of its notes moved up or down a semitone.
+    if(!scale) return ERROR_FLAG;
+    
+    S_SCALE ret=scale;
+    unsigned char ran=0;
+
+    if(! (length==12 || length==1)){
+        ran= rand()%3; 
+        if(ran==0){//add note case
+            return add_rand_note_nopointer(ret);
+
+        }else if(ran==1){//delete note case
+            ret=delete_nearby(ret,  length);
+
+        }else{//move note case
+            ret= move_note(ret,  length);
+
+        }
+    }else if(length==12){
+
+        ran=rand()%2;
+
+        if(ran==0){//delete note case
+            ret=delete_nearby(scale,  length);
+        }else if(ran==1){//move note case 
+            ret= move_note(ret,  length);
+        }
+
+    }else if(length==1){
+        ran =rand()%2; 
+
+        if(ran==0){//add note case
+            ret=add_rand_note_nopointer(ret);
+        }else if(ran==1){//move note case
+            ret=move_note(ret, length);
+        }
+    }
+
+    return ret;
+}//works

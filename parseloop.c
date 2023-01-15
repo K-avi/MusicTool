@@ -36,6 +36,7 @@ S_INTERVAL_STRUCTURE generated_intv_struct=0;
 
 //chprog globals
 S_CHORD_PROG * tmp_chprog=NULL;
+S_CHORD_PROG* generated_chprog=NULL;
 SIGNED_LENGTH l1=-1, l2=-1;
 
 
@@ -402,11 +403,9 @@ void chprogparse(char * line , S_USERINFO* user_saved){
 
         l1=parse_index(line);
         l2=parse_next(line);
-        if(tmp_chprog) {
-
-          
-            free_chord_prog(tmp_chprog);
-        }
+      
+        free_chord_prog(tmp_chprog);
+        
 
      
         if(l1==-1){
@@ -421,32 +420,35 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         if(!tmp_chprog) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
         else print_chord_prog(tmp_chprog);
        
-      }else if(!strncmp(&line[i], "save [",6)) {
-
-         S_CHORD_PROG * ch_parsed= str_to_chord_prog(line);
-         if(!ch_parsed){
-            printf("couldn't parse a chord prog, please pass a correct chord prog\n");
-
-         }else{
-           save_chprog(ch_parsed, user_saved);
-           free_chord_prog(ch_parsed);
-         }
        
       }else if(!strncmp(&line[i], "save",4)) {
-
          
-         if(tmp_chprog){
-           save_chprog(tmp_chprog, user_saved);
-          // printf("chord prog saved at index %d\n", user_saved->progs_num);
+         i+=4;
+         while(NEUTRAL_CHAR(line[i])) i++;
+         if(line[i]=='['){
+            S_CHORD_PROG * ch_parsed= str_to_chord_prog(&line[i]);
+            if(!ch_parsed){
+                printf("couldn't parse a chord prog, please pass a correct chord prog\n");
 
-           //printf("in save chprog %p\n", tmp_chprog);
-           print_chord_prog(tmp_chprog);
-           free_chord_prog(tmp_chprog);
-           tmp_chprog=NULL;
+            }else{
+              save_chprog(ch_parsed, user_saved);
+              free_chord_prog(ch_parsed);
+            }
+         }else if(END_OF_LINE_CHAR(line[i])){
+         
+            if(tmp_chprog){
+              save_chprog(tmp_chprog, user_saved);
+              // printf("chord prog saved at index %d\n", user_saved->progs_num);
 
-         }else{
-           printf("no temporary scale saved\n");
-         }
+              //printf("in save chprog %p\n", tmp_chprog);
+              print_chord_prog(tmp_chprog);
+              free_chord_prog(tmp_chprog);
+              tmp_chprog=NULL;
+
+            }else{
+              printf("no temporary prog saved\n");
+            }
+            }else printf("runtime error in chprog save\n");
         
       } else if(!strncmp(&line[i], "print ",6)) {
 
@@ -464,6 +466,49 @@ void chprogparse(char * line , S_USERINFO* user_saved){
           else{remove_chprog(user_saved, indexx);}
          
 
+      }else if(!strncmp(&line[i], "toscale",7 )){
+
+          i+=7;
+          while (NEUTRAL_CHAR(line[i])) {
+            i++;
+          }
+          if(line[i]=='['){
+            //printf("%s\n", &line[i]);
+            free_chord_prog(generated_chprog);
+            generated_chprog=str_to_chord_prog(&line[i]);
+            
+            if(generated_chprog!=NULL){
+              tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_chprog));
+              printf("the scale containing the chprog parsed is:");
+              print_scale(tmp_saved_scale);
+            }else{
+              printf("please parse a valid chprog\n");
+            }
+          }else if(!strncmp(&line[i], "saved", 5)){
+            i+=5;
+            while(NEUTRAL_CHAR(line[i])){
+              i++;
+            }
+            indexx=parse_index(&line[i]);
+            if(indexx!=-1){
+              free_chord_prog(generated_chprog);
+              generated_chprog=duplicate_chprog(get_chprog(user_saved, indexx)); 
+              
+              if(generated_chprog!=NULL){
+                tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_chprog));
+                printf("the scale containing the chprog at index parsed is:");
+                print_scale(tmp_saved_scale);
+              }else{
+                printf("placeholder error in inverse saved\n");
+              }
+            }
+          }else if(END_OF_LINE_CHAR(line[i])){
+            if(tmp_chprog){
+              tmp_saved_scale= PCS_TO_SCALE(chprog_to_pcs(tmp_chprog));
+              printf("the scale containing the chprog in tmp_chprog is:"); 
+              print_scale(tmp_saved_scale);
+            }else printf("no temporary saved scale to retrieve\n");
+          }else printf("runtime error in scale inverse\n");
       }
 }
 
@@ -504,6 +549,8 @@ void clearglobals(){
     if(tmp_saved_mode) free(tmp_saved_mode);
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
+    free_chord_prog(generated_chprog);
+    free_chord_prog(tmp_chprog);
   
 }
 

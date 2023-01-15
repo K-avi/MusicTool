@@ -16,3 +16,9 @@ scale comp { 0 2 5 7 9}
 
 scale prime { 0 2 3 5 7 9 10}
 scale prime saved 1
+
+scale intv struct { 0 2 4 5 7 9 11}
+scale intv struct saved 1
+
+scale rand 
+scale intv struct

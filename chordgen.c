@@ -139,7 +139,9 @@ void free_chord_prog(S_CHORD_PROG* source){
 
   if(!source) return ;
   
-  free(source->chord_prog);
+  if(source->chord_prog){
+    free(source->chord_prog);
+  }
   free(source);
 }
 

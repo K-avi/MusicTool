@@ -236,14 +236,19 @@
                                 index passed;
                         <br/>-remove : remove has to be passed with one integer argument, it will remove the scale stored at
                                 the index passed as argument if it exists and reindex the saved scales.
-                        <br/>-invert : can be passed with a scale argument or "saved n" with n being the index of a saved scale.
-                                Either ways calculates the inverse of the scale retrieved and saves it into tmp saved.
+                        <br/>-invert : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
+                                If passed with an argument calculates the inverse of the scale passed or saved at index n and saves it into tmp saved.
+                                if passed without argument calculates the inverse of the temp saved scale and stores it in temp saved scale.
 
-                        <br/>-comp : can be passed with a scale argument or "saved n" with n being the index of a saved scale.
-                        Either ways calculates the complementary of the scale retrieved and saves it into tmp saved.
+                        <br/>-comp : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
+                                If passed with an argument it calculates the complementary of the scale passed or saved at index n and saves it into tmp saved.
+                                if passed without argument calculates the complementary of the temp saved scale and stores it in temp saved scale.
+
 
                         <br/>-prime : can be passed with a scale argument or "saved n" with n being the index of a saved scale.
-                        Either ways calculates the prime form of the scale retrieved if and saves it into tmp saved.
+                                If passed with an argument it calculates the prime form of the scale passed or saved at index n and saves it into tmp saved.
+                                if passed without argument calculates the prime form of the temp saved scale and stores it in temp saved scale.
+
                     </p>
                 </div>
                 <div id="p32">

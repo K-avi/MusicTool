@@ -253,19 +253,22 @@ SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK ||
         
        tmp+=6;
        while(NEUTRAL_CHAR(*tmp)) tmp++; 
-       if(*tmp!='{') return saved_one_arg_check(tmp);
+       if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+       else if(*tmp!='{') return saved_one_arg_check(tmp);
        else return parsescalecheck(tmp);
     }else if(!strncmp( tmp, "comp", 4)){
        
         tmp+=4;
        while(NEUTRAL_CHAR(*tmp)) tmp++; 
-       if(*tmp!='{') return saved_one_arg_check(tmp);
+       if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+       else if(*tmp!='{') return saved_one_arg_check(tmp);
        else return parsescalecheck(tmp);
     }else if(!strncmp( tmp, "prime", 5)){
      
        tmp+=5;
        while(NEUTRAL_CHAR(*tmp)) tmp++; 
-       if(*tmp!='{') return saved_one_arg_check(tmp);
+       if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+       else if(*tmp!='{') return saved_one_arg_check(tmp);
        else return parsescalecheck(tmp);
     }
 

@@ -28,7 +28,7 @@ S_SCALE scale_to_save=0;
 S_SCALE generated_scale=0;
 LENGTH length=0;
 SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
-
+S_INTERVAL_STRUCTURE generated_intv_struct=0;
 //harmo globals
  S_MODES tmp_saved_mode= NULL , parsed_modes=NULL;
  char* begin=NULL;
@@ -37,6 +37,8 @@ SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to ren
 //chprog globals
 S_CHORD_PROG * tmp_chprog=NULL;
 SIGNED_LENGTH l1=-1, l2=-1;
+
+
 
 void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsing
     
@@ -123,7 +125,13 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
               printf("placeholder error in inverse saved\n");
             }
           }
-        }
+        }else if(END_OF_LINE_CHAR(line[i])){
+          if(tmp_saved_scale){
+            tmp_saved_scale= get_inverse_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
+            printf("inverse of tmp saved scale is:\n"); 
+            print_scale(tmp_saved_scale);
+          }else printf("no temporary saved scale to retrieve\n");
+        }else printf("runtime error in scale inverse\n");
 
     }  else if(!strncmp(&line[i], "comp",4)){
        i+=4;
@@ -157,7 +165,14 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
               printf("placeholder error in comp saved\n");
             }
           }
-        }
+        }else if(END_OF_LINE_CHAR(line[i])){
+          if(tmp_saved_scale){
+            tmp_saved_scale= get_complementary_scale(tmp_saved_scale);
+            printf("complementary of tmp saved scale is:\n"); 
+            print_scale(tmp_saved_scale);
+          }else printf("no temporary saved scale to retrieve\n");
+        }else printf("runtime error in scale comp\n");
+        
     } else if(!strncmp(&line[i], "prime",5)){
        i+=5;
         while (NEUTRAL_CHAR(line[i])) {
@@ -190,6 +205,19 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
               printf("placeholder error in prime saved\n");
             }
           }
+        }else if(END_OF_LINE_CHAR(line[i])){
+          if(tmp_saved_scale){
+            tmp_saved_scale= get_prime_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
+            printf("prime form of tmp saved scale is:\n"); 
+            print_scale(tmp_saved_scale);
+          }else printf("no temporary saved scale to retrieve\n");
+        }else printf("runtime error in scale prime\n");
+    } else if(!strncmp(&line[i], "intv",4)){
+        i+=4;
+        while(NEUTRAL_CHAR(line[i])) i++; 
+        if(!strncmp(&line[i], "struct", 6)) {
+          //case if passed w/o arg ; w scale arg ; with saved n arg
+          
         }
     }else {
         printf("runtime scaleparse error\n");

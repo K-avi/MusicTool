@@ -67,9 +67,5 @@ status PCS/scale from chprog:
 Might implement PCS as their own thing in frontend ?????
 
 
-inverse of scale written n added to the runtime parser but has to be added into the syntaxchecker; 
-complementary of scale written ; prime of scale written too btw
-
-
 print env function written; has to be added as a runtime command n in the syntaxchecker; 
 easy to retrieve print scales/harmos/chprogs from it

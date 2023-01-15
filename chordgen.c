@@ -220,7 +220,7 @@ PITCH_CLASS_SET chord_to_pcs(CHORD chord){
   if(!ret )return 0;
 
 
-  print_pcs(ret);
+  //print_pcs(ret);
   return rot_pcs(ret, degree);
 }
 

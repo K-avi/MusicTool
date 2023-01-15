@@ -11,9 +11,9 @@
 
 extern SYNTAX_ERROR syntaxcheck(char *str);
 
+#ifdef DEBUG
 
-//testing only
-extern SYNTAX_ERROR savescalecheck(char *str);
+extern SYNTAX_ERROR parsescalecheck(char *str);
 
 extern SYNTAX_ERROR scalecheck(char* str);
 extern SYNTAX_ERROR removecheck(char *str);
@@ -27,7 +27,7 @@ extern SYNTAX_ERROR parenthesis_check( FILE * f);
 
 extern SYNTAX_ERROR env_check(char * str);
 
-#ifdef DEBUG
+
 extern SYNTAX_ERROR env_scale_check ( char *str) ;
 extern char* file_to_string( char* str);
 #endif

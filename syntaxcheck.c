@@ -48,6 +48,8 @@ SYNTAX_ERROR printcheck(char *str){//syntax check for the print commands
     return SYNTAX_TOO_FEW_ARGS;
 }
 
+
+
 SYNTAX_ERROR removecheck(char *str){//syntax check for the remove commands
 
     char *tmp=str;
@@ -70,7 +72,7 @@ SYNTAX_ERROR removecheck(char *str){//syntax check for the remove commands
 
 }//not tested
 
-SYNTAX_ERROR savescalecheck(char *str){//syntax check for saving scale and modes
+SYNTAX_ERROR parsescalecheck(char *str){//syntax check for parsing scales and modes
 
     char *tmp=str;
     while( *tmp==' '  || *tmp=='\n' || *tmp== '\t') tmp++;
@@ -211,6 +213,24 @@ SYNTAX_ERROR one_num_arg_check( char * str){//checks that a string contains 1 in
 }
 //scale syntax check ////////////
 
+
+SYNTAX_ERROR saved_one_arg_check (char * str){//checks that a string is of the form .... saved n
+
+ //   printf("entered saved one arg check\n");
+    char * tmp = str; 
+
+    while( NEUTRAL_CHAR(*tmp )) tmp++;
+    //printf("%s\n", tmp);
+    if(!strncmp (tmp, "saved", 5)){
+        //printf("reached this check\n");
+        return one_num_arg_check(tmp+5);
+    }else {
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
+        else return SYNTAX_INVALID_ARG;
+    }
+
+}
+
 SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK || 
 
     char * tmp=str; 
@@ -228,7 +248,19 @@ SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK ||
     }else if(!strncmp(tmp, "print", 5)){
         return printcheck(tmp+5);
     }else if(!strncmp (tmp ,"save",4)){
-        return savescalecheck(tmp+4);
+        return parsescalecheck(tmp+4);
+    }else if(!strncmp (tmp, "invert",6)){
+        
+       tmp+=6;
+       while(NEUTRAL_CHAR(*tmp)) tmp++; 
+       if(*tmp!='{') return saved_one_arg_check(tmp);
+       else return parse_scale(tmp);
+    }else if(!strncmp( tmp, "comp", 4)){
+       
+        tmp+=4;
+       while(NEUTRAL_CHAR(*tmp)) tmp++; 
+       if(*tmp!='{') return saved_one_arg_check(tmp);
+       else return parse_scale(tmp);
     }
 
     return SYNTAX_INVALID_ARG;
@@ -282,7 +314,7 @@ SYNTAX_ERROR harmocheck(char * str){
         while(NEUTRAL_CHAR(*tmp)) tmp++;
         if(*tmp=='{'){  //case:harmo save N
     
-            return savescalecheck(tmp);
+            return parsescalecheck(tmp);
         }else if(!strncmp(tmp, "as", 2)){ //case : harmo save as scale I J
             tmp+=2; 
 
@@ -299,7 +331,7 @@ SYNTAX_ERROR harmocheck(char * str){
     }else if( !strncmp(tmp, "rand", 4)){ // harmo rand || harmo rand N
         return zero_one_arg_check(tmp+4);
     }else if( ! strncmp(tmp , "scale", 5)){
-        return savescalecheck(tmp+5);
+        return parsescalecheck(tmp+5);
     }
 
     return SYNTAX_INVALID_ARG;

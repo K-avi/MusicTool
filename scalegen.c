@@ -271,8 +271,6 @@ void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval str
 
 PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET pcs, CPT n){//rotates the first 12 bits of a scale by n 
 
-
-   
     if(n==0) return pcs;
     S_SCALE head = pcs & (61440);
     S_SCALE body = pcs & (4095); 

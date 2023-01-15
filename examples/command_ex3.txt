@@ -1,0 +1,9 @@
+MusicTool:commands
+
+
+#this example file shows the new scale functions added in 1.1
+
+scale invert { 0 2 4 5 7 9 11} 
+ 
+scale save  
+ 

@@ -6,6 +6,7 @@ Features for MusicTool 1.1:
 
     calling MusicTool with arguments like -read -rand -harmo,...
 
+
 Features for MusicTool 1.2: 
     implementing dodecaphonic series, 12 tone matrixes n operations on them 
 
@@ -19,6 +20,8 @@ Features for MusicTool 1.4:
 
 
 
+
+IMPLEMENTING PCS OBJECTS AT SOME POINT ??????
 mtool 1.1 utility functions: 
 
 
@@ -39,12 +42,9 @@ mtool 1.1 utility functions:
     -all chprogs 
 
 
-status inverse : 
+status invert : 
 
--backend done 
--added in cmdline parser 
--not added in file parser 
--not added in syntaxchecker 
+-implemented invert with parsed scale ; gotta implement inverting saved scales 
 
 status complementary : 
 -backend done 
@@ -54,11 +54,16 @@ status prime :
 
 -backend done
 
-status interval structure: 
+status interval structure from scale: 
 
 -backend done 
 
-currently doing: chprog to scale .
+status PCS/scale from chprog: 
+
+-backend done
+
+
+Might implement PCS as their own thing in frontend ?????
 
 
 inverse of scale written n added to the runtime parser but has to be added into the syntaxchecker; 

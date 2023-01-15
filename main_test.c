@@ -137,11 +137,15 @@ int main(){
   //int *i = malloc(100);
   //i[101]= 10;
 
-  S_CHORD_PROG* chprog= str_to_chord_prog("[II, V, I]");
-  PITCH_CLASS_SET pcs= (chprog_to_pcs(chprog));
+ // S_CHORD_PROG* chprog= str_to_chord_prog("[II, V, I]");
+ // PITCH_CLASS_SET pcs= (chprog_to_pcs(chprog));
 
+ //free_chord_prog(chprog);
+
+
+ 
   //PITCH_CLASS_SET pcsmaj= MAJOR_PCS<<7;
-print_pcs(pcs);
+//print_pcs(pcs);
  //print_pcs(pcsmaj); 
   //print_pcs(2741);
  
@@ -164,16 +168,22 @@ print_pcs(pcs);
  // printf("%d\n",length_intv_struct(intv));
  // printf("%d\n", length_intv_struct(intv));
  // print_intv_struct(intv); 
- //S_INTERVAL_STRUCTURE intv1= get_interval_struct(scl);
- //print_intv_struct(intv1);
-  //print_intv_struct(get_interval_struct(scl));
 
- // print_scale(  get_inverse_scale(scl, 7));
+  //print_intv_struct(get_interval_struct(scl));
+ S_SCALE scl= parse_scale("{ 0 2 4 5 7 9 11}");
+
+
+ print_scale(get_complementary_scale(scl));
+   //S_INTERVAL_STRUCTURE intv1= get_interval_struct(scl);
+ //print_intv_struct(intv1);
+  //print_scale(  get_inverse_scale(scl, 7));
   //print_scale (get_complementary_scale(scl));
   //save_scale(scl, user_data);
   //scaleparse("invert saved 1", user_data);
 
   //printf("%lu\n", (long)1<<48);
+
+  free_userinfo(user_data);
   return 0;
 
 }

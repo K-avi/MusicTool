@@ -2,6 +2,7 @@
 #define TYPES_H
 
 
+#include <sys/types.h>
 #define DEBUG
 #include <stdbool.h>
 
@@ -113,8 +114,14 @@ typedef struct{
     CPT modes_num;
 }S_USERINFO;
 
-typedef unsigned long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bytes so this makes me kinda sad
 
+#ifndef WIN32
+typedef unsigned long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bits so this makes me kinda sad
+#endif
+
+#ifdef WIN32 
+typedef unsigned long long S_INTERVAL_STRUCTURE;
+#endif 
 //the interval structure is divided into 4 bits sections containing numbers from 1 to 11 .
 //from bit 48 onward bits are flags. 
 //special case : a scale containing only 1 note is translated into an empty interval structure which 
@@ -124,6 +131,17 @@ typedef unsigned long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bytes
 // (40x0)  0001 0010 0010 0001 0010 0010 
 
 #define INTERVAL_STRUCT_ERRFLAG 0x1000000000000
+
+typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ; 
+//the interval struct is divided in 6  4bits sections containing numbers from 0 to 12.
+// if u take the intv vector < 2, 5, 4, 3, 6, 1> (intv vector of the major scale) 
+//ur bitwise rep would be: 0001 0110 0011 0100 0101 0010 (or 0x163452)
+//                          1     6    3    4    5    2 
+//the edge cases are the intv vect of the chromatic scale : <12 , 12, 12, 12 ,12,6>
+//its rep is :  0110 1100 1100 1100 1100 1100
+
+//n the unisson {0} scale : <0 ,0 ,0,0,0,0>
+//its rep is: 0000 0000 0000 0000 0000 0000
 
 
 //macro functions for environment syntax check

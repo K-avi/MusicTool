@@ -263,6 +263,46 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
           printf("scale intv vector not yet implemented\n");
 
         }else printf("runtime error in scale intv\n");
+    }else if(!strncmp(&line[i], "nearby",6)){
+       i+=6;
+        while (NEUTRAL_CHAR(line[i])) {
+          i++;
+        }
+        if(line[i]=='{'){
+          //printf("%s\n", &line[i]);
+          generated_scale=parse_scale(&line[i]);
+        
+          if( ! (generated_scale&ERROR_FLAG)){
+            tmp_saved_scale=generate_nearby_scale(generated_scale, get_length_kerni(generated_scale));
+            printf("nearby scale generated parsed scale is:\n");
+            print_scale(tmp_saved_scale);
+          }else{
+            printf("please parse a valid scale\n");
+          }
+        }else if(!strncmp(&line[i], "saved", 5)){
+          i+=5;
+          while(NEUTRAL_CHAR(line[i])){
+            i++;
+          }
+          indexx=parse_index(&line[i]);
+          if(indexx!=-1){
+            generated_scale=get_saved_scale(user_saved, indexx); 
+            if( !( generated_scale & ERROR_FLAG)){
+              tmp_saved_scale=generate_nearby_scale(generated_scale, get_length_kerni(generated_scale));
+              printf("nearby scale generated from saved scale is:");
+              print_scale(tmp_saved_scale);
+            }else{
+              printf("placeholder error in prime saved\n");
+            }
+          }
+        }else if(END_OF_LINE_CHAR(line[i])){
+          if(tmp_saved_scale){
+            tmp_saved_scale= generate_nearby_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
+            printf("nearby scale generated from tmp_scale is:\n"); 
+            print_scale(tmp_saved_scale);
+          }else printf("no temporary saved scale to retrieve\n");
+        }else printf("runtime error in scale prime\n");
+
     }else {
         printf("runtime scaleparse error\n");
     }   

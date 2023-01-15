@@ -22,3 +22,10 @@ scale intv struct saved 1
 
 scale rand 
 scale intv struct
+
+scale nearby { 0 1 }
+
+scale rand 
+scale nearby 
+
+scale nearby saved 1

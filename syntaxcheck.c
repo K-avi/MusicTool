@@ -295,6 +295,12 @@ SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK ||
        else return parsescalecheck(tmp);
     }else if (!strncmp( tmp, "intv", 4)){
         return intvcheck(tmp+4);
+    }else if (!strncmp(tmp, "nearby", 6)){
+       tmp+=6;
+       while(NEUTRAL_CHAR(*tmp)) tmp++; 
+       if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+       else if(*tmp!='{') return saved_one_arg_check(tmp);
+       else return parsescalecheck(tmp);
     }
 
     return SYNTAX_INVALID_ARG;

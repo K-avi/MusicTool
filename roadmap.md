@@ -39,6 +39,8 @@ mtool 1.1 utility functions:
     -generate nearby scale 
     -get scale from chprog 
 
+    -get interval vector
+
 -print env: 
     
     -print all env 
@@ -71,9 +73,7 @@ status PCS/scale from chprog:
 
 status generate nearby scale :
 
-    function written; 
-    not added in parseloop; 
-    not added in syntaxchecker
+    implemented
 
 status intv vector from scale: 
 
@@ -97,7 +97,7 @@ status global print env? :
 
 
 
-1.1: functions implementented: 4/11
+1.1: functions implementented: 6/11
 
 status shell mtool : 
 

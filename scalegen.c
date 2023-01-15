@@ -284,7 +284,13 @@ void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval str
     if(!intervals) {printf("[12\n]"); return;}
     printf("[ ");
     for (CPT i=0; i<length_intv_struct(intervals); i++){
+        #ifndef WIN32
         printf("%lu " , (intervals>>(4*i)&15));
+        #endif
+        #ifdef WIN32
+        printf("%llu " , (intervals>>(4*i)&15));
+        #endif
+
     }
     printf("]\n");
     return ;
@@ -382,3 +388,12 @@ S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length){//generates a nearb
 
     return ret;
 }//works
+
+
+S_INTERVAL_VECTOR generate_intv_vect(S_SCALE scale, LENGTH length){
+
+    if(!(scale & length)) return 0;
+
+    S_INTERVAL_VECTOR ret=0; 
+    return ret;
+}

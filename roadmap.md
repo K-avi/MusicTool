@@ -44,15 +44,16 @@ mtool 1.1 utility functions:
 
 status invert : 
 
--implemented invert with parsed scale ; gotta implement inverting saved scales 
+    implemented
 
 status complementary : 
--backend done 
+
+    implemented
 
 
 status prime : 
 
--backend done
+    implemented
 
 status interval structure from scale: 
 

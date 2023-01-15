@@ -4,6 +4,15 @@ MusicTool:commands
 #this example file shows the new scale functions added in 1.1
 
 scale invert { 0 2 4 5 7 9 11} 
- 
 scale save  
+
+scale rand 
+scale save
  
+scale invert saved 1
+
+scale comp saved 2
+scale comp { 0 2 5 7 9}
+
+scale prime { 0 2 3 5 7 9 10}
+scale prime saved 1

@@ -10,12 +10,18 @@
 
 
 extern SYNTAX_ERROR syntaxcheck(char *str);
+extern SYNTAX_ERROR scalecheck(char* str);
+extern SYNTAX_ERROR harmocheck(char * str);
+extern SYNTAX_ERROR chprogcheck(char * str);
+extern SYNTAX_ERROR helpcheck(char * str);
+extern SYNTAX_ERROR readcommandcheck( char * str);
+extern SYNTAX_ERROR filename_check_var(char * str);
 
 #ifdef DEBUG
 
 extern SYNTAX_ERROR parsescalecheck(char *str);
 
-extern SYNTAX_ERROR scalecheck(char* str);
+
 extern SYNTAX_ERROR removecheck(char *str);
 
 extern SYNTAX_ERROR printcheck(char *str);

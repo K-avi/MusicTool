@@ -1188,3 +1188,43 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
     }
 }
 
+
+
+RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
+
+  char * keyword= argv[1] ; 
+  char* command = argv[2];
+
+  LENGTH len= strlen (argv[2]);
+
+
+  if(! (keyword &&  command)){
+      printf("invalid arguments\n");
+      return 1;
+  }
+  SYNTAX_ERROR syntaxcheck=0;
+
+  if(!strncmp(keyword, "-read",5 )){
+        syntaxcheck=filename_check_var(command);
+        if(!syntaxcheck){
+          printf("in\n");
+          file_command_parseloop(command, user_info);
+        }
+  }else if(!strncmp(keyword, "-scale",5 )){
+
+      syntaxcheck=scalecheck(command);
+      if(!syntaxcheck) scaleparse( command, user_info);
+  }else if(!strncmp(keyword, "-harmo",6 )){
+      syntaxcheck=harmocheck(command);
+      if(!syntaxcheck) harmoparse( command, user_info);
+  }else if(!strncmp(keyword, "-prog",5 )){
+      syntaxcheck=chprogcheck(command);
+      if(!syntaxcheck) chprogparse( command, user_info);
+  }else if(!strncmp(keyword, "-help",5 )){
+       syntaxcheck=helpcheck(command);
+       if(!syntaxcheck) helpparse( command);
+  }
+
+  clearglobals();
+  return syntaxcheck;
+}

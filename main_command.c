@@ -16,13 +16,15 @@
 
 
 
-int main()
+int main( int argc, char *argv[])
 {
   
+  if(argc!=3){
+     printf("to use smtool pass two args");
+  }
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
-   
- 
+
   //initialises the user saved info structure
   user_data=malloc(sizeof(S_USERINFO));
   init_userinfo(user_data);
@@ -31,12 +33,12 @@ int main()
   time_t t;
   srand((unsigned) time(&t));
 
+  SYNTAX_ERROR err =parse_command( argv, user_data);
 
-  printf("Welcome to MusicTool! Type 'help' for more informations\n");
-  printf("  >>>");
-
-  cmdline_parseloop(user_data);
-
+  if(err!=0){
+    char * err_msg= syntax_error_flag_to_str(err);
+    printf("%s\n", err_msg);
+  }
   free_userinfo(user_data);
   return 0;
 }

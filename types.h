@@ -185,4 +185,7 @@ typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ;
 #define SYNTAX_INVALID_SOF 17 //invalid start of file
 
 
+typedef unsigned char RUNTIME_ERROR;
+
+
 #endif

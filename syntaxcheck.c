@@ -324,6 +324,7 @@ SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argumen
 
 //a filename is considered to be a string w/o spaces
 
+    printf("%s\n", str);
     char * tmp=str; 
 
     while(NEUTRAL_CHAR(*tmp)) tmp++; 
@@ -333,7 +334,26 @@ SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argumen
 
     while(NEUTRAL_CHAR( *tmp)) tmp++; //whatever next 
 
+    printf("%s\n", tmp);
     if(END_OF_LINE_CHAR(*tmp) ) return SYNTAX_OK; 
+
+    return SYNTAX_INVALID_ARG; //too much args error
+}
+
+SYNTAX_ERROR filename_check_var(char * str){ //checks that the str passed as argument is a filename. 
+
+//a filename is considered to be a string w/o spaces
+
+    printf("%s\n", str);
+    char * tmp=str; 
+
+    while( *tmp==' ' || *tmp=='\t') tmp++; 
+    if(END_OF_LINE_CHAR(*tmp) || *tmp=='\n') return SYNTAX_TOO_FEW_ARGS;
+   
+    while( !( *tmp==' ' || *tmp=='\t' || *tmp=='\0' )) tmp++; //string w/o spaces or tab or \n
+    while(*tmp==' ' || *tmp=='\t') tmp++; //whatever next 
+
+    if(END_OF_LINE_CHAR(*tmp) || *tmp=='\n') return SYNTAX_OK; 
 
     return SYNTAX_INVALID_ARG; //too much args error
 }
@@ -469,6 +489,16 @@ SYNTAX_ERROR helpcheck(char * str){
         
     }
     return SYNTAX_INVALID_ARG;
+}
+SYNTAX_ERROR readcommandcheck( char * str){
+
+    char * tmp= str ;
+
+    while(NEUTRAL_CHAR(*tmp))tmp++; 
+
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS; 
+
+    return filename_check(tmp);
 }
 
 SYNTAX_ERROR readcheck( char * str){

@@ -1217,7 +1217,7 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   }else if(!strncmp(keyword, "-harmo",6 )){
       syntaxcheck=harmocheck(command);
       if(!syntaxcheck) harmoparse( command, user_info);
-  }else if(!strncmp(keyword, "-prog",5 )){
+  }else if(!strncmp(keyword, "-chprog",7 )){
       syntaxcheck=chprogcheck(command);
       if(!syntaxcheck) chprogparse( command, user_info);
   }else if(!strncmp(keyword, "-help",5 )){

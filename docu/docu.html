@@ -114,6 +114,22 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="#p5">
+                                    V: using Shell MusicTool (smtool): 
+                                </a>
+                                <li>
+                                    <a href="#p51">
+                                    1: what is smtool
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#p52">
+                                    2: how to call an smtool command 
+                                    </a>
+                                </li>
+                               
+                            </li>
                         </ul>
                     
                 
@@ -401,6 +417,52 @@
                         Multiple environments can be written in a single environment file.
                     </p>
                 </div>
+                <div id="p5">
+                    <h2>
+                    <u>
+                       V: Using Shell MusicTool (smtool) :
+                    </u>
+                    </h2>
+                    <br/>
+                    <div id="p51">
+                        <h4>
+                            <em>
+                                V.1: what is smtool: 
+                            </em>
+                            </h4>
+                        <p class="text-left">
+                            Shell MusicTool (for short smtool) is a program that tries to emulate the syntax of a shell command 
+                            to do MusicTool operations.
+                            The goal of smtool in the long run is to maximize it's compatibility with shell scripts and make it a practical way 
+                            of testing MusicTool functions or doing short operations. 
+                        </p>
+                    </div>
+                    <div id="p52">
+                        <h4>
+                            <em>
+                                V.2: how to call a smtool command: 
+                            </em>
+                            </h4>
+                        <p class="text-left">
+                            smtool implements all the commands that can be parsed from music tool except the "read env" and "write env" functions
+                            Instead of launching an interpreter an smtool command is called from command line and takes two arguments; 
+                            the first one corresponding to a MusicTool keyword (scale, harmo , chprog,...) preceeded by a single "-"
+                            the second argument is a MusicTool command available with the keyword. 
+                            To parse the command correctly, it has to be contained between double quotes. 
+
+                            Example: the MusicTool command 'scale rand 7' would be 'smtool -scale "rand 7" ' if called from smtool. 
+                            The syntax for most of the MusicTool command is the same for smtool ones; except the "read command" function 
+                            which is simplified to : 'smtool -read "filename.txt" '
+
+                            NB: the save family of command aren't disabled in smtool; however they are useless as each smtool command takes place
+                            in a new environment.
+                            
+                        </p>
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
             </div>
         </div>
 

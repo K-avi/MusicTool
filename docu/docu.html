@@ -232,8 +232,8 @@
                                 be saved;
                                 if passed without argument, the interpreter will check if there is currently a temporary
                                 scale saved and save it if it's the case. 
-                        <br/><br/>-print : print has to be passed with one integer argument , it will print the scale stored at the 
-                                index passed;
+                        <br/><br/>-print : print can be passed with one integer argument or the env keuword. If passed with an integer it will print the scale stored at the 
+                                index passed; If passed with env, it will print every scale currently saved
                         <br/><br/>-remove : remove has to be passed with one integer argument, it will remove the scale stored at
                                 the index passed as argument if it exists and reindex the saved scales.
                         <br/><br/>-invert : can be passed without argument , with a scale argument or "saved n" with n being the index of a saved scale.
@@ -294,8 +294,8 @@
                         <br/><br/>-saved scale : must be passed with one integer argument, harmonises the saved scale stored at the
                                     index passed if it exists and generates it's harmonised scale. The harmonised scale
                                     generated is saved as the temporary saved harmonised scale  
-                        <br/><br/>-print : print has to be passed with one integer argument , it will print the harmonised scale 
-                                stored at the index passed if it exists.
+                        <br/><br/>-print : can be passed with one integer argument or with env, if passed with an integer will print the harmonised scale 
+                                stored at the index passed if it exists. If passed with env, prints every harmonised scale currently stored
                         <br/><br/>-remove : remove has to be passed with one integer argument, it will remove the harmonised scale 
                                 stored at the index passed as argument if it exists and reindex the saved harmonised
                                 scales. 
@@ -318,7 +318,7 @@
                                 if passed with none will generate a prog of rand length from a rand scale.
                         <br/><br/>-save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
                                 if passed without will save the temporary saved chprog if it exists.
-                        <br/><br/>-print : passed with one integer argument prints the chprog stored at index n if it exists. 
+                        <br/><br/>-print : passed with one integer argument or the env keyword prints the chprog stored at index n if it exists or all the chprogs currenlty saved if passed with env. 
                         <br/><br/>-remove : passed with one integer argument removes the chprog stored at index n if it exists 
                                   and reindexes the remaining saved progs.
                         <br/><br/>-toscale : can be passed with a chprog arg, "saved n" arg or w/o args. If passed with a chprog will generate the scale containing each note

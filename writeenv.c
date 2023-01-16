@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include "chordprint.h"
 #include "harmo.h"
+#include "types.h"
 #include "user_info.h"
 #include "scalegen.h"
 
@@ -21,54 +22,68 @@
 #endif
 
 
+void print_scl_env( S_SAVED_SCALES* saved_scales){
+   // if (!saved_scales) return; 
 
-void print_env(S_USERINFO* user_info){
-    if(!user_info) return;
 
     printf("env scale (\n");
-
-    S_SAVED_SCALES * tmp= user_info->saved_scales;
-
+    S_SAVED_SCALES * tmp= saved_scales->next;
    
-    if(tmp){
-        while(tmp){
-            printf("%d",tmp->scale);
+    CPT i=1;
+    while(tmp){
+            printf("\n%d :",i++);
             if(tmp->scale){
              print_scale(tmp->scale); 
             }
             tmp=tmp->next;
         }
-    }
-    printf(")\n");
-
-    S_SAVED_MODES * tmp1= user_info->saved_modes;
     
-  
-    printf("env harmo (\n");
-    if(tmp1){
-        while(tmp1){
-            if(tmp1->modes){
-                print_scale(tmp1->modes[0]); 
-            }
-            tmp1=tmp1->next;
+    printf(")\n");
+}
+
+void print_modes_env( S_SAVED_MODES* saved_modes){
+
+    //if (!saved_modes) return; 
+    printf("env scale (\n");
+    S_SAVED_MODES * tmp= saved_modes->next;
+
+    CPT i=1;
+    while(tmp){
+        printf("\n%d :",i++);
+        if(tmp->modes){
+         print_modes(tmp->modes); 
         }
+            tmp=tmp->next;
     }
     printf(")\n");
+}
 
-    S_SAVED_PROGS * tmp2= user_info->saved_progs;
-    if(!tmp2) return;
-    tmp2=tmp2->next;
+void print_chprog_env (S_SAVED_PROGS* saved_progs){
+   // if(!saved_progs ) return; 
+
+    S_SAVED_PROGS * tmp= saved_progs;
+    if(!tmp) return;
+    CPT i=1;
+    tmp=tmp->next;
      printf("env chprog (\n");
-    if(tmp2){
-        while(tmp2){
-            if(tmp2->ch_prog){
-                print_chord_prog(tmp2->ch_prog); 
+    if(tmp){
+        while(tmp){
+            printf("\n%d",i++);
+            if(tmp->ch_prog){
+                print_chord_prog(tmp->ch_prog); 
             }
-            tmp2=tmp2->next;
+            tmp=tmp->next;
         }
     }
     printf(")\n");
+}
 
+void print_env(S_USERINFO* user_info){
+    if(!user_info) return;
+
+    print_scl_env(user_info->saved_scales);
+    print_modes_env(user_info->saved_modes); 
+    print_chprog_env(user_info->saved_progs);
 }
 
 

@@ -13,6 +13,7 @@
 #include "parsing.h"
 #include "harmo.h"
 #include "writeenv.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -62,11 +63,17 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
         }
         print_scale(tmp_saved_scale);
        
-    } else if(!strncmp(&line[i], "print ",6)){
+    } else if(!strncmp(&line[i], "print",5)){
           
-          indexx=parse_index(line);
-          if(indexx==-1) printf("index not recognised; no scale will be printed, please pass an integer from 1 to the number of scales saved\n");
-          else{print_saved_scale(user_saved, indexx);}
+          i+=5;
+          while(NEUTRAL_CHAR(line[i])) i++;
+          if(isdigit(line[i])){
+            indexx=parse_index(line);
+            if(indexx==-1) printf("index not recognised; no scale will be printed, please pass an integer from 1 to the number of scales saved\n");
+            else{print_saved_scale(user_saved, indexx);}
+          }else if(!strncmp(&line[i], "env", 3)){
+            print_scl_env(user_saved->saved_scales);
+          }else printf("runtime error in scale print\n");
           
           
 
@@ -415,13 +422,17 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
           else{remove_modes(user_saved, indexx); compt_harmo--;}
           
 
-    }else if(!strncmp(&line[i], "print ",5)){
+    }else if(!strncmp(&line[i], "print",5)){
           
-          indexx=parse_index(line);
-          if(indexx==-1) printf("index not recognised; nothing will be printed, please pass an integer from 1 to the number of harmo saved\n");
-          else{
-            print_modes(get_modes(user_saved, indexx));
-          }
+          i+=5;
+          while(NEUTRAL_CHAR(line[i])) i++;
+          if(isdigit(line[i])){
+            indexx=parse_index(line);
+            if(indexx==-1) printf("index not recognised; no scale will be printed, please pass an integer from 1 to the number of harmonised scales saved\n");
+            else{print_saved_modes(user_saved, indexx);}
+          }else if(!strncmp(&line[i], "env", 3)){
+            print_modes_env(user_saved->saved_modes);
+          }else printf("runtime error in harmo print\n");
           
 
     }else {
@@ -445,8 +456,6 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         l2=parse_next(line);
       
         free_chord_prog(tmp_chprog);
-        
-
      
         if(l1==-1){
         
@@ -490,13 +499,17 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             }
             }else printf("runtime error in chprog save\n");
         
-      } else if(!strncmp(&line[i], "print ",6)) {
-
-         
-         indexx=parse_index(line);
-          if(indexx==-1) printf("index not recognised; no chprog will be printed, please pass an integer from 1 to the number of scales saved\n");
-          else{print_saved_prog(user_saved, indexx);}
+      } else if(!strncmp(&line[i], "print",5)) {
         
+          i+=5;
+          while(NEUTRAL_CHAR(line[i])) i++;
+          if(isdigit(line[i])){
+            indexx=parse_index(line);
+            if(indexx==-1) printf("index not recognised; no chprog will be printed, please pass an integer from 1 to the number of progs saved\n");
+            else{print_saved_prog(user_saved, indexx);}
+          }else if(!strncmp(&line[i], "env", 3)){
+            print_chprog_env(user_saved->saved_progs);
+          }else printf("runtime error in chprog print\n");
 
       }  else if(!strncmp(&line[i], "remove ",7)){
           

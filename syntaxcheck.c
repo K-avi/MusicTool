@@ -24,6 +24,13 @@
 //syntax check for common functions : print and remove 
 
 
+SYNTAX_ERROR emptycheck(char * str){
+    char * tmp=str; 
+    while(NEUTRAL_CHAR(*tmp)) tmp++; 
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK ;
+    return SYNTAX_GENERIC_ERROR;
+}
+
 
 SYNTAX_ERROR printcheck(char *str){//syntax check for the print commands
 
@@ -35,16 +42,23 @@ SYNTAX_ERROR printcheck(char *str){//syntax check for the print commands
     if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
 
     //number? 
-    if(!isdigit(*tmp)) return SYNTAX_INVALID_ARG;
-    while(isdigit(*tmp)) tmp++;
-
+    if(!strncmp(tmp, "env", 3)){
+        tmp+=3; 
+        return emptycheck(tmp);
+    }
+    else if(!isdigit(*tmp)) return SYNTAX_INVALID_ARG;
+    else {
     
-    while(*tmp==' ' || *tmp=='\t'  || *tmp=='\n') tmp++;
-    //nothing appart from a integer in the string
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+        while(isdigit(*tmp)) tmp++;
 
-    //other char error
-    else return SYNTAX_INVALID_CHAR;
+        
+        while(*tmp==' ' || *tmp=='\t'  || *tmp=='\n') tmp++;
+        //nothing appart from a integer in the string
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+
+        //other char error
+        else return SYNTAX_INVALID_CHAR;
+    }
     return SYNTAX_TOO_FEW_ARGS;
 }
 
@@ -502,12 +516,7 @@ SYNTAX_ERROR commentcheck( char * str){//checks if a line contains a comment
     return SYNTAX_GENERIC_ERROR;
 }
 
-SYNTAX_ERROR emptycheck(char * str){
-    char * tmp=str; 
-    while(NEUTRAL_CHAR(*tmp)) tmp++; 
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK ;
-    return SYNTAX_GENERIC_ERROR;
-}
+
 
 SYNTAX_ERROR syntaxcheck(char *str){
     //returns SYNTAX_OK if the syntax of a line is correct; an error flag otherwise

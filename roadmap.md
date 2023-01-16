@@ -81,23 +81,18 @@ status intv vector from scale:
 
 status scale print env: 
     
-    not done 
+    implemented
 
 status harmo print env: 
     
-    not done 
+    implemented
 
 status chprog print env: 
 
-    not done 
-
-status global print env? : 
-
-    not sure to implement; not done
+    implemented
 
 
-
-1.1: functions implementented: 6/11
+1.1: functions implementented: 9/10
 
 status shell mtool : 
 

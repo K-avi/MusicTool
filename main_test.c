@@ -172,6 +172,8 @@ int main(){
   //print_intv_struct(get_interval_struct(scl));
  S_SCALE scl= parse_scale("{ 0 2 4 5 7 9 11}");
 
+  S_INTERVAL_VECTOR vect= generate_intv_vect(scl, 7);
+  print_intv_vect(vect);
 
  //print_scale(get_complementary_scale(scl));
 

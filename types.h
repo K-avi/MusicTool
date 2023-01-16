@@ -145,6 +145,8 @@ typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ;
 //n the unisson {0} scale : <0 ,0 ,0,0,0,0>
 //its rep is: 0000 0000 0000 0000 0000 0000
 
+#define INTV_VECT_ERRFLAG 1<<25
+
 
 //macro functions for environment syntax check
 

@@ -30,6 +30,7 @@ S_SCALE generated_scale=0;
 LENGTH length=0;
 SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
 S_INTERVAL_STRUCTURE generated_intv_struct=0;
+S_INTERVAL_VECTOR generated_intv_vect=0;
 //harmo globals
  S_MODES tmp_saved_mode= NULL , parsed_modes=NULL;
  char* begin=NULL;
@@ -226,6 +227,8 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
     } else if(!strncmp(&line[i], "intv",4)){
         i+=4;
         while(NEUTRAL_CHAR(line[i])) i++; 
+        
+        
         if(!strncmp(&line[i], "struct", 6)) {
             i+=6;
             while (NEUTRAL_CHAR(line[i]))  i++;
@@ -267,7 +270,42 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
 
         }else if(!strncmp(&line[i], "vector",6)){
           i+=6;
-          printf("scale intv vector not yet implemented\n");
+            while (NEUTRAL_CHAR(line[i]))  i++;
+            
+            if(line[i]=='{'){
+              //printf("%s\n", &line[i]);
+              generated_scale=parse_scale(&line[i]);
+            
+              if( ! (generated_scale&ERROR_FLAG)){
+                generated_intv_vect= generate_intv_vect(generated_scale, get_length_kerni(generated_scale));
+                printf("interval vect of parsed scale is:\n");
+                print_intv_vect(generated_intv_vect);
+              }else{
+                printf("please parse a valid scale\n");
+              }
+            }else if(!strncmp(&line[i], "saved", 5)){
+              i+=5;
+              while(NEUTRAL_CHAR(line[i])){
+                i++;
+              }
+              indexx=parse_index(&line[i]);
+              if(indexx!=-1){
+                generated_scale=get_saved_scale(user_saved, indexx); 
+                if( !( generated_scale & ERROR_FLAG)){
+                  generated_intv_vect= generate_intv_vect(generated_scale, get_length_kerni(generated_scale));
+                  printf("interval vect of saved scale is:\n");
+                  print_intv_vect(generated_intv_vect);
+                }else{
+                  printf("placeholder error in intv vect saved\n");
+                }
+              }
+            }else if(END_OF_LINE_CHAR(line[i])){
+              if(tmp_saved_scale){
+                generated_intv_vect=generate_intv_vect(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
+                printf("interval vect of tmp saved scale is:\n"); 
+                print_intv_vect(generated_intv_vect);
+              }else printf("no temporary saved scale to retrieve\n");
+            }else printf("runtime error in scale intv struct\n");
 
         }else printf("runtime error in scale intv\n");
     }else if(!strncmp(&line[i], "nearby",6)){

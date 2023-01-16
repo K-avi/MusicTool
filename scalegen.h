@@ -36,7 +36,9 @@ extern S_SCALE get_prime_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length);
 extern S_SCALE get_complementary_scale(S_SCALE scale);
 extern S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length);
+
 extern S_INTERVAL_VECTOR generate_intv_vect(S_SCALE scale, LENGTH length);
+extern void print_intv_vect( S_INTERVAL_VECTOR vect);
 
 #ifdef DEBUG
 extern SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2);

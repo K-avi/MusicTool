@@ -13,3 +13,13 @@ chprog toscale saved 1
 
 scale save
 scale print 1
+
+scale print env 
+
+harmo rand 
+harmo save 
+harmo print env 
+
+chprog rand 
+chprog save 
+chprog print env 

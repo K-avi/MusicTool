@@ -29,3 +29,9 @@ scale rand
 scale nearby 
 
 scale nearby saved 1
+
+scale intv vector { 0 2 4 5 7 9 11}
+scale intv vector saved 1
+
+scale rand 
+scale intv vector

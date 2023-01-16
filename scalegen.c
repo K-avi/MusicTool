@@ -389,11 +389,59 @@ S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length){//generates a nearb
     return ret;
 }//works
 
+void print_intv_vect( S_INTERVAL_VECTOR vect){
+    //printf("%b\n", vect);
+    if(vect & INTV_VECT_ERRFLAG){ return ;}
+    CPT  mask=0xF; 
+    printf("< ");
+    for(CPT i=0; i<6; i++){
+        printf("%d ",  (vect >>(4*i)) &mask );
+    }
+    printf(" >\n");
+}
+
+S_INTERVAL_VECTOR add_partial_intv_vect(S_SCALE scale , S_INTERVAL_VECTOR vect){
+
+    if(scale & ERROR_FLAG) return INTV_VECT_ERRFLAG;
+
+    S_INTERVAL_VECTOR ret= vect;
+ 
+    BITS mask= 0xF;
+    BITS retrieved=0;
+    for(CPT i=0; i<6; i++){
+    
+        if( scale & (1<<i)){
+           
+            retrieved = (ret & (mask << (4*i))) >> (4*i);
+            retrieved +=1;
+
+            ret= ret & ( ~(mask <<(4*i)));
+            ret= ret | (retrieved << (4*i));
+        }
+    }
+    return ret ;
+}
 
 S_INTERVAL_VECTOR generate_intv_vect(S_SCALE scale, LENGTH length){
 
     if(!(scale & length)) return 0;
 
-    S_INTERVAL_VECTOR ret=0; 
+    S_INTERVAL_VECTOR ret= 0; 
+    S_MODES modes= generate_modes(scale); 
+
+    for (CPT i=0; i<length; i++){
+       
+        ret=add_partial_intv_vect(modes[i],  ret);
+    }
+    free(modes);
+
+    unsigned mask= 0xF00000;
+    BITS retrieved= (ret & mask) >> 20;
+    
+    retrieved/=2;
+
+    ret &= ~mask;
+    ret|= retrieved <<20;
     return ret;
 }
+

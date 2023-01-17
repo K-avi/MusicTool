@@ -55,6 +55,8 @@ typedef unsigned long long S_DODEC; /*
 #define DODEC_ERRFLAG 0xF00000000000 // 
 #define DODEC_INITFLAG 0xD
 
+#define HARMO_SERIE 0xCBA9876543210
+
 //-----------------------------------------------------------------------------------------------//
 
 // CHORD MODE

@@ -191,12 +191,26 @@ int main(){
 
   //printf("%lu\n", (long)1<<48);
 
-  S_DODEC dodec= init_dodec();
-  dodec= add_rand_to_dodec(dodec);
-  dodec= generate_serie(dodec);
-  printf("%b\n", dodec);
-    print_serie(dodec);
-    
+  /*S_DODEC dodec= INIT_DODEC;
+  print_serie(dodec);
+  dodec= add_to_dodec(dodec, 10);
+  dodec= add_to_dodec(dodec, 1);
+  dodec= add_to_dodec(dodec, 4);
+  dodec= add_to_dodec(dodec, 4);*/
+  //printf("%b\n", dodec);
+ // print_serie(dodec);
+ // print_serie( dodec);
+
+ // printf("%d\n", isvalid_serie(HARMO_SERIE));
+  //printf("%d\n", note_in_dodec(HARMO_SERIE , 10));
+  
+
+  //print_serie(HARMO_SERIE);
+  
+ // S_DODEC randodec= generate_serie() ;
+ // print_serie(randodec); 
+  //print_serie ( shuffle_once(HARMO_SERIE , 0, 11));
+  print_serie( shuffle_serie( HARMO_SERIE,  100));
   free_userinfo(user_data);
   return 0;
 

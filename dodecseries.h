@@ -3,6 +3,9 @@
 
 #include "types.h"
 #include <stdlib.h>
+#include <sys/types.h>
+
+#define INIT_DODEC 0xDDDDDDDDDDDD
 
 extern S_DODEC generate_serie();
 extern S_DODEC inverse_serie(S_DODEC serie, INDEX inversion);
@@ -11,10 +14,14 @@ extern S_DODEC * serie_to_12tmat( S_DODEC serie);
 
 extern void print_serie(S_DODEC serie);
 extern S_DODEC init_dodec();
+extern S_DODEC shuffle_serie(S_DODEC seed, u_long num);
 
 #ifdef DEBUG 
 
-S_DODEC add_rand_to_dodec( S_DODEC serie);
-
+extern S_DODEC add_rand_to_dodec( S_DODEC serie);
+extern bool isvalid_serie(S_DODEC serie);
+extern bool note_in_dodec( S_DODEC serie, NOTE note);
+extern S_DODEC add_to_dodec( S_DODEC serie, NOTE note);
+extern S_DODEC shuffle_once( S_DODEC seed, INDEX i1, INDEX i2);
 #endif
 #endif

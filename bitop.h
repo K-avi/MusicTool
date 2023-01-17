@@ -8,6 +8,7 @@
 
 // error flag's bit rep is: 1000 0000 0000 0000
 #define SET_NTH(bits, n) ( 1<<n | bits)
+
 #define GET_NTH(bits,n) (1 & bits>>n)
 #define POP_BIT(bits, n) (1<<n ^ bits)
 

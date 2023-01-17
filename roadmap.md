@@ -12,6 +12,7 @@ Features for MusicTool 1.2:
     
     implementing dodecaphonic series, 12 tone matrixes n operations on them 
     maybe implementing PCS? 
+    making the parsing look better
 
 Features for MusicTool 1.3: 
     
@@ -24,76 +25,3 @@ Features for MusicTool 1.4:
     writing stuff to midi files maybe ? 
 
 
-
-
-mtool 1.1 utility functions: 
-
-
--scale functions: 
-
-    -get inverse of scale 
-    -get prime of scale 
-    -get complementary scale 
-    
-    -get interval structure
-    -generate nearby scale 
-    -get scale from chprog 
-
-    -get interval vector
-
--print env: 
-    
-    -print all env 
-    -print all scales
-    -all harmos
-    -all chprogs 
-
-
-status invert : 
-
-    implemented
-
-status complementary : 
-
-    implemented
-
-
-status prime : 
-
-    implemented
-
-status interval structure from scale: 
-
-    implemented
-
-status PCS/scale from chprog: 
-
-    implemented
-
-
-status generate nearby scale :
-
-    implemented
-
-status intv vector from scale: 
-
-    not done
-
-status scale print env: 
-    
-    implemented
-
-status harmo print env: 
-    
-    implemented
-
-status chprog print env: 
-
-    implemented
-
-
-1.1: functions implementented: 9/10
-
-status shell mtool : 
-
-    not started

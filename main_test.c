@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "dodecseries.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parseloop.h"
@@ -19,6 +20,7 @@
 #include "parseloop.h"
 #include "writeenv.h"
 #include "syntaxcheck.h"
+#include "dodecseries.h"
 
 
 #include <wchar.h>
@@ -170,10 +172,10 @@ int main(){
  // print_intv_struct(intv); 
 
   //print_intv_struct(get_interval_struct(scl));
- S_SCALE scl= parse_scale("{ 0 2 4 5 7 9 11}");
+ /*S_SCALE scl= parse_scale("{ 0 2 4 5 7 9 11}");
 
   S_INTERVAL_VECTOR vect= generate_intv_vect(scl, 7);
-  print_intv_vect(vect);
+  print_intv_vect(vect);*/
 
  //print_scale(get_complementary_scale(scl));
 
@@ -189,6 +191,12 @@ int main(){
 
   //printf("%lu\n", (long)1<<48);
 
+  S_DODEC dodec= init_dodec();
+  dodec= add_rand_to_dodec(dodec);
+  dodec= generate_serie(dodec);
+  printf("%b\n", dodec);
+    print_serie(dodec);
+    
   free_userinfo(user_data);
   return 0;
 

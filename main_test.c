@@ -210,8 +210,20 @@ int main(){
  // S_DODEC randodec= generate_serie() ;
  // print_serie(randodec); 
   //print_serie ( shuffle_once(HARMO_SERIE , 0, 11));
-  print_serie( shuffle_serie( HARMO_SERIE,  100));
+ // print_serie( shuffle_serie( HARMO_SERIE,  100));
+
+  //print_serie(retrograde_serie(HARMO_SERIE));
+  //print_serie(inverse_serie(HARMO_SERIE));
+
+/*  S_DODEC harmogenplz=INIT_DODEC;
+  for (int i=0; i<12; i++){
+    harmogenplz= add_to_dodec(harmogenplz, i);
+    
+  }*/
+ // print_serie(harmogenplz);
+ // print_serie(generate_serie());
   free_userinfo(user_data);
+  print_serie( parse_serie("{ 0 1 2 3 4 5 6 7 8 9 10 11"));
   return 0;
 
 }

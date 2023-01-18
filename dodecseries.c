@@ -1,13 +1,17 @@
 #include "dodecseries.h"
 #include "bitop.h"
+#include "scalegen.h"
 #include "types.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 
 
 
-bool isvalid_serie(S_DODEC serie){
+
+bool isvalid_serie(S_DODEC serie){//returns true is a serie is full and has each number from 0 to eleven 
+//exactly once in it .
     
     unsigned short seriecheck=0;
     NOTE note= 0 ,notenum=0;
@@ -37,22 +41,37 @@ bool note_in_dodec( S_DODEC serie, NOTE note){
  
 }
 
-S_DODEC add_to_dodec( S_DODEC serie, NOTE note){ //doesnt work
+S_DODEC add_to_dodec( S_DODEC serie, NOTE note){ //adds a note to a dodec serie passed as arg.
     //adds a note to a dodec serie on the first empty index if it's not full
-    CPT i=0;
+    if(ISFULL_SERIE(serie)) return serie;
+    if(note>11) return serie;
+    S_DODEC i=0;
+    S_DODEC ullnote= note;
+    S_DODEC ullflag= 0xF;
     while( ( ((serie >> (4*i)) & 0xF)!=0xD )&& i<12) {
-        
-        print_serie(serie);
         i++;
     }
-    printf("%llu %d\n",((serie >> (4*i)) & 0xF) ,i  );
     if(i==12) return serie;
-    serie= (S_DODEC) (((S_DODEC) serie & (S_DODEC) ~((0xF)<<(S_DODEC) (4*i))) | (S_DODEC) ((S_DODEC) note << (S_DODEC) 4*i) );
+ 
+    serie=  (( serie &  ~((ullflag)<< (4*i))) |  ( ullnote <<  4*i) );
     return serie;
 }
 
+S_DODEC add_rand_dodec(S_DODEC serie){//adds a random note in a dodec serie ; doesn't check for max length
+    
+    NOTE note= rand()%12; 
+    while(note_in_dodec(serie, note)) note=rand()%12;
+    return add_to_dodec(serie,  note);
+}
+S_DODEC generate_serie(){//generates a random dodec serie 
 
-S_DODEC shuffle_once( S_DODEC seed, INDEX i1, INDEX i2){
+    S_DODEC ret=INIT_DODEC;
+    for(int i=0; i<12; i++){
+        ret=add_rand_dodec(ret);
+    }
+    return ret;
+}
+S_DODEC shuffle_once( S_DODEC seed, INDEX i1, INDEX i2){//shuffles a serie passed as a seed at the indexes 1 n 2
    
     if(! (i1<12) & (i2<12)) return seed;
 
@@ -61,7 +80,7 @@ S_DODEC shuffle_once( S_DODEC seed, INDEX i1, INDEX i2){
 
     return seed ^ shuffler;
 }
-S_DODEC shuffle_serie(S_DODEC seed, u_long num){
+S_DODEC shuffle_serie(S_DODEC seed, u_long num){//randomly shuffles a serie passed as seed num times
 
     INDEX i1=rand()%12, i2=rand()%12;
     while(i1==i2) i2=rand()%12;
@@ -78,7 +97,7 @@ S_DODEC shuffle_serie(S_DODEC seed, u_long num){
 }
 
 
-void print_serie(S_DODEC serie){
+void print_serie(S_DODEC serie){//prints a dodec serie
 
     printf("{ ");
     for( CPT cpt=0; cpt <12; cpt ++){
@@ -86,13 +105,27 @@ void print_serie(S_DODEC serie){
     }
     printf(" }\n");
 }
-S_DODEC inverse_serie(S_DODEC serie, INDEX inversion){
+S_DODEC inverse_serie(S_DODEC serie){ //calculates I0 of a serie 
 
-    return 0;
+    S_DODEC ret=0; 
+    S_DODEC current=0;
+    for(CPT i=0; i<12; i++){
+        current= (serie >> (4*i)) & 0xF; 
+        ret|= ((12-current)%12)<<(4*i);
+    }
+
+    return ret;
+    
 }
 
-S_DODEC retrograde_serie (S_DODEC serie, INDEX inversion){
-    return 0;
+S_DODEC retrograde_serie (S_DODEC serie) {//calculates R0 of a serie 
+    S_DODEC ret= 0;
+    S_DODEC current=0;
+    for (CPT i=0; i<12; i++){
+        current= (serie >> (4*i)) & 0xF;
+        ret|=  (current<<( (11-i)*4 ));
+    }
+    return ret;
 }
 
 S_DODEC * serie_to_12tmat( S_DODEC serie){
@@ -101,4 +134,25 @@ S_DODEC * serie_to_12tmat( S_DODEC serie){
 }
 
 
+S_DODEC parse_serie(char * str){//parses a str into a serie
+
+    char * tmp=str;
+    NOTE note=13;
+    S_DODEC ret=INIT_DODEC;
+    while(*tmp!= '\0'){
+        if(isdigit(*tmp) ){
+            note=atoi(tmp);
+            ret=add_to_dodec(ret,  note);
+             printf("%d\n",note);
+            while(isdigit(*tmp)) tmp++;
+            continue;
+        }else tmp++;
+    }
+
+    
+    if(isvalid_serie(ret)) return ret;
+
+    return ret;
+
+}
 

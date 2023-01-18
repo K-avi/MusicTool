@@ -8,17 +8,33 @@
 #define INIT_DODEC 0xDDDDDDDDDDDD
 #define ISFULL_SERIE(serie) ( ((serie)& 0xF00000000000)!= 0xD00000000000)
 
+
+//random gen function
 extern S_DODEC generate_serie();
+extern S_DODEC shuffle_serie(S_DODEC seed, u_long num);
+
+
+//utility functions 
 extern S_DODEC inverse_serie(S_DODEC serie);
 extern S_DODEC retrograde_serie (S_DODEC serie);
-extern S_DODEC * serie_to_12tmat( S_DODEC serie);
+extern S_DODEC retrograde_serie (S_DODEC serie);
+extern S_DODEC retrograde_inverse_serie(S_DODEC serie);
 
+extern S_DODEC nth_prime( S_DODEC serie, INDEX n );
+extern S_DODEC nth_inv (S_DODEC serie, INDEX n);
+extern S_DODEC nth_retrograde (S_DODEC serie, INDEX n);
+extern S_DODEC nth_retrograde_inverse( S_DODEC serie, INDEX n);
+
+//stdio functions
 extern void print_serie(S_DODEC serie);
-extern S_DODEC init_dodec();
-extern S_DODEC shuffle_serie(S_DODEC seed, u_long num);
-extern S_DODEC generate_serie();
+extern void print_12t_mat(S_DODEC* mat);
 
 extern S_DODEC parse_serie(char * str);
+
+//12 tone mat functions
+
+extern S_DODEC * serie_to_12tmat( S_DODEC serie);
+
 #ifdef DEBUG 
 
 extern S_DODEC add_rand_to_dodec( S_DODEC serie);

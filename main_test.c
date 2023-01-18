@@ -29,14 +29,14 @@
 
 int main(){
 
-  time_t t;
-  srand((unsigned) time(&t));
+ // time_t t;
+ // srand((unsigned) time(&t));
 
-  setbuf(stdin, NULL);
-  setbuf(stdout, NULL);
+ // setbuf(stdin, NULL);
+ // setbuf(stdout, NULL);
 
-  user_data=malloc(sizeof(S_USERINFO));
-  init_userinfo(user_data);
+ // user_data=malloc(sizeof(S_USERINFO));
+ // init_userinfo(user_data);
 
 
  /* char *str= "[II, V,I]";
@@ -222,8 +222,15 @@ int main(){
   }*/
  // print_serie(harmogenplz);
  // print_serie(generate_serie());
-  free_userinfo(user_data);
-  print_serie( parse_serie("{ 0 1 2 3 4 5 6 7 8 9 10 11"));
+ // free_userinfo(user_data);
+  S_DODEC serie= shuffle_serie(HARMO_SERIE, 200);
+ // print_serie(serie);
+    
+ // print_serie(serie); 
+  //print_serie(inverse_serie(serie));
+  S_DODEC * mat= serie_to_12tmat(serie);
+ // print_12t_mat(mat);
+  free(mat);
   return 0;
 
 }

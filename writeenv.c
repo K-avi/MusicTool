@@ -22,12 +22,12 @@
 #endif
 
 
-void print_scl_env( S_SAVED_SCALES* saved_scales){
+void print_scl_env( S_USERINFO* uinfo){
    // if (!saved_scales) return; 
 
 
     printf("env scale (\n");
-    S_SAVED_SCALES * tmp= saved_scales->next;
+    S_SAVED_SCALES * tmp= uinfo->saved_scales->next;
    
     CPT i=1;
     while(tmp){
@@ -41,11 +41,11 @@ void print_scl_env( S_SAVED_SCALES* saved_scales){
     printf(")\n");
 }
 
-void print_modes_env( S_SAVED_MODES* saved_modes){
+void print_modes_env( S_USERINFO*uinfo){
 
     //if (!saved_modes) return; 
     printf("env scale (\n");
-    S_SAVED_MODES * tmp= saved_modes->next;
+    S_SAVED_MODES * tmp= uinfo->saved_modes->next;
 
     CPT i=1;
     while(tmp){
@@ -58,10 +58,10 @@ void print_modes_env( S_SAVED_MODES* saved_modes){
     printf(")\n");
 }
 
-void print_chprog_env (S_SAVED_PROGS* saved_progs){
+void print_chprog_env (S_USERINFO*uinfo){
    // if(!saved_progs ) return; 
 
-    S_SAVED_PROGS * tmp= saved_progs;
+    S_SAVED_PROGS * tmp= uinfo->saved_progs;
     if(!tmp) return;
     CPT i=1;
     tmp=tmp->next;
@@ -81,9 +81,9 @@ void print_chprog_env (S_SAVED_PROGS* saved_progs){
 void print_env(S_USERINFO* user_info){
     if(!user_info) return;
 
-    print_scl_env(user_info->saved_scales);
-    print_modes_env(user_info->saved_modes); 
-    print_chprog_env(user_info->saved_progs);
+    print_scl_env(user_info);
+    print_modes_env(user_info); 
+    print_chprog_env(user_info);
 }
 
 

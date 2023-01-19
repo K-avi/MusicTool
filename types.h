@@ -30,6 +30,7 @@ typedef unsigned char INDEX; // generic index
 typedef unsigned char CHORD; //chord rpz : 
 typedef unsigned char SYNTAX_ERROR;
 typedef unsigned char BITS; //generic uchar 
+typedef unsigned char RUNTIME_ERROR;
 /*
 first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
 3 diminished and 4 augmented
@@ -98,32 +99,7 @@ typedef unsigned short WORD_BITS; //bits representing the characters parsed from
 //each symbol takes 3 bits ; the symbols are defined as macro in bitop.h. the longest symbol is bVIIm which has a length of 5. 
 //any symbol longer than that is invalid. The 16 bit is a mask. If it is set then the WORD is invalid.
 
-/////////////// saved stuff//////////////
 
-typedef struct S_LINKED_SCALE{ //basic linked list w scales
-  S_SCALE scale; 
-  struct S_LINKED_SCALE * next;
-}S_SAVED_SCALES;
-
-typedef struct S_LINKED_MODE{
-  S_MODES modes;
-  struct S_LINKED_MODE * next;
-}S_SAVED_MODES;
-
-typedef struct S_LINKED_CHPROGS{
- 
-  S_CHORD_PROG *ch_prog;
-  struct S_LINKED_CHPROGS * next ; 
-}S_SAVED_PROGS;
-
-typedef struct{ 
-    S_SAVED_MODES *saved_modes;
-    S_SAVED_SCALES *saved_scales;
-    S_SAVED_PROGS * saved_progs;
-    CPT progs_num;
-    CPT scales_num;
-    CPT modes_num;
-}S_USERINFO;
 
 
 #ifndef WIN32
@@ -193,8 +169,39 @@ typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ;
 //#define SYNTAX_INVALID_SCALE 17
 #define SYNTAX_INVALID_SOF 17 //invalid start of file
 
+/////////////// saved stuff//////////////
 
-typedef unsigned char RUNTIME_ERROR;
+typedef struct S_LINKED_SCALE{ //basic linked list w scales
+  S_SCALE scale; 
+  struct S_LINKED_SCALE * next;
+}S_SAVED_SCALES;
+
+typedef struct S_LINKED_MODE{
+  S_MODES modes;
+  struct S_LINKED_MODE * next;
+}S_SAVED_MODES;
+
+typedef struct S_LINKED_CHPROGS{
+ 
+  S_CHORD_PROG *ch_prog;
+  struct S_LINKED_CHPROGS * next ; 
+}S_SAVED_PROGS;
+
+typedef struct  S_LINKED_DODEC{
+    S_DODEC serie; 
+    struct S_LINKED_DODEC*next; 
+}S_SAVED_DODEC;
+
+typedef struct{ 
+    S_SAVED_MODES *saved_modes;
+    S_SAVED_SCALES *saved_scales;
+    S_SAVED_PROGS * saved_progs;
+    S_SAVED_DODEC * saved_dodecs;
+    CPT progs_num;
+    CPT scales_num;
+    CPT modes_num;
+    CPT dodec_num;
+}S_USERINFO;
 
 
 #endif

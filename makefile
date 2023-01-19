@@ -12,7 +12,7 @@ progs: $(PROGRAMS)
 test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o chordgen.o rand.o misc.o chordprint.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o main_test.o 
 	$(CC) -o $@ $(CFLAGS) $^
 
-MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o main_interpreter.o
+MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o main_interpreter.o
 	$(CC) -o $@ $(CFLAGS) $^
 
 

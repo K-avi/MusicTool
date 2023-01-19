@@ -25,17 +25,17 @@ extern void print_array( NOTE *scale, LENGTH length);
 
 extern S_SCALE * make_scale( NOTE *scale, LENGTH length);
 
-extern S_SCALE inverse_scale(S_SCALE scale, LENGTH length);
+extern S_SCALE inverse_scale(S_SCALE scale);
 extern S_SCALE complementary_scale(S_SCALE scale);
 
 
-extern S_SCALE get_normal_scale(S_SCALE scale, LENGTH length);
+extern S_SCALE get_normal_scale(S_SCALE scale);
 extern S_SCALE get_normal_scale_modes(S_MODES modes, LENGTH length);
 
-extern S_SCALE get_prime_scale(S_SCALE scale, LENGTH length);
-extern S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length);
+extern S_SCALE get_prime_scale(S_SCALE scale);
+extern S_SCALE get_inverse_scale(S_SCALE scale);
 extern S_SCALE get_complementary_scale(S_SCALE scale);
-extern S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length);
+extern S_SCALE generate_nearby_scale (S_SCALE scale);
 
 extern S_INTERVAL_VECTOR generate_intv_vect(S_SCALE scale, LENGTH length);
 extern void print_intv_vect( S_INTERVAL_VECTOR vect);

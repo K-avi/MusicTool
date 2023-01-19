@@ -25,3 +25,41 @@ Features for MusicTool 1.4:
     writing stuff to midi files maybe ? 
 
 
+----------------------------------------
+
+
+mtool 1.2: 
+
+Implementation of 12 tone series: 
+
+backend :
+
+random generation : 
+    -done (twice)
+    
+parsing: 
+    -done 
+
+calculating 12 tone matrixes: 
+    -yee
+
+basic functions: 
+    -R: yes
+    -I: yes
+    -P: yes
+    -RI: yes
+
+syntaxchecking: 
+    -lmao no
+
+u_info: 
+    -struct: no 
+    -save: no 
+    -remove: no 
+    
+
+////////////////////////
+
+MusicTool front: 
+
+smtool front: 

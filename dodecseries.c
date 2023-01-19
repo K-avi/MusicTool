@@ -184,17 +184,13 @@ void print_serie(S_DODEC serie){//prints a dodec serie
 }
 
 void print_serie_num(S_DODEC serie){//prints the num of a dodec serie
+    for( CPT cpt=0; cpt <12; cpt ++)  printf("%llu ",  (serie>> (4*cpt))& 0xF); 
 
-    for( CPT cpt=0; cpt <12; cpt ++){
-        printf("%llu ",  (serie>> (4*cpt))& 0xF);
-    }
-  
 }
 
 void print_12t_mat(S_DODEC* mat){//prints a 12tone mat to stdout
     if(!mat) return;
-   // printf("  I0 I1 I2 I3 I4 I5 I6 I7 I8 I9 I10 I11  \n");
-    
+    // printf("  I0 I1 I2 I3 I4 I5 I6 I7 I8 I9 I10 I11  \n");
     for(CPT i=0; i<12; i++){
         //printf("P%d ",i); 
         print_serie_num(mat[i]);
@@ -202,7 +198,7 @@ void print_12t_mat(S_DODEC* mat){//prints a 12tone mat to stdout
        printf("\n");
     }
     //printf("  RI0 RI1 RI2 RI3 RI4 RI5 RI6 RI7 RI8 RI9 RI10 RI11  \n");
-}
+}//need to add the lil indexes like I0 I1,....
 
 S_DODEC parse_serie(char * str){//parses a str into a serie
 

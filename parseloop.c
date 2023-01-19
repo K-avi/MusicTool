@@ -20,8 +20,10 @@
 #include <strings.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 
+bool succes=0;
 
 //scale globals
 S_SCALE tmp_saved_scale=0;
@@ -40,6 +42,92 @@ S_INTERVAL_VECTOR generated_intv_vect=0;
 S_CHORD_PROG * tmp_chprog=NULL;
 S_CHORD_PROG* generated_chprog=NULL;
 SIGNED_LENGTH l1=-1, l2=-1;
+
+//dodec globals 
+S_DODEC tmp_saved_dodec=0;
+S_DODEC generated_dodec=0, dodec_to_save=0; 
+
+
+void generic_rand( void * rand() ,...){
+
+}//not yet 
+
+u_char generic_print_uinfo (void (*print_uinfo)(S_USERINFO* uinfo, LENGTH index), void (*print_env)( S_USERINFO* uinfo),char*str, S_USERINFO*usaved ){
+  //generic function to print a saved object in uinfo
+  char * tmp=str;
+  while(NEUTRAL_CHAR(*tmp)) tmp++;
+  if(isdigit(*tmp)){
+      indexx=parse_index(tmp);
+      if(indexx==-1) printf("index not recognised; nothing will be printed, please pass an integer from 1 to the number of objects saved\n");
+      else{print_uinfo(usaved, indexx);}
+      return 1;
+
+  }else if(!strncmp(tmp, "env", 3)){
+            print_env(usaved);
+            return 2;
+  }else printf("runtime error in print\n");
+  return 0;
+}
+
+u_char generic_remove (void  (* remove)(S_USERINFO* uinfo, INDEX index), char* str, S_USERINFO*uinfo){
+  char * tmp=str;
+  while(NEUTRAL_CHAR(*tmp)) tmp++;
+  if(isdigit(*tmp)){
+      indexx=parse_index(tmp);
+      if(indexx==-1) printf("index not recognised; nothing will be removed, please pass an integer from 1 to the number of objects saved\n");
+      else{remove(uinfo, indexx);}
+      return 1;
+  }
+  return 0;
+}
+
+u_char generic_scl_scl( S_SCALE (*operation)(S_SCALE scl),char* str, S_USERINFO*uinfo ){
+  /*
+  function to represent a generic f: scl -> scl function 
+  */
+   char * tmp=str;
+   S_SCALE generated_scl=0;
+   while (NEUTRAL_CHAR(*tmp)) {
+          tmp++;
+    }
+    if(*tmp=='{'){
+          //printf("%s\n", &line[i]);
+      generated_scl=parse_scale(tmp);    
+      if( ! (generated_scl&ERROR_FLAG)){
+        tmp_saved_scale=operation(generated_scl);   
+        print_scale(tmp_saved_scale);
+        return 1;
+      }else{
+        printf("please parse a valid scale\n");
+      }
+    }else if(!strncmp(tmp, "saved", 5)){
+          tmp+=5;
+          while(NEUTRAL_CHAR(*tmp)){
+            tmp++;
+          }
+          indexx=parse_index(tmp);
+          if(indexx!=-1){
+            generated_scl=get_saved_scale(uinfo, indexx); 
+            if( !( generated_scl & ERROR_FLAG)){
+              tmp_saved_scale=operation(generated_scl);
+              print_scale(tmp_saved_scale);
+              return 2;
+            }else{
+              printf("runtime error while doing scale operation\n");
+            }
+          }
+    }
+    return 0;
+}
+
+void generic_save( void (*save)(void* element, S_USERINFO *user_info) ,char*str){
+
+}
+
+
+void dodecparse(char* line, S_USERINFO* user_saved){
+
+}
 
 
 
@@ -64,19 +152,8 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
         }
         print_scale(tmp_saved_scale);
        
-    } else if(!strncmp(&line[i], "print",5)){
-          
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])) i++;
-          if(isdigit(line[i])){
-            indexx=parse_index(line);
-            if(indexx==-1) printf("index not recognised; no scale will be printed, please pass an integer from 1 to the number of scales saved\n");
-            else{print_saved_scale(user_saved, indexx);}
-          }else if(!strncmp(&line[i], "env", 3)){
-            print_scl_env(user_saved->saved_scales);
-          }else printf("runtime error in scale print\n");
-          
-          
+    } else if(!strncmp(&line[i], "print",5)){ 
+          succes=generic_print_uinfo(&print_saved_scale , &print_scl_env,&line[i+5], user_saved); 
 
     }else if (!strncmp(&line[i], "save",4)){
 
@@ -98,132 +175,20 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
         }
         
 
-    }  else if(!strncmp(&line[i], "remove",6)){
-          
-          indexx=parse_index(line);
-          if(indexx==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
-          else{remove_scale(user_saved, indexx);}
-             
-    
+    }else if(!strncmp(&line[i], "remove",6)){         
+         succes=generic_remove(&remove_scale, &line[i+6], user_saved);
+            
     }else if (!strncmp(&line[i],"invert" , 6)){
-        i+=6;
-        while (NEUTRAL_CHAR(line[i])) {
-          i++;
-        }
-        if(line[i]=='{'){
-          //printf("%s\n", &line[i]);
-          generated_scale=parse_scale(&line[i]);
-          if(generated_scale!=ERROR_FLAG){
-            tmp_saved_scale=get_inverse_scale(generated_scale, get_length_kerni(generated_scale));
-            print_scale(tmp_saved_scale);
-          }else{
-            printf("please parse a valid scale\n");
-          }
-        }else if(!strncmp(&line[i], "saved", 5)){
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])){
-            i++;
-          }
-          indexx=parse_index(&line[i]);
-          if(indexx!=-1){
-            generated_scale=get_saved_scale(user_saved, indexx); 
-            if(generated_scale!=ERROR_FLAG){
-              tmp_saved_scale=get_inverse_scale(generated_scale, get_length_kerni(generated_scale));
-              print_scale(tmp_saved_scale);
-            }else{
-              printf("placeholder error in inverse saved\n");
-            }
-          }
-        }else if(END_OF_LINE_CHAR(line[i])){
-          if(tmp_saved_scale){
-            tmp_saved_scale= get_inverse_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
-            printf("inverse of tmp saved scale is:\n"); 
-            print_scale(tmp_saved_scale);
-          }else printf("no temporary saved scale to retrieve\n");
-        }else printf("runtime error in scale inverse\n");
+       succes=generic_scl_scl(&get_inverse_scale , &line[i+6], user_saved);
 
     }  else if(!strncmp(&line[i], "comp",4)){
-       i+=4;
-        while (NEUTRAL_CHAR(line[i])) {
-          i++;
-        }
-        if(line[i]=='{'){
-          //printf("%s\n", &line[i]);
-          generated_scale=parse_scale(&line[i]);
-        
-          if( ! (generated_scale&ERROR_FLAG)){
-            tmp_saved_scale=get_complementary_scale(generated_scale);
-            printf("complementary scale is:\n");
-            print_scale(tmp_saved_scale);
-          }else{
-            printf("please parse a valid scale\n");
-          }
-        }else if(!strncmp(&line[i], "saved", 5)){
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])){
-            i++;
-          }
-          indexx=parse_index(&line[i]);
-          if(indexx!=-1){
-            generated_scale=get_saved_scale(user_saved, indexx); 
-            if( !( generated_scale & ERROR_FLAG)){
-              tmp_saved_scale=get_complementary_scale(generated_scale);
-              printf("complementary of saved scale is:");
-              print_scale(tmp_saved_scale);
-            }else{
-              printf("placeholder error in comp saved\n");
-            }
-          }
-        }else if(END_OF_LINE_CHAR(line[i])){
-          if(tmp_saved_scale){
-            tmp_saved_scale= get_complementary_scale(tmp_saved_scale);
-            printf("complementary of tmp saved scale is:\n"); 
-            print_scale(tmp_saved_scale);
-          }else printf("no temporary saved scale to retrieve\n");
-        }else printf("runtime error in scale comp\n");
+       succes=generic_scl_scl(&get_complementary_scale, &line[i+4], user_saved);
 
     } else if(!strncmp(&line[i], "prime",5)){
-       i+=5;
-        while (NEUTRAL_CHAR(line[i])) {
-          i++;
-        }
-        if(line[i]=='{'){
-          //printf("%s\n", &line[i]);
-          generated_scale=parse_scale(&line[i]);
-        
-          if( ! (generated_scale&ERROR_FLAG)){
-            tmp_saved_scale=get_prime_scale(generated_scale, get_length_kerni(generated_scale));
-            printf("prime form of parsed scale is:\n");
-            print_scale(tmp_saved_scale);
-          }else{
-            printf("please parse a valid scale\n");
-          }
-        }else if(!strncmp(&line[i], "saved", 5)){
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])){
-            i++;
-          }
-          indexx=parse_index(&line[i]);
-          if(indexx!=-1){
-            generated_scale=get_saved_scale(user_saved, indexx); 
-            if( !( generated_scale & ERROR_FLAG)){
-              tmp_saved_scale=get_prime_scale(generated_scale, get_length_kerni(generated_scale));
-              printf("prime form of saved scale is:");
-              print_scale(tmp_saved_scale);
-            }else{
-              printf("placeholder error in prime saved\n");
-            }
-          }
-        }else if(END_OF_LINE_CHAR(line[i])){
-          if(tmp_saved_scale){
-            tmp_saved_scale= get_prime_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
-            printf("prime form of tmp saved scale is:\n"); 
-            print_scale(tmp_saved_scale);
-          }else printf("no temporary saved scale to retrieve\n");
-        }else printf("runtime error in scale prime\n");
+       succes=generic_scl_scl(&get_prime_scale, &line[i+5], user_saved);
 
-
-
+    }else if(!strncmp(&line[i], "nearby",6)){
+       succes=generic_scl_scl(&generate_nearby_scale, &line[i+6], user_saved);
     } else if(!strncmp(&line[i], "intv",4)){
         i+=4;
         while(NEUTRAL_CHAR(line[i])) i++; 
@@ -308,46 +273,6 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
             }else printf("runtime error in scale intv struct\n");
 
         }else printf("runtime error in scale intv\n");
-    }else if(!strncmp(&line[i], "nearby",6)){
-       i+=6;
-        while (NEUTRAL_CHAR(line[i])) {
-          i++;
-        }
-        if(line[i]=='{'){
-          //printf("%s\n", &line[i]);
-          generated_scale=parse_scale(&line[i]);
-        
-          if( ! (generated_scale&ERROR_FLAG)){
-            tmp_saved_scale=generate_nearby_scale(generated_scale, get_length_kerni(generated_scale));
-            printf("nearby scale generated parsed scale is:\n");
-            print_scale(tmp_saved_scale);
-          }else{
-            printf("please parse a valid scale\n");
-          }
-        }else if(!strncmp(&line[i], "saved", 5)){
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])){
-            i++;
-          }
-          indexx=parse_index(&line[i]);
-          if(indexx!=-1){
-            generated_scale=get_saved_scale(user_saved, indexx); 
-            if( !( generated_scale & ERROR_FLAG)){
-              tmp_saved_scale=generate_nearby_scale(generated_scale, get_length_kerni(generated_scale));
-              printf("nearby scale generated from saved scale is:");
-              print_scale(tmp_saved_scale);
-            }else{
-              printf("placeholder error in prime saved\n");
-            }
-          }
-        }else if(END_OF_LINE_CHAR(line[i])){
-          if(tmp_saved_scale){
-            tmp_saved_scale= generate_nearby_scale(tmp_saved_scale, get_length_kerni(tmp_saved_scale));
-            printf("nearby scale generated from tmp_scale is:\n"); 
-            print_scale(tmp_saved_scale);
-          }else printf("no temporary saved scale to retrieve\n");
-        }else printf("runtime error in scale prime\n");
-
     }else {
         printf("runtime scaleparse error\n");
     }   
@@ -391,10 +316,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
       }else {
         printf("no scale parsed; harmonisation operation isn't possible; please pass a valid scale\n");
       }
-     
 
-
-     
     }else if(!strncmp(&line[i], "saved",5)){
         i+=5; 
         indexx= parse_index(&line[i]);
@@ -408,11 +330,9 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
              print_modes(tmp_saved_mode);
           }else{ printf("something went wrong\n");}
         }
-        
 
     }else if(!strncmp(&line[i], "save",4)){
 
-    
       i+=4;
 
       while(NEUTRAL_CHAR(line[i])) i++;
@@ -455,23 +375,9 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
       }
     }else if(!strncmp(&line[i], "remove ",7)){
           
-          indexx=parse_index(line);
-          if(indexx==-1) printf("index not recognised; no scale will be removed, please pass an integer from 1 to the number of scales saved\n");
-          else{remove_modes(user_saved, indexx); compt_harmo--;}
-          
-
+         generic_remove( &remove_modes, &line[i+7], user_saved);
     }else if(!strncmp(&line[i], "print",5)){
-          
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])) i++;
-          if(isdigit(line[i])){
-            indexx=parse_index(line);
-            if(indexx==-1) printf("index not recognised; no scale will be printed, please pass an integer from 1 to the number of harmonised scales saved\n");
-            else{print_saved_modes(user_saved, indexx);}
-          }else if(!strncmp(&line[i], "env", 3)){
-            print_modes_env(user_saved->saved_modes);
-          }else printf("runtime error in harmo print\n");
-          
+          generic_print_uinfo( &print_saved_modes, &print_modes_env, &line[i+5], user_saved);
 
     }else {
         printf("runtime harmoparse error 2\n");
@@ -546,7 +452,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             if(indexx==-1) printf("index not recognised; no chprog will be printed, please pass an integer from 1 to the number of progs saved\n");
             else{print_saved_prog(user_saved, indexx);}
           }else if(!strncmp(&line[i], "env", 3)){
-            print_chprog_env(user_saved->saved_progs);
+            print_chprog_env(user_saved);
           }else printf("runtime error in chprog print\n");
 
       }  else if(!strncmp(&line[i], "remove ",7)){

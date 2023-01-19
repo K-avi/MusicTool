@@ -59,6 +59,23 @@ void free_saved_progs( S_SAVED_PROGS * saved_progs){
 	}
 }
 
+void init_saved_dodec(S_SAVED_DODEC* saved_dodecs){
+  //initialises a saved scale struct
+  saved_dodecs->serie=0;
+  saved_dodecs->next=NULL;
+}
+
+void free_saved_dodecs( S_SAVED_DODEC * saved_dodecs){
+	if(!saved_dodecs) return;
+	S_SAVED_DODEC* tmp;
+	while(saved_dodecs){
+		tmp=saved_dodecs;
+		saved_dodecs=saved_dodecs->next;
+		free(tmp);
+	}
+}
+
+
 void init_userinfo( S_USERINFO* user_data){
   //initialises and allocates memory to the different pointers in the user_data structure
  //only call at the start of MusicTool otherwise can cause memleak
@@ -71,20 +88,24 @@ void init_userinfo( S_USERINFO* user_data){
   user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));// printf("saved modes pointer: %p\n", user_data->saved_modes);
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);
   user_data->saved_progs= malloc(sizeof(S_SAVED_PROGS));
+  user_data->saved_dodecs=malloc(sizeof(S_SAVED_DODEC));
 
   user_data->modes_num=0;
   user_data->scales_num=0;
   user_data->progs_num=0;
+  user_data->dodec_num=0;
 
   init_saved_scale(user_data->saved_scales);
   init_saved_mode(user_data->saved_modes);
   init_saved_progs(user_data->saved_progs);
+  init_saved_dodec(user_data->saved_dodecs);
 }
 
 void free_userinfo( S_USERINFO* user_info){
      free_saved_scale(user_info->saved_scales);
 	 free_saved_modes(user_info->saved_modes);
 	 free_saved_progs(user_info->saved_progs);
+	 free_saved_dodecs(user_info->saved_dodecs);
 	
 	free(user_info);
 }

@@ -1,6 +1,7 @@
 #include "user_info.h"
 #include "bitop.h"
 #include "chordprint.h"
+#include "dodecseries.h"
 #include "types.h"
 #include "harmo.h"
 #include "scalegen.h"
@@ -10,6 +11,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+
+//need to use generics w that tbf
 
 
 CPT scale_in_saved (S_SCALE scale, S_SAVED_SCALES * saved_scales){//returns the index+1 (to avoid problems if the first saved scale is scale) if a scale is present 
@@ -203,6 +206,54 @@ CPT chprog_in_saved (S_CHORD_PROG* chprog, S_SAVED_PROGS * saved_progs){//return
 	return 0;
 }
 
+
+/////////////////DODECAPHONIC SERIES///////////////////////////
+
+
+void add_serie( S_SAVED_DODEC * saved_series , S_DODEC serie){
+	//adds a serie into into a saved_serie linked list
+	if(! (saved_series && serie)) return;
+
+	S_SAVED_DODEC * tmp= saved_series; 
+
+	while (tmp->next) {
+		tmp= tmp->next;
+	}
+	S_SAVED_DODEC* tmp1= malloc(sizeof(S_SAVED_PROGS));
+	tmp1->next=NULL; 
+	tmp1->serie=  serie; //allocates new chprog ; 
+
+	tmp->next=tmp1;
+}//not tested 
+
+void print_saved_serie( S_USERINFO * user_data, INDEX index){
+	if(index> user_data->dodec_num){ printf("index superior to number of dodec series currently stored please enter a valid index; number of series is is : %d\n", user_data->dodec_num); return;}
+	CPT i=0; 
+	S_SAVED_DODEC *tmp = user_data->saved_dodecs;
+	while(i<index && tmp){
+		if(tmp->next)tmp=tmp->next;
+		i++;
+	}
+	if(!tmp){printf("2ND CHECK index superior to number of series currently stored please enter a valid index; number of series is : %d\n", user_data->progs_num); return; }
+	print_serie(tmp->serie);
+}//not tested
+
+
+CPT serie_in_saved (S_DODEC serie, S_SAVED_DODEC * saved_dodecs){//returns the index +1 of chprog if a chprog is present 
+//in a saved progs struct 0 otherwise
+
+	if(! (serie && saved_dodecs)) return 0;
+
+	S_SAVED_DODEC*tmp= saved_dodecs; 
+	CPT cpt=1; 
+
+	while (tmp) {
+	 	if( serie == saved_dodecs->serie) return cpt;
+		cpt++;
+		tmp=tmp->next;
+	}
+	return 0;
+}
 ////////////////USER INFO ///////////////////
 
 void save_scale( S_SCALE scale, S_USERINFO * user_info){
@@ -229,7 +280,16 @@ void save_chprog(S_CHORD_PROG* chprog, S_USERINFO * user_info){//used to save a 
 	user_info->progs_num++;
 	add_chprog(user_info->saved_progs, chprog);
 	printf("chprog saved at index %d\n", user_info->progs_num);
-}//not tested 
+}
+
+void save_dodec( S_DODEC serie, S_USERINFO * user_info){
+  //used to save a scale in the user data structure returns an error if the slots to save scales are all fille
+  INDEX index= serie_in_saved(serie, user_info->saved_dodecs);
+  if(index) { printf("serie already in struct at index %d ; no serie saved\n", index-1); return;}
+  user_info->dodec_num++;
+  add_serie(user_info->saved_dodecs, serie);
+  printf("dodec saved at index %d\n", user_info->dodec_num);
+}
 
 void remove_scale(  S_USERINFO * user_info, CPT index ){ //removes scale at index passed as argument if it exists
 	
@@ -314,6 +374,36 @@ void remove_chprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at in
 }
 
 
+void remove_dodec(  S_USERINFO * user_info, CPT index ){ //removes scale at index passed as argument if it exists
+	
+	
+	if( index > user_info->dodec_num){ printf("index passed is higher than the number of series contained; can't remove dodec\n"); return;}
+	S_SAVED_DODEC * tmp= user_info->saved_dodecs, *tmp1;
+	CPT cpt=0;
+	while(cpt< (index-1) && tmp){
+		tmp=tmp->next;
+		cpt++;
+	}
+	if(!tmp) { printf(" indexation problem; something went wrong\n"); return;}
+	if(tmp->next){
+		if(tmp->next->next){
+			
+			tmp1=tmp->next;
+			print_serie(tmp1->serie);
+			tmp->next=tmp->next->next;
+			free(tmp1);
+		}else {
+			
+			tmp1=tmp->next;
+			print_serie(tmp1->serie);
+			tmp->next=NULL;
+			print_serie(tmp->serie);
+			free(tmp1);
+		}
+	}
+	user_info->dodec_num--;
+}
+
 S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index){//retrieves the scale contained at "index"
 //n ERROR_FLAG otherwise.
 
@@ -365,4 +455,18 @@ S_CHORD_PROG* get_chprog( S_USERINFO *user_data, INDEX index){//retrieves the ch
 }
 
 
+S_DODEC get_saved_dodec( S_USERINFO * user_data, INDEX index){//retrieves the dodec serie contained at "index"
+//n DODEC_ERRFLAG otherwise.
+
+	if(user_data->dodec_num<index) return DODEC_ERRFLAG; 
+
+	S_SAVED_DODEC *tmp = user_data->saved_dodecs; 
+	u_char i=0;
+	while (tmp && (i<index)) {
+		tmp=tmp->next;
+		i++;
+	}
+	if(!tmp) return DODEC_ERRFLAG; 
+	return tmp->serie;
+}
 

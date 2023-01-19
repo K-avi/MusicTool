@@ -11,19 +11,6 @@
 #include <ctype.h>
 #include <sys/types.h>
 
-
-
-//  SYNTAX CHECKING DOESNT ACCOUNT FOR LINES THAT CONTAIN A COMMAND N THEN A # WILL HAVE TO FIX
-
-
-
-
-
-//gonna return 1 or 0 for testing; will change to different error flags afterwards for error messages
-
-//syntax check for common functions : print and remove 
-
-
 SYNTAX_ERROR emptycheck(char * str){
     char * tmp=str; 
     while(NEUTRAL_CHAR(*tmp)) tmp++; 
@@ -546,6 +533,36 @@ SYNTAX_ERROR commentcheck( char * str){//checks if a line contains a comment
     return SYNTAX_GENERIC_ERROR;
 }
 
+SYNTAX_ERROR seriesavecheck(char *str){
+    return 0;
+}
+
+SYNTAX_ERROR seriecheck(char * str){//syntaxchecker for dodecaphonic series related operations
+
+    char * tmp=str; 
+    while(NEUTRAL_CHAR(*tmp) ) tmp++;
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
+
+    else if(!strncmp(tmp, "save", 4)){
+       return seriesavecheck(tmp+4);
+    }else if (!strncmp(tmp, "remove",6)){
+       return removecheck(tmp+6);
+    }else if (!strncmp(tmp, "print",5)){
+       return printcheck(tmp+5);
+    }else if (!strncmp(tmp, "inv",3)){
+        
+    }else if (!strncmp(tmp, "retro",5)){
+        
+    }else if (!strncmp(tmp, "retroinv",8)){
+        
+    }else if (!strncmp(tmp, "prime",5)){
+       
+    }else if (!strncmp(tmp, "matrix",6)){
+       
+    }
+    return SYNTAX_OK;
+}
+
 
 
 SYNTAX_ERROR syntaxcheck(char *str){
@@ -569,7 +586,8 @@ SYNTAX_ERROR syntaxcheck(char *str){
         ret =readcheck(tmp+4);
     }else if (!strncmp(tmp, "write",5)){
         ret =writecheck(tmp+5);
- 
+    }else if (!strncmp(tmp, "serie",5)){
+        ret =seriecheck(tmp+5);
     }else if (!strncmp(tmp, "quit",4)){
         ret=emptycheck(tmp+4);
         if(ret) ret= SYNTAX_INVALID_CHAR;

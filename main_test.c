@@ -23,20 +23,33 @@
 #include "dodecseries.h"
 
 
-#include <wchar.h>
+//#include <stdarg.h>
+/*
+S_SCALE generate_ran_scl1( LENGTH length,...){ //generates a random scale of 'length' notes
+
+    S_SCALE  ret=0;
+    int i;
+    length=length%13;
+    for(i=0; i<length-1; i++){
+        add_rand_note(&ret);
+    }
+   return ret;
+}*/
+
+
 
 
 
 int main(){
 
- // time_t t;
- // srand((unsigned) time(&t));
+  time_t t;
+  srand((unsigned) time(&t));
 
- // setbuf(stdin, NULL);
- // setbuf(stdout, NULL);
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
 
- // user_data=malloc(sizeof(S_USERINFO));
- // init_userinfo(user_data);
+  user_data=malloc(sizeof(S_USERINFO));
+  init_userinfo(user_data);
 
 
  /* char *str= "[II, V,I]";
@@ -223,14 +236,19 @@ int main(){
  // print_serie(harmogenplz);
  // print_serie(generate_serie());
  // free_userinfo(user_data);
-  S_DODEC serie= shuffle_serie(HARMO_SERIE, 200);
+  //S_DODEC serie= shuffle_serie(HARMO_SERIE, 200);
  // print_serie(serie);
     
  // print_serie(serie); 
   //print_serie(inverse_serie(serie));
-  S_DODEC * mat= serie_to_12tmat(serie);
+//  S_DODEC * mat= serie_to_12tmat(serie);
  // print_12t_mat(mat);
-  free(mat);
+ // free(mat);
+ //printf("a");
+  //printf("b");
+  //fprintf(stderr, "vc");
+
+  free_userinfo(user_data);
   return 0;
 
 }

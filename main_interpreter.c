@@ -23,14 +23,15 @@ int main()
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
    
- 
+  /* Intializes random number generator */
+  time_t t;
+  srand((unsigned) time(&t));
+
   //initialises the user saved info structure
   user_data=malloc(sizeof(S_USERINFO));
   init_userinfo(user_data);
 
-  /* Intializes random number generator */
-  time_t t;
-  srand((unsigned) time(&t));
+  
 
 
   printf("Welcome to MusicTool! Type 'help' for more informations\n");

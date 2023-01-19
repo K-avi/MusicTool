@@ -177,7 +177,8 @@ SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2){//returns 0 if two scal
 
 
 
-S_SCALE get_normal_scale(S_SCALE scale, LENGTH length){
+S_SCALE get_normal_scale(S_SCALE scale){
+    LENGTH length=get_length_kerni(scale);
     S_MODES modes= generate_modes(scale);
     S_SCALE ret= scale;
     for(INDEX i=0; i<length; i++){
@@ -208,9 +209,8 @@ unsigned short inverse_bit (S_SCALE scale ){
     return (1<< (10-i));
 }//tested 
 
-S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length){//returns the inverse (I0) of a scale passed as argument.
-    
-    
+S_SCALE get_inverse_scale(S_SCALE scale){//returns the inverse (I0) of a scale passed as argument.
+
     S_SCALE ret=0;  
     for(int i=0; i<12; i++){
         ret|= inverse_bit( (scale &(1<<i)));
@@ -219,9 +219,10 @@ S_SCALE get_inverse_scale(S_SCALE scale, LENGTH length){//returns the inverse (I
 }//tested 
 
 
-S_SCALE get_prime_scale(S_SCALE scale, LENGTH length){//returns the prime of the scale passed as argument
+S_SCALE get_prime_scale(S_SCALE scale){//returns the prime of the scale passed as argument
 
-    S_SCALE scl_norm= get_normal_scale(scale,  length) ,scl_inv= get_inverse_scale(scl_norm,  length);
+    LENGTH length= get_length_kerni(scale);
+    S_SCALE scl_norm= get_normal_scale(scale) ,scl_inv= get_inverse_scale(scl_norm);
 
     S_SCALE ret= (scale_comp_lexi(scl_norm, scl_inv)==1) ? scl_norm : scl_inv; 
 
@@ -347,8 +348,9 @@ S_SCALE delete_nearby(S_SCALE scale, LENGTH length){
     return ret;
 }
 
-S_SCALE generate_nearby_scale (S_SCALE scale, LENGTH length){//generates a nearby scale from the scale passed as arg ; 
+S_SCALE generate_nearby_scale (S_SCALE scale){//generates a nearby scale from the scale passed as arg ; 
 //a nearby scale is a scale that has 1 more/less note than another scale or that has one of its notes moved up or down a semitone.
+    LENGTH length=get_length_kerni(scale);
     if(!scale) return ERROR_FLAG;
     
     S_SCALE ret=scale;

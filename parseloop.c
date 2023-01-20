@@ -20,131 +20,31 @@
 #include <strings.h>
 #include <sys/types.h>
 #include <stdlib.h>
-#include <stdarg.h>
-
-
-bool succes=0;
-
-//scale globals
-S_SCALE tmp_saved_scale=0;
-S_SCALE scale_to_save=0;
-S_SCALE generated_scale=0;
-LENGTH length=0;
-SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
-S_INTERVAL_STRUCTURE generated_intv_struct=0;
-S_INTERVAL_VECTOR generated_intv_vect=0;
-//harmo globals
- S_MODES tmp_saved_mode= NULL , parsed_modes=NULL;
- char* begin=NULL;
- S_MODES modes=NULL;
-
-//chprog globals
-S_CHORD_PROG * tmp_chprog=NULL;
-S_CHORD_PROG* generated_chprog=NULL;
-SIGNED_LENGTH l1=-1, l2=-1;
-
-//dodec globals 
-S_DODEC tmp_saved_dodec=0;
-S_DODEC generated_dodec=0, dodec_to_save=0; 
-
-
-void generic_rand( void * rand() ,...){
-
-}//not yet 
-
-u_char generic_print_uinfo (void (*print_uinfo)(S_USERINFO* uinfo, LENGTH index), void (*print_env)( S_USERINFO* uinfo),char*str, S_USERINFO*usaved ){
-  //generic function to print a saved object in uinfo
-  char * tmp=str;
-  while(NEUTRAL_CHAR(*tmp)) tmp++;
-  if(isdigit(*tmp)){
-      indexx=parse_index(tmp);
-      if(indexx==-1) printf("index not recognised; nothing will be printed, please pass an integer from 1 to the number of objects saved\n");
-      else{print_uinfo(usaved, indexx);}
-      return 1;
-
-  }else if(!strncmp(tmp, "env", 3)){
-            print_env(usaved);
-            return 2;
-  }else printf("runtime error in print\n");
-  return 0;
-}
-
-u_char generic_remove (void  (* remove)(S_USERINFO* uinfo, INDEX index), char* str, S_USERINFO*uinfo){
-  char * tmp=str;
-  while(NEUTRAL_CHAR(*tmp)) tmp++;
-  if(isdigit(*tmp)){
-      indexx=parse_index(tmp);
-      if(indexx==-1) printf("index not recognised; nothing will be removed, please pass an integer from 1 to the number of objects saved\n");
-      else{remove(uinfo, indexx);}
-      return 1;
-  }
-  return 0;
-}
-
-u_char generic_scl_scl( S_SCALE (*operation)(S_SCALE scl),char* str, S_USERINFO*uinfo ){
-  /*
-  function to represent a generic f: scl -> scl function 
-  */
-   char * tmp=str;
-   S_SCALE generated_scl=0;
-   while (NEUTRAL_CHAR(*tmp)) {
-          tmp++;
-    }
-    if(*tmp=='{'){
-          //printf("%s\n", &line[i]);
-      generated_scl=parse_scale(tmp);    
-      if( ! (generated_scl&ERROR_FLAG)){
-        tmp_saved_scale=operation(generated_scl);   
-        print_scale(tmp_saved_scale);
-        return 1;
-      }else{
-        printf("please parse a valid scale\n");
-      }
-    }else if(!strncmp(tmp, "saved", 5)){
-          tmp+=5;
-          while(NEUTRAL_CHAR(*tmp)){
-            tmp++;
-          }
-          indexx=parse_index(tmp);
-          if(indexx!=-1){
-            generated_scl=get_saved_scale(uinfo, indexx); 
-            if( !( generated_scl & ERROR_FLAG)){
-              tmp_saved_scale=operation(generated_scl);
-              print_scale(tmp_saved_scale);
-              return 2;
-            }else{
-              printf("runtime error while doing scale operation\n");
-            }
-          }
-    }
-    return 0;
-}
-
-void generic_save( void (*save)(void* element, S_USERINFO *user_info) ,char*str){
-
-}
+#include "genfuncs.h"
 
 
 void dodecparse(char* line, S_USERINFO* user_saved){
+    ushort i=0; 
+    while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
+    if(line[i]==10 || line[i]=='\0'){ printf("dodec parse error\n"); return;}
 
-}
+    if(!strncmp(&line[i],"rand",4)){
+      
+    }
 
-
+} 
 
 void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsing
     
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
-
     if(line[i]==10 || line[i]=='\0'){ printf("scale parse error\n"); return;}
 
     if (!strncmp(&line[i], "rand",4)) {
 
         length=parse_scale_length(line);
 
-        if(length==13){ //checks wether a length was retrieved from the line
-
-            
+        if(length==13){ //checks wether a length was retrieved from the line         
           printf("\ngenerating scale of random length \n");
           tmp_saved_scale=generate_ran_scale(rand()%12);
         }else{
@@ -375,7 +275,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
       }
     }else if(!strncmp(&line[i], "remove ",7)){
           
-         generic_remove( &remove_modes, &line[i+7], user_saved);
+         generic_remove( &remove_modes , &line[i+7], user_saved);
     }else if(!strncmp(&line[i], "print",5)){
           generic_print_uinfo( &print_saved_modes, &print_modes_env, &line[i+5], user_saved);
 
@@ -444,24 +344,10 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             }else printf("runtime error in chprog save\n");
         
       } else if(!strncmp(&line[i], "print",5)) {
-        
-          i+=5;
-          while(NEUTRAL_CHAR(line[i])) i++;
-          if(isdigit(line[i])){
-            indexx=parse_index(line);
-            if(indexx==-1) printf("index not recognised; no chprog will be printed, please pass an integer from 1 to the number of progs saved\n");
-            else{print_saved_prog(user_saved, indexx);}
-          }else if(!strncmp(&line[i], "env", 3)){
-            print_chprog_env(user_saved);
-          }else printf("runtime error in chprog print\n");
+          generic_print_uinfo(&print_saved_prog, print_env, &line[i+5], user_saved);
 
       }  else if(!strncmp(&line[i], "remove ",7)){
-          
-          indexx=parse_index(line);
-         // printf("%d",index);
-          if(indexx==-1  || indexx==0) printf("index not recognised; no chprog will be removed, please pass an integer from 1 to the number of scales saved\n");
-          else{remove_chprog(user_saved, indexx);}
-         
+          generic_remove(&remove_chprog, &line[i+7], user_saved);  
 
       }else if(!strncmp(&line[i], "toscale",7 )){
 
@@ -552,17 +438,12 @@ void clearglobals(){
 }
 
 void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might change behavior of env command to make it also work in command line
-//syntax checking ugly af; will have to redo smtg more coherent at some point
-
 
    if(!filename){
         printf("null pointer as filename\n");
         return;
     }
-
-    ushort k=0; 
- 
-    
+    ushort k=0;
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
     if(filename[k]=='\n' || filename[k]=='\0'){
@@ -571,13 +452,9 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
     }
 
     char* name_start= &filename[k];
-    
-
-
-
-    int i= strcspn(name_start, " \n\t#"), j=strlen(name_start);
-    
+    int i= strcspn(name_start, " \n\t#"), j=strlen(name_start);  
     char* clean_filename;
+
     if(i!=j){
         clean_filename = malloc(( j) * sizeof(char));
         memcpy(clean_filename, name_start,  j);
@@ -598,7 +475,6 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
     }
     FILE *f=fopen(clean_filename, "r") ;
 
-
     if(!f){
         printf("error file \"%s\" doesn't exist; please pass a valid filename as argument.\n", filename);
         free(clean_filename);
@@ -613,27 +489,20 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
         fclose(f); 
         return;
     }
-
     CPT line_num=1;
 
     while(fgets(line, 256, f)){
-        ushort i=0;
-
-
+      ushort i=0;
       while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
         i++;
       }
       if(line[i]== '\n' || line[i]=='#') { ++line_num; continue;//empty line or comment
         
       }else if(!strncmp(&line[i], "env scale", 9)){
-
         //check that '(' is the next not space \t \n character
-
-        printf("1");
         char* tmp= &line[i+9];
         ushort line_env= line_num+1;
         u_char nxt_chr= next_not_blank_comment( tmp, '(');
-
 
         if(nxt_chr==1){
          while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
@@ -655,13 +524,9 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
           }
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
-
-            
             nxt_chr= next_not_blank_comment(line, '(');
-         
             if(nxt_chr==1){
             
-
               while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){
                
                 i=0;
@@ -746,7 +611,6 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
                   save_modes( tmp_modes, user_info);
                   free(tmp_modes);
                 }
-
               }
               if(!f){
                 free(clean_filename);
@@ -784,15 +648,11 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             }
             if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
               ++line_num; continue;//empty line or comment
-            }else{
-             
-              
+            }else{      
               tmp_chprog=str_to_chord_prog(&line[i]);
               save_chprog( tmp_chprog, user_info);
-              free_chord_prog(tmp_chprog);
-              
+              free_chord_prog(tmp_chprog);      
             }
-
           }
           if(!f){
             free(clean_filename);
@@ -804,8 +664,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             nxt_chr= next_not_blank_comment(line, '(');
            
             if(nxt_chr==1){
-              while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){
-               
+              while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){            
                 i=0;
                 while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
                   i++;
@@ -819,7 +678,6 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
                   save_chprog( tmp_chprog, user_info);
                   free_chord_prog(tmp_chprog);
                 }
-
               }
               if(!f){
                 free(clean_filename);
@@ -849,22 +707,18 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
         return;
       }
       line_num++;
-
     }
     free(clean_filename);
     fclose(f);
     printf("environment loaded succesfully!\n");
 }
 
-void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"
-    
-    
+void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"   
 
     if(!filename){
         printf("filename incorrect\n");
         return;
     }
-
     ushort k=0; 
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
@@ -874,11 +728,6 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     }
 
     char* name_start= &filename[k];
-
-
-   // printf("%s\n", &filename[k]);
-    
-
     int i= strcspn(name_start, "\n#\t "), j=strlen(name_start);
     char* clean_filename;
     if(i!=j){
@@ -888,22 +737,16 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
 
     }else {  clean_filename= strdup(filename);}
     
-   // printf("%s\n", clean_filename);
     FILE *f=fopen(clean_filename, "r") ;
-
 
     if(!f){
         printf("error file \"%s\" doesn't exist; please pass a valid filename as argument.\n", filename);
         free(clean_filename);
         return;
     }
-    char line[256];
-
-    
+    char line[256];   
     fgets(line, 256, f);
-   
-
-   
+      
     if(strncmp(line, "MusicTool:commands", 18)){
         printf("error invalid start of file; please begin your file with \"MusicTool:commands\"\n");
         free(clean_filename);
@@ -911,32 +754,25 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
         return;
     }
 
-   
     CPT line_num=1;
     ushort l=0;
- 
     SYNTAX_ERROR syntax_flag= SYNTAX_OK;
 
     while(fgets(line, 256, f)){
 
       l=0;
       syntax_flag=syntaxcheck(line);
-      if(syntax_flag) {
-       
+      if(syntax_flag) {     
         printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
         free(clean_filename);
-        fclose(f);
-        
+        fclose(f);    
         return;
+      }
+        
+      while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ) l++;
 
-      }
-        
-      while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ){
-        l++;
-      }
       if(line[l]== 10 || line[l]=='#') { ++line_num; continue;}//empty line or comment
-      else if(!strncmp(&line[l], "scale ",6)){
-        
+      else if(!strncmp(&line[l], "scale ",6)){     
         scaleparse(&line[l+6], user_saved);
         
       }else if(!strncmp(&line[l], "harmo",5)){
@@ -952,10 +788,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     
         l+=4;
         while(NEUTRAL_CHAR(line[l])) l++;
-       
-
-        if(!strncmp(&line[l], "command", 7)){
-          
+        if(!strncmp(&line[l], "command", 7)){  
           file_command_parseloop(&line[l+7], user_saved);
 
         }else if(!strncmp(&line[l], "env",3)){
@@ -971,22 +804,15 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       }
       line_num++;
     }
-
-
     free(clean_filename);
     fclose(f);
     printf("file read correctly!\n");
     return;
 }
 
-
-
-
-
 void readparse(char * str ,S_USERINFO* user_saved){
   if(! str ) return; 
 
-  //printf("%s\n", str);
   ushort i=0;
   while(str[i]==' ') i++; 
   if(str[i] =='\n' || str[i]=='\0') return;
@@ -1016,7 +842,6 @@ void writeparse(char * str , S_USERINFO* user_info){
       printf("please give the the name of the file you want to save the current environment in\n");
       return;
     }else write_env(&str[i], user_info);
-
   }else{
     printf("runtime writeparse error\n");
      return;
@@ -1024,27 +849,21 @@ void writeparse(char * str , S_USERINFO* user_info){
 }
 
 void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
-
    
-
-    //overkill but usefull 
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
     char line[256];
     ushort i=0;
-   
     SYNTAX_ERROR syntax_error= SYNTAX_OK;
 
     while (true){
-        
-          
+           
       i=0;
+
       fflush(stdin);
       memset(&line[0], 0, 256*sizeof(char));
-
       fflush(stdout);
       if (!fgets(line, 256, stdin))	continue;
-      
       
       while(NEUTRAL_CHAR(line[i])){
         i++;
@@ -1052,9 +871,7 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       syntax_error= syntaxcheck(line);
       if(syntax_error) {
       
-       // printf("%d\n", syntax_error);
         printf("syntax error : %s\n",syntax_error_flag_to_str(syntax_error));
-        
         printf("  >>>");
         continue;
       }
@@ -1089,20 +906,16 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       }else if (line[0]=='\n'){
         printf("  >>>");
       }else {
-        printf("parsing error\n  >>>");
+        printf("runtime error\n  >>>");
       }
     }
 }
-
-
 
 RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
 
   char * keyword= argv[1] ; 
   char* command = argv[2];
-
   LENGTH len= strlen (argv[2]);
-
 
   if(! (keyword &&  command)){
       printf("invalid arguments\n");
@@ -1130,7 +943,6 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
        syntaxcheck=helpcheck(command);
        if(!syntaxcheck) helpparse( command);
   }
-
   clearglobals();
   return syntaxcheck;
 }

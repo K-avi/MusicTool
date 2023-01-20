@@ -204,4 +204,41 @@ typedef struct{
 }S_USERINFO;
 
 
+typedef struct { 
+
+  S_SCALE (*rand)( LENGTH l);
+  S_SCALE (*parse)(char *str );
+
+  void (*save ) (S_SCALE scale, S_USERINFO*uinfo);
+  void (*remove) (S_USERINFO*uinfo, INDEX index);
+  S_SCALE (*get) (S_USERINFO*uinfo, INDEX index);
+  S_SCALE (*inverse)( S_SCALE scale);
+  S_SCALE (*complementary)( S_SCALE scale);
+  S_SCALE (*nearby)( S_SCALE scale);
+  S_SCALE (*prime)( S_SCALE scale);
+  S_INTERVAL_VECTOR (*scl_to_intvect)(S_SCALE scale);
+  S_INTERVAL_STRUCTURE (*scl_to_intstruct)(S_SCALE scale);
+}SCL_FUNC; 
+
+typedef struct { 
+
+  S_MODES (*rand)( LENGTH l);
+  S_MODES (*parse)(char *str );
+  void (*save ) (S_MODES harmo, S_USERINFO*uinfo);
+}HARMO_FUNC; 
+
+typedef struct { 
+
+  S_CHORD_PROG* (*rand)( u_char a1, u_char a2);
+  S_CHORD_PROG* (*parse)(char *str );
+  void (*save ) (S_CHORD_PROG*chprog, S_USERINFO*uinfo);
+  S_SCALE (*toscale) (S_CHORD_PROG* chprog);
+}CHPROG_FUNC;
+
+typedef struct { 
+
+  S_DODEC (*rand)();
+  S_DODEC (*parse)(char *str );
+  void (*save ) (S_DODEC serie, S_USERINFO*uinfo);
+}DODEC_FUNC; 
 #endif

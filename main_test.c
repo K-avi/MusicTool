@@ -248,6 +248,10 @@ int main(){
   //printf("b");
   //fprintf(stderr, "vc");
 
+  for(int i=0 ; i<10; i++){
+    print_scale(gen_ran_scale_var());
+  }
+
   free_userinfo(user_data);
   return 0;
 

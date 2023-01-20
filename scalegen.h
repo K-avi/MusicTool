@@ -12,6 +12,7 @@ extern void sort_scale(S_SCALE * scale);
 extern void add_rand_note(S_SCALE* scale);
 
 extern S_SCALE generate_ran_scale(LENGTH length);
+extern S_SCALE gen_ran_scale_var();
 
 extern LENGTH get_length( S_SCALE scale);
 extern LENGTH get_length_kerni(S_SCALE scale);

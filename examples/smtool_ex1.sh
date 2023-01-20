@@ -14,4 +14,3 @@
 #being able to read the commands in a Mtool file from smtool might be the most 
 #significant feature 
 
-#this script leaks a lot of memory but the commands don't on their own; I just kinda suck at bash ig

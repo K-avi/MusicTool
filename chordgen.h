@@ -14,7 +14,7 @@ extern CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg);
 
 extern bool equals_chprog( S_CHORD_PROG* chpr1, S_CHORD_PROG* chpr2);
 
-
+extern S_SCALE chprog_to_scl(const S_CHORD_PROG* chprog);
 #ifdef DEBUG 
 extern PITCH_CLASS_SET chprog_to_pcs(const S_CHORD_PROG* chprog); 
 extern void print_pcs( const PITCH_CLASS_SET pcs);

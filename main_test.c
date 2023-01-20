@@ -248,11 +248,18 @@ int main(){
   //printf("b");
   //fprintf(stderr, "vc");
 
-  for(int i=0 ; i<10; i++){
+  /*for(int i=0 ; i<10; i++){
     print_scale(gen_ran_scale_var());
-  }
+  }*/
+  funcs_struct=malloc(sizeof(ALL_FUNC));
+  init_allfunc(funcs_struct);
 
+  funcs_struct->scl_funcs->print(funcs_struct->scl_funcs->rand(7));
+
+  funcs_struct->dodec_funcs->save( funcs_struct->dodec_funcs->shuflle(HARMO_SERIE, 100), user_data);
+  funcs_struct->dodec_funcs->print_saved(user_data,1);
   free_userinfo(user_data);
+  free_allfunc(funcs_struct);
   return 0;
 
 }

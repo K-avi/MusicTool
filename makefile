@@ -16,7 +16,7 @@ MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o 
 	$(CC) -o $@ $(CFLAGS) $^
 
 
-smtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o main_command.o
+smtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o main_command.o
 	$(CC) -o $@ $(CFLAGS) $^
 	
 %.o:%.c %.h

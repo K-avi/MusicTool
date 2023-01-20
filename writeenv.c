@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include "chordprint.h"
+#include "dodecseries.h"
 #include "harmo.h"
 #include "types.h"
 #include "user_info.h"
@@ -78,12 +79,33 @@ void print_chprog_env (S_USERINFO*uinfo){
     printf(")\n");
 }
 
+void print_dodec_env (S_USERINFO*uinfo){
+   // if(!saved_progs ) return; 
+
+    S_SAVED_DODEC * tmp= uinfo->saved_dodecs;
+    if(!tmp) return;
+    CPT i=1;
+    tmp=tmp->next;
+     printf("env dodec (\n");
+    if(tmp){
+        while(tmp){
+            printf("\n%d",i++);
+            if(tmp->serie){
+                print_serie(tmp->serie); 
+            }
+            tmp=tmp->next;
+        }
+    }
+    printf(")\n");
+}
+
 void print_env(S_USERINFO* user_info){
     if(!user_info) return;
 
     print_scl_env(user_info);
     print_modes_env(user_info); 
     print_chprog_env(user_info);
+    print_dodec_env(user_info);
 }
 
 

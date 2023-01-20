@@ -2,7 +2,7 @@
 #define GENFUNCS_H
 #include "types.h"
 
-extern void generic_rand( void * rand() , char mode,...);
+extern bool generic_rand( char* str, char mode);
 
 extern u_char generic_print_uinfo (void (*print_uinfo)(S_USERINFO* uinfo, LENGTH index), void (*print_env)( S_USERINFO* uinfo),char*str, S_USERINFO*usaved );
 extern u_char generic_remove (void  (* remove)(S_USERINFO* uinfo, INDEX index), char* str, S_USERINFO*uinfo);

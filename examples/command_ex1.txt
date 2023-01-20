@@ -13,4 +13,6 @@ harmo save
 scale save 
 chprog save 
 
-read env examples/environment_ex3.txt 
+read env examples/environment_ex3.txt
+#being able to load an environment 
+#from a command file is a pretty usefull feature I think 

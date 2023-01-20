@@ -2,15 +2,17 @@
 #include "types.h"
 #include <stdlib.h>
 
+//structure where u save stuff
 S_USERINFO * user_data=NULL ; //user_saved stuff
 
+//structure where functions r stored; mainly used for generics:
+
+ALL_FUNC * funcs_struct= NULL;
+
+/* currently useless
 CPT nb_entries=0;  //nb entries currently in chord_book 
-CPT nb_entries_max=0; //maxnum of entries in chordbook
-
-unsigned short compt_scale=0; //counts how many stuff were saved to print them; might have to make a global
-unsigned short compt_harmo=0; //counts how many stuff were saved to print them; might have to make a global
-
-NOTE triads[4][3]= { {0,4,7}, {0,3,7}, {0,3,6}, {0,4,8}}; 
+CPT nb_entries_max=0; //maxnum of entries in chordbook 
+*/
 
 
 bool succes=0;

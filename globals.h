@@ -6,6 +6,8 @@
 
 
 extern  S_USERINFO * user_data;
+extern ALL_FUNC * funcs_struct;
+
 extern bool EXIT_INFO;
 extern unsigned short compt_scale;
 extern unsigned short compt_harmo;

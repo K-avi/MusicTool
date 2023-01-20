@@ -1,5 +1,14 @@
 #include "chordgen.h"
+#include "chordprint.h"
+#include "globals.h"
+#include "harmo.h"
+#include "parsing.h"
+#include "rand.h"
+#include "scalegen.h"
 #include "types.h"
+#include "user_info.h"
+#include "writeenv.h"
+#include "dodecseries.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -75,15 +84,114 @@ void free_saved_dodecs( S_SAVED_DODEC * saved_dodecs){
 	}
 }
 
+void init_scl_func(SCL_FUNC* func){
+	func->compare=NULL; 
+
+	func->rand=&generate_ran_scale;
+	func->parse=&parse_scale;
+	func->print=&print_scale;
+
+	func->get=&get_saved_scale;
+	func->inverse=&get_inverse_scale;
+	func->complementary=&get_complementary_scale;
+	func->nearby=&generate_nearby_scale;
+	func->prime=&get_prime_scale;
+	func->scl_to_intvect=&generate_intv_vect;
+	func->scl_to_intstruct=&get_interval_struct;
+
+	func->save=&save_scale;
+	func->print_env=&print_scl_env;
+	func->print_saved=&print_saved_scale;
+	func->remove=&remove_scale;
+	
+}
+
+void init_harmo_func( HARMO_FUNC* func){
+
+	func->compare=&equals_harmo;
+
+	func->rand=NULL;
+	func->parse=NULL;
+	func->print=&print_modes;
+
+	func->get=&get_modes;
+	func->fromscale=&generate_modes;
+
+	func->save=&save_modes;
+	func->print_env=&print_modes_env;
+	func->print_saved=&print_saved_modes;
+	func->remove=&remove_modes;
+}
+
+void init_chprog_func( CHPROG_FUNC* func){
+	
+	func->compare=&equals_chprog;
+
+	func->rand=&generate_chord_prog;
+	func->parse=&str_to_chord_prog;
+	func->print=&print_chord_prog;
+
+	func->get=&get_chprog;
+	func->toscale=&chprog_to_scl;
+
+	func->save=&save_chprog;
+	func->print_env=&print_chprog_env;
+	func->print_saved=&print_saved_prog;
+	func->remove=&remove_chprog;
+}
+
+void init_dodec_func( DODEC_FUNC* func){
+
+	func->compare=NULL;
+
+	func->rand=&generate_serie;
+	func->shuflle=&shuffle_serie;
+	func->parse=&parse_serie;
+	func->print=&print_serie;
+
+	func->get=&get_saved_dodec;
+	func->gen_matrix=&serie_to_12tmat;
+	func->retrograde=&retrograde_serie;
+	func->inverse=&inverse_serie;
+	func->ret_inv=&retrograde_inverse_serie;
+
+	func->nth_prime=&nth_prime;
+	func->nth_inv=&nth_inv;
+	func->nth_ret=&nth_retrograde;
+	func->nth_ret_in=&nth_retrograde_inverse;
+
+	func->save=&save_dodec;
+	func->print_env=&print_dodec_env;
+	func->print_saved=&print_saved_serie;
+	func->remove=&remove_dodec;
+}
+
+void init_allfunc( ALL_FUNC* funcs){
+
+	funcs->scl_funcs=malloc(sizeof(SCL_FUNC));
+	funcs->harmo_funcs=malloc(sizeof(HARMO_FUNC));
+	funcs->chprog_funcs=malloc(sizeof(CHPROG_FUNC));
+	funcs->dodec_funcs=malloc(sizeof(DODEC_FUNC));
+	
+	init_scl_func(funcs->scl_funcs);
+	init_harmo_func(funcs->harmo_funcs); 
+	init_chprog_func(funcs->chprog_funcs); 
+	init_dodec_func(funcs->dodec_funcs);
+}
+
+void free_allfunc( ALL_FUNC*funcs){
+
+	free(funcs->scl_funcs);
+	free(funcs->harmo_funcs);
+	free(funcs->chprog_funcs);
+	free(funcs->dodec_funcs);
+	free(funcs);
+}
+
 
 void init_userinfo( S_USERINFO* user_data){
   //initialises and allocates memory to the different pointers in the user_data structure
  //only call at the start of MusicTool otherwise can cause memleak
-  
-  //check causes unitialised value error in valgrind
- /* if(user_data==NULL) user_data=malloc(sizeof(S_USERINFO)) ;//printf("user_data pointer: %p\n", user_data);}
-  if(user_data->saved_modes) free(user_data->saved_modes);
-  if(user_data->saved_scales) free(user_data->saved_scales);*/
 
   user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));// printf("saved modes pointer: %p\n", user_data->saved_modes);
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);

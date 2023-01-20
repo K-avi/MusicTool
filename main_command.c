@@ -23,16 +23,16 @@ int main( int argc, char *argv[])
      printf("to use smtool pass two args\n");
   }
   else{
+    /* Intializes random number generator */
+    time_t t;
+    srand((unsigned) time(&t));
+
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
     //initialises the user saved info structure
     user_data=malloc(sizeof(S_USERINFO));
     init_userinfo(user_data);
-
-    /* Intializes random number generator */
-    time_t t;
-    srand((unsigned) time(&t));
 
     SYNTAX_ERROR err =parse_command( argv, user_data);
 

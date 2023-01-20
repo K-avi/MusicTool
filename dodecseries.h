@@ -17,7 +17,6 @@ extern S_DODEC shuffle_serie(S_DODEC seed, u_long num);
 //utility functions 
 extern S_DODEC inverse_serie(S_DODEC serie);
 extern S_DODEC retrograde_serie (S_DODEC serie);
-extern S_DODEC retrograde_serie (S_DODEC serie);
 extern S_DODEC retrograde_inverse_serie(S_DODEC serie);
 
 extern S_DODEC nth_prime( S_DODEC serie, INDEX n );

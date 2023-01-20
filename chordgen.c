@@ -236,3 +236,7 @@ PITCH_CLASS_SET chprog_to_pcs(const S_CHORD_PROG* chprog){
   return ret;
 } 
 
+S_SCALE chprog_to_scl(const S_CHORD_PROG* chprog){
+  return chprog_to_pcs(chprog)>>1;
+}
+

@@ -27,10 +27,15 @@ extern S_SCALE get_scale_of_modes ( S_USERINFO * user_data, CPT modes_num, CPT s
 
 extern void remove_scale( S_USERINFO * user_info, CPT index );
 extern void remove_modes( S_USERINFO * user_info, CPT index );
+extern void remove_dodec(  S_USERINFO * user_info, CPT index );
+
+extern void save_dodec( S_DODEC serie, S_USERINFO * user_info);
+extern void print_saved_serie( S_USERINFO * user_data, INDEX index);
 
 extern S_CHORD_PROG* get_chprog( S_USERINFO *user_data, INDEX index);
 extern S_MODES get_modes( S_USERINFO *user_data, INDEX index);
 extern S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index);
+extern S_DODEC get_saved_dodec( S_USERINFO * user_data, INDEX index);
 
 #ifdef DEBUG
 extern S_CHORD_PROG * duplicate_chprog( S_CHORD_PROG * chprog);

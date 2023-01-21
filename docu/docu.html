@@ -60,6 +60,11 @@
                                         3: abstract chprog 
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="#p24">
+                                        4: dodecaphonic series/tone rows
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         
@@ -86,12 +91,17 @@
                                     </li>
                                     <li>
                                         <a href="#p34">
-                                        4: the read / write commands
+                                        4: the dodec command
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p35">
-                                        5: additionnal commands/syntax elements
+                                        5: the read / write commands
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p36">
+                                        6: additionnal commands/syntax elements
                                         </a>
                                     </li>
                                 </ul>
@@ -221,6 +231,23 @@
 
                 </p>
             </div>
+            <div id="p24">
+                <h4>
+                <em>
+                    II.4: what are MusicTool dodecaphonic series /tone rows :
+                </em>
+                </h4>
+                <p class="text-left">
+                    Dodecaphonic series (or tone rows) are an orderer set of every 12-tet note. They are commonly used in serial and 
+                    dodecaphonic music. If you want to learn more about serialism and dodecaphonic series please check out the <a href="https://en.wikipedia.org/wiki/Twelve-tone_technique#Tone_row" target="blank">wikipedia article on serialism</a>
+                    or <a href="https://musictheory.pugetsound.edu/mt21c/Serialism.html">Robert Hutchinson's course on serialism</a>
+                    In music tool series are stored as 64 bits integer. However only the first 48 bits are relevants, the 16 remaining are used as an error flag. 
+                    Each number in the serie is stored on 4 bits; the first number of the serie is stored from the LSB to bit 3 ,the second from bit 4 to 7 and so on.
+                    The MusicTool syntax for series is the same as the scale one, except a serie MUST be of length 12 (contain every note). 
+                    For example: { 11 4 5 2 3 6 7 9 8 1 0} is a valid serie.
+                    MusicTool implements the common serie operations such as inversion, retrograde, prime and 12 tone matrix calculation
+                </p>
+            </div>
             <br/>
             <hr/>
             <br/>
@@ -332,7 +359,7 @@
                                 if passed with one argument x will generate a random chord prog of random length from a
                                 scale of length x 
                                 if passed with none will generate a prog of rand length from a rand scale.
-                        <br/><br/>-save : passed with one scale chprog or no arguments; if passed with a chprog will save the chprog
+                        <br/><br/>-save : passed with one chprog or no arguments; if passed with a chprog will save the chprog
                                 if passed without will save the temporary saved chprog if it exists.
                         <br/><br/>-print : passed with one integer argument or the env keyword prints the chprog stored at index n if it exists or all the chprogs currenlty saved if passed with env. 
                         <br/><br/>-remove : passed with one integer argument removes the chprog stored at index n if it exists 
@@ -346,7 +373,45 @@
                 <div id="p34">
                     <h4>
                     <em>
-                        III.4: The read/write keywords
+                        III.4: The dodec keyword
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        The dodec keyword is used to pass commands on dodecaphonic series/tone rows. The commands currenlty available are : 
+                        
+                        <br/><br/>-rand : must be passed without argument. Retrieves a random serie by shuffling the serie {0 1 2 3 4 5 6 7 8 9 10 11} 100 times.
+                        <br/><br/>-save : passed with a serie or no arguments; if passed with a serie will save the serie
+                                if passed without will save the temporary saved serie if it exists.
+                        <br/><br/>-print : passed with one integer argument or the env keyword prints the serie stored at index n if it exists or all the series currenlty saved if passed with env. 
+                        <br/><br/>-remove : passed with one integer argument removes the serie stored at index n if it exists 
+                                  and reindexes the remaining saved series.
+                        <br/><br/>-matrix: can be passed without arguments, with a serie, or with saved and an integer argument. 
+                                   when passed without argument will calculate and print out the matrix of the last generated serie (if the serie is set).
+                                   when passed with a serie will calculate and print out the matrix of the serie passed. 
+                                   when passed with saved n will calculate and print out the matrix of the serie saved at the nth index. 
+                        <br/><br/><h6 class="font-weight-bold">All of the following functions can be passed:</h6>
+                        <ul>
+                            <li>without arguments:</li><p>in this case they will aplly the function passed on the prime form of last serie generated (if a serie was generated).</p>
+                            <li>with an integer argument:</li><p>in this case they will aplly the function passed on the Pn form (with n being the argument passed) of last serie generated (if a serie was generated).</p>
+                            <li>with an integer and serie:</li><p>in this case they will apply the function passed on the Pn form (with n being the argument passed) on the serie passed</p>
+                            <li>with an integer and 'saved n':</li><p>in this case they will aplly the function passed on the Pn form (with n being the argument passed) on the serie saved at the index passed.</p>
+                            <li>with a serie:</li><p>in this case they will apply the function passed on the prime form of the serie passed</p>
+                            <li>with 'saved n':</li><p>in this case they will apply the function passed on the prime form of the serie saved at the index passed.</p>
+                        </ul>
+                        -invert: calculates I0 or In of a serie depending on how it's passed.
+                        <br/><br/>-retro: calculates R0 or Rn of a serie depending on how it's passed.
+                        <br/><br/>-prime: calculates Pn of a serie (retrieves the serie if asked to calculate P0)
+                        <br/><br/>-retroinv:calculates RI0 or RIn, of a serie depending on how it's passed.
+                        <br/><br/>
+                        <i class="small">if you don't know about the inverse, retrograde, retrograde inverse, and prime operations, I recommand checking out <a href="https://en.wikipedia.org/wiki/Tone_row">the wikipedia article on tone rows</a></i>
+                        
+
+                    </p>
+                </div>
+                <div id="p35">
+                    <h4>
+                    <em>
+                        III.5: The read/write keywords
                     </em>
                     </h4>
                     <p class="text-left">
@@ -360,10 +425,10 @@
                                     will create it and write the current environment on it. 
                     </p>
                 </div>
-                <div id="p35">
+                <div id="p36">
                     <h4>
                     <em>
-                        III.5: Other keywords/syntax elements
+                        III.6: Other keywords/syntax elements
                     </em>
                     </h4>
                     <p class="text-left">
@@ -413,7 +478,9 @@
                         write the scales you want to load as MusicTool scale. 
                         writing down harmonised scales works the same as scales except the environment must begin by 
                         env harmo" 
-                        finally writing down a chprog env works the same except the env must begin by "env chprog".
+                        writing down a chprog env also works the same except the env must begin by "env chprog".
+                        finally, dodecaphonic series environment works similarly, but the environment must begin with 
+                        "env dodec".
                         Multiple environments can be written in a single environment file.
                     </p>
                 </div>
@@ -455,8 +522,7 @@
                             which is simplified to : 'smtool -read "filename.txt" '
 
                             NB: the save family of command aren't disabled in smtool; however they are useless as each smtool command takes place
-                            in a new environment.
-                            
+                            in a new environment.             
                         </p>
                     </div>
                 </div>

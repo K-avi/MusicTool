@@ -48,18 +48,28 @@ basic functions:
     -I: yes
     -P: yes
     -RI: yes
-
-syntaxchecking: 
-    -lmao no
+    -TOMATRIX: yes
 
 u_info: 
-    -struct: no 
-    -save: no 
-    -remove: no 
-    
+    -struct: y
+    -save: y
+    -remove: y
 
+STATE OF PARSELOOP: 
+
+made shorter thanks to (some) generics (yay) reducing the amount of boilerplates
+unfortunately , the experiment to make eveything (or almost everything) as generic 
+as possible was a failure. 
+However, some generic functions were kept some of them being good (generic_scl_scl )
+some of them being questionnable design choices (generic_rand)
+
+
+s_dodec is almost done in parseloop (yay) 
+has to be implemented in syntaxchecker (nay)
 ////////////////////////
 
-MusicTool front: 
+MusicTool front: done
 
-smtool front: 
+smtool front: done
+
+syntaxchecking : not begun

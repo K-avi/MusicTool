@@ -12,8 +12,7 @@ extern void free_saved_modes( S_SAVED_MODES * saved_modes);
 extern void init_userinfo( S_USERINFO* user_data);
 extern void free_userinfo( S_USERINFO* user_info);
 
-extern void init_allfunc( ALL_FUNC* funcs);
-extern void free_allfunc( ALL_FUNC*funcs);
+
 
 
 #endif // INIT_H_INCLUDED

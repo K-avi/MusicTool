@@ -6,7 +6,7 @@
 
 
 extern  S_USERINFO * user_data;
-extern ALL_FUNC * funcs_struct;
+
 
 extern bool EXIT_INFO;
 extern unsigned short compt_scale;
@@ -30,7 +30,7 @@ extern S_SCALE tmp_saved_scale ;
 extern S_SCALE scale_to_save ;
 extern S_SCALE generated_scale;
 extern LENGTH length;
-extern SIGNED_LENGTH indexx; //there's an index function in string.h so I had to rename the global n could not think of a better name
+extern SIGNED_LENGTH indexx, index2; //there's an index function in string.h so I had to rename the global n could not think of a better name
 extern S_INTERVAL_STRUCTURE generated_intv_struct;
 extern S_INTERVAL_VECTOR generated_intv_vect;
 //harmo globals

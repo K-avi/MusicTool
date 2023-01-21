@@ -2,6 +2,7 @@
 #include "bitop.h"
 #include "chordgen.h"
 #include "chordprint.h"
+#include "dodecseries.h"
 #include "globals.h"
 #include "parsing.h"
 #include "init.h"
@@ -29,9 +30,49 @@ void dodecparse(char* line, S_USERINFO* user_saved){
     if(line[i]==10 || line[i]=='\0'){ printf("dodec parse error\n"); return;}
 
     if(!strncmp(&line[i],"rand",4)){
-      
-    }
+        generic_rand(&line[i+4], 'd');
+    }else if (!strncmp( &line[i], "save", 4)){
+        if(!strstr(line, "0")){ //checks if a scale is passed
+          if(tmp_saved_dodec){
+            printf("no serie passed; saving last random serie generated\n");
+            print_serie(tmp_saved_dodec); 
+            save_dodec(tmp_saved_dodec, user_saved);
+            tmp_saved_dodec=0;
+          }else{
+            printf("no serie parsed and no temporary serie in memory; nothing will be done\n");
+          }
+        }else{
+          char * tmp = set_to_first_bracket(&line[i+4]);
+          if(tmp){
+            dodec_to_save=parse_serie(line);
+            printf("serie parsed as : \n");
+            print_serie(dodec_to_save);
+            save_dodec(dodec_to_save, user_saved);
+          }else printf("runtime error in dodec save {..}\n");
+        }
+    }else if (!strncmp (&line[i], "print", 4)){
+      generic_print_uinfo(&print_saved_serie, &print_dodec_env,&line[i+4], user_saved);
 
+    }else if(!strncmp(&line[i], "remove",6)){         
+      succes=generic_remove(&remove_dodec, &line[i+6], user_saved);
+
+    }else if(!strncmp(&line[i], "invert",6)){         
+      generic_dodec_dodec(&inverse_serie, &nth_inv, &line[i+6], user_saved);
+
+    }else if(!strncmp(&line[i], "retro",5)){         
+        generic_dodec_dodec(&retrograde_serie, &nth_retrograde, &line[i+5], user_saved);
+
+    }else if(!strncmp(&line[i], "retroinv",8)){         
+        generic_dodec_dodec(&retrograde_inverse_serie, &nth_retrograde_inverse, &line[i+8], user_saved);
+
+    }else if(!strncmp(&line[i], "prime",5)){         
+        generic_dodec_dodec(&first_prime, &nth_prime, &line[i+5], user_saved);
+
+    }else if(!strncmp(&line[i], "matrix",6)){         
+        
+    }else{
+      printf("runtime error in dodec\n");
+    }
 } 
 
 void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsing
@@ -41,17 +82,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
     if(line[i]==10 || line[i]=='\0'){ printf("scale parse error\n"); return;}
 
     if (!strncmp(&line[i], "rand",4)) {
-
-        length=parse_scale_length(line);
-
-        if(length==13){ //checks wether a length was retrieved from the line         
-          printf("\ngenerating scale of random length \n");
-          tmp_saved_scale=generate_ran_scale(rand()%12);
-        }else{
-          tmp_saved_scale=generate_ran_scale(length);
-        }
-        print_scale(tmp_saved_scale);
-       
+      generic_rand(&line[i+4], 's');
     } else if(!strncmp(&line[i], "print",5)){ 
           succes=generic_print_uinfo(&print_saved_scale , &print_scl_env,&line[i+5], user_saved); 
 
@@ -73,8 +104,6 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
           print_scale(scale_to_save);
           save_scale(scale_to_save, user_saved);
         }
-        
-
     }else if(!strncmp(&line[i], "remove",6)){         
          succes=generic_remove(&remove_scale, &line[i+6], user_saved);
             
@@ -186,22 +215,7 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
     if(line[i]==10 || line[i]=='\0'){ printf("runtime harmoparse error\n"); return;}
 
     if (!strncmp(&line[i], "rand",4)) {
-
-
-      length= parse_scale_length(line);
-      if(length==13) length=rand()%12;
-      
-      tmp_saved_scale=generate_ran_scale(length);
-
-      
-      if(tmp_saved_mode) free(tmp_saved_mode);
-	  tmp_saved_mode=generate_modes(tmp_saved_scale);
-
-	  print_scale(tmp_saved_scale);
-	  print_modes(tmp_saved_mode);
-
-    
-
+      generic_rand(&line[i+4], 'h');
     }else if (!strncmp(&line[i], "scale",5)) {
 
       
@@ -295,26 +309,9 @@ void chprogparse(char * line , S_USERINFO* user_saved){
     if(line[i]==10 || line[i]=='\0'){ printf("runtime chprogparse error\n"); return;}
     
     if(!strncmp(&line[i], "rand",4)){
+        generic_rand(&line[i+4], 'c');  
 
-        l1=parse_index(line);
-        l2=parse_next(line);
-      
-        free_chord_prog(tmp_chprog);
-     
-        if(l1==-1){
-        
-            tmp_chprog=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
-        }else if(l2==-1){
-            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , rand()%10+1   );
-        }else{
-            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , l2   );
-        }
-        
-        if(!tmp_chprog) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
-        else print_chord_prog(tmp_chprog);
-       
-       
-      }else if(!strncmp(&line[i], "save",4)) {
+    }else if(!strncmp(&line[i], "save",4)) {
          
          i+=4;
          while(NEUTRAL_CHAR(line[i])) i++;
@@ -409,8 +406,7 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
        
         printf("\ntype 'harmo rand x' to generate an harmonised scale of length x with x being an integer between 1 and 12\ntype 'harmo rand' to generate an harmonised scale of random length\ntype 'harmo scale { 0 ... }' to harmonise a scale passed as argument \ntype 'harmo saved scale n' to harmonise the nth scale you saved\ntype 'save { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\ntype 'print n' to print the harmonised scale saved at index n \ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\ntype 'remove n' to remove the modes saved at index n\n");        
     }else if(!strncmp(&line[i], "chprog",6 )){
-       
-
+      
         printf("\ntype 'chprog rand x y' to generate a chord prog of length x using a scale of length y\ntype 'chprog rand x' to generate a chord prog of length x using a scale of a random length\ntype 'chprog rand' to generate a chord prog of a random length from a scale of random length \ntype 'chprog save [ I, IIm, .... ]' to save the chprog you passed after it if  save chprog is called without argument, the last generated chprog will be saved\ntype 'chprog print n' to print the nth chprog you saved\ntype 'chprog remove n' to remove the chprog saved at index n\n");
        // printf("\ntype 'extract scale n' to extract the scale from the chprog saved at index n\n");
         //printf("\ntype 'extract scale [I......]' to extract the scale from the chprog passed as argument\n");
@@ -890,6 +886,9 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       }else if(!strncmp(&line[i], "chprog", 6)){
         chprogparse(&line[i+6] , user_saved);
         printf("  >>>");
+      }else if(!strncmp(&line[i], "dodec", 4)){
+        dodecparse(&line[i+4] , user_saved);
+        printf("  >>>");
       }else if(!strncmp(&line[i], "help",4)){
         helpparse(&line[i+4]);
         printf("  >>>");
@@ -939,6 +938,9 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   }else if(!strncmp(keyword, "-chprog",7 )){
       syntaxcheck=chprogcheck(command);
       if(!syntaxcheck) chprogparse( command, user_info);
+  }else if(!strncmp(keyword, "-dodec",5 )){
+      syntaxcheck=dodeccheck(command);
+      if(!syntaxcheck) dodecparse( command, user_info);
   }else if(!strncmp(keyword, "-help",5 )){
        syntaxcheck=helpcheck(command);
        if(!syntaxcheck) helpparse( command);

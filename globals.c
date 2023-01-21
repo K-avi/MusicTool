@@ -5,10 +5,6 @@
 //structure where u save stuff
 S_USERINFO * user_data=NULL ; //user_saved stuff
 
-//structure where functions r stored; mainly used for generics:
-
-ALL_FUNC * funcs_struct= NULL;
-
 /* currently useless
 CPT nb_entries=0;  //nb entries currently in chord_book 
 CPT nb_entries_max=0; //maxnum of entries in chordbook 
@@ -22,7 +18,7 @@ S_SCALE tmp_saved_scale;
 S_SCALE scale_to_save=0;
 S_SCALE generated_scale=0;
 LENGTH length=0;
-SIGNED_LENGTH indexx=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
+SIGNED_LENGTH indexx=-1 ,index2=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
 S_INTERVAL_STRUCTURE generated_intv_struct=0;
 S_INTERVAL_VECTOR generated_intv_vect=0;
 //harmo globals

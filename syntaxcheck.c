@@ -563,7 +563,9 @@ SYNTAX_ERROR seriecheck(char * str){//syntaxchecker for dodecaphonic series rela
     return SYNTAX_OK;
 }
 
-
+SYNTAX_ERROR dodeccheck(char*str){
+    return 0;
+}
 
 SYNTAX_ERROR syntaxcheck(char *str){
     //returns SYNTAX_OK if the syntax of a line is correct; an error flag otherwise
@@ -588,6 +590,8 @@ SYNTAX_ERROR syntaxcheck(char *str){
         ret =writecheck(tmp+5);
     }else if (!strncmp(tmp, "serie",5)){
         ret =seriecheck(tmp+5);
+    }else if (!strncmp(tmp, "dodec",4)){
+        ret =dodeccheck(tmp+4);
     }else if (!strncmp(tmp, "quit",4)){
         ret=emptycheck(tmp+4);
         if(ret) ret= SYNTAX_INVALID_CHAR;
@@ -597,14 +601,8 @@ SYNTAX_ERROR syntaxcheck(char *str){
     return ret;
 }
 
-
-
-
-
-
 char* skip_line(char * str){
     //sets a str to the next new line in it; or the next end of string char if \n isnt found. 
-
     while(! (*str=='\n' || *str=='\0')) str++;
     return str;
 }
@@ -636,16 +634,11 @@ SYNTAX_ERROR env_scl_harmo_check ( char *str) {//checks the syntax of the substr
         if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
         else if( COMMENT_ENV(*str)) {  //skips the comment line
 
-           // printf("skipping line\n");
-            str=skip_line(str) ;
-          
-           
+            str=skip_line(str) ;        
             continue;
         }else if (*str=='{'){
-          //  printf("%s\n", str);
             scale_check= parse_scale(str);
-           // print_scale(scale_check);
-          //  printf("%d\n", scale_check);
+      
             if(scale_check&ERROR_FLAG){
                 return SYNTAX_INVALID_SCALE;
             }else {
@@ -659,10 +652,8 @@ SYNTAX_ERROR env_scl_harmo_check ( char *str) {//checks the syntax of the substr
           // printf("%c in seeking ) inval\n", *str);
             return SYNTAX_INVALID_CHAR;
         }
-    }
-    
+    }  
     return SYNTAX_OK;
-
 }
 
 SYNTAX_ERROR env_chprog_check ( char *str) {//checks the syntax of the substring containing an env scale in 

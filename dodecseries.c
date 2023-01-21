@@ -101,8 +101,6 @@ S_DODEC shuffle_serie(S_DODEC seed, u_long num){//randomly shuffles a serie pass
     return ret;
 }
 
-
-
 ///////// utility functions//////////
 
 S_DODEC inverse_serie(S_DODEC serie){ //calculates I0 of a serie 
@@ -132,6 +130,10 @@ S_DODEC retrograde_serie (S_DODEC serie) {//calculates R0 of a serie
 }
 S_DODEC retrograde_inverse_serie(S_DODEC serie){// calculates RI0 of a serie
     return retrograde_serie(inverse_serie(serie));
+}
+
+S_DODEC first_prime(S_DODEC serie){//not relevant but needed to pass generic_dodec_dodec lol
+    return serie;
 }
 S_DODEC nth_prime( S_DODEC serie, INDEX n ){ //calculates the nth prime form of a dodec serie
     S_DODEC ret=0; 

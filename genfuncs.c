@@ -151,7 +151,7 @@ u_char generic_dodec_dodec( S_DODEC (*operation)(S_DODEC serie), S_DODEC(*nth_op
   f : str -> S_DODEC -> S_DODEC -> stdout
   returns a positive integer when succes , 0 when fails
   */
-
+printf("%s\n", str);
   char * tmp=str; 
   while(NEUTRAL_CHAR(*tmp)) tmp++; 
   if(END_OF_LINE_CHAR(*tmp)){
@@ -160,6 +160,8 @@ u_char generic_dodec_dodec( S_DODEC (*operation)(S_DODEC serie), S_DODEC(*nth_op
       print_serie(tmp_saved_dodec);
 
       return 1; 
+    }else {
+      printf("no serie saved in tmp; nothing will be done\n");
     }
   }else if (isdigit(*tmp)){
     indexx= atoi(tmp)%12;
@@ -210,6 +212,11 @@ u_char generic_dodec_dodec( S_DODEC (*operation)(S_DODEC serie), S_DODEC(*nth_op
     }else {
       printf("runtime error in dodec fun saved\n");
     }
+  }else if(*tmp=='{'){
+    S_DODEC parsed_dodec= parse_serie(tmp);
+   
+    tmp_saved_dodec=operation(parsed_dodec);
+    print_serie(tmp_saved_dodec);
   }else {
     printf("runtime error in dodec fun\n");
   }

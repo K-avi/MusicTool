@@ -75,11 +75,10 @@ SYNTAX_ERROR removecheck(char *str){//syntax check for the remove commands
 
 SYNTAX_ERROR parsescalecheck(char *str){//syntax check for parsing scales and modes
 
+    if(END_OF_LINE_CHAR(*str)) return SYNTAX_OK;
     char *tmp=str;
     while( *tmp==' '  || *tmp=='\n' || *tmp== '\t') tmp++;
-
     if( END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
-
 
     if(*tmp=='{'){
         
@@ -87,17 +86,13 @@ SYNTAX_ERROR parsescalecheck(char *str){//syntax check for parsing scales and mo
         //return syntax invalid scale
         if(check & ERROR_FLAG) return SYNTAX_INVALID_SCALE;
        
-
         while(*tmp!='}') tmp++; 
         tmp++;
-
         while(*tmp==' ' || *tmp=='\t' || *tmp=='\n') tmp++; 
-      //return invalid char
+
         if(!(*tmp=='\n' || *tmp=='\0' )) return SYNTAX_INVALID_CHAR; //invalid character 
         return SYNTAX_OK;
     }
-
-
 
     return SYNTAX_NO_ARG;
 }
@@ -106,9 +101,7 @@ SYNTAX_ERROR parseprogcheck(char *str){//syntax check for saving chprogs
 
     char *tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++;
-
     if( END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
-
 
     if(*tmp=='['){
         //return invalid prog
@@ -116,20 +109,15 @@ SYNTAX_ERROR parseprogcheck(char *str){//syntax check for saving chprogs
         if(!check ) { free_chord_prog(check); return SYNTAX_INVALID_PROG;}//trying to generate is costly ; maybe shouldn't do this way 
         free_chord_prog(check);
        
-
         while(*tmp!=']') tmp++; 
         tmp++;
 
         while(NEUTRAL_CHAR(*tmp)) tmp++; 
       
         if(END_OF_LINE_CHAR(*tmp) ) return SYNTAX_OK; 
-        
-        //return invalid character 
+ 
         return SYNTAX_INVALID_CHAR;
     }
-
-
-
     return SYNTAX_NO_ARG;
 }
 
@@ -175,11 +163,7 @@ SYNTAX_ERROR two_num_args_check(char * str){//checks that a string contains two 
     char *tmp= str;
 
     while( NEUTRAL_CHAR(*tmp )) tmp++;
-
     if(!isdigit(*tmp)) return SYNTAX_TOO_FEW_ARGS; 
-
-    //too few args
-
 
     while(isdigit(*tmp)) tmp++;
  //first integer in string is ok ; checks second: 
@@ -196,14 +180,10 @@ SYNTAX_ERROR two_num_args_check(char * str){//checks that a string contains two 
 }
 
 SYNTAX_ERROR one_num_arg_check( char * str){//checks that a string contains 1 integer and nothing else
-
     char *tmp= str;
 
     while( NEUTRAL_CHAR(*tmp )) tmp++;
-
     if(!isdigit(*tmp)) return SYNTAX_TOO_FEW_ARGS;  //too few args 
-
-
     while(isdigit(*tmp)) tmp++;
  //integer in string is ok; checks that nothing else is in 
 
@@ -308,7 +288,6 @@ SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK ||
 }//not tested
 
 SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argument is a filename. 
-
 //a filename is considered to be a string w/o spaces
 
     printf("%s\n", str);
@@ -328,7 +307,6 @@ SYNTAX_ERROR filename_check(char * str){ //checks that the str passed as argumen
 }
 
 SYNTAX_ERROR filename_check_var(char * str){ //checks that the str passed as argument is a filename. 
-
 //a filename is considered to be a string w/o spaces
 
     printf("%s\n", str);
@@ -419,8 +397,6 @@ SYNTAX_ERROR chprogcheck(char * str){ //checks that a string containing a chprog
     if( END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
 
     else if( !strncmp(tmp, "rand", 4)){
-
-        
         return zero_one_two_arg_check(tmp+4);
         
     }else if(!strncmp(tmp, "remove", 6)){
@@ -533,38 +509,94 @@ SYNTAX_ERROR commentcheck( char * str){//checks if a line contains a comment
     return SYNTAX_GENERIC_ERROR;
 }
 
-SYNTAX_ERROR seriesavecheck(char *str){
-    return 0;
+SYNTAX_ERROR serieparsecheck(char *str, u_char mode ){
+    //char is a flag; if it's true then func returns ok when tmp is parsed w/o args 
+    //if false then a scale MUST be passed
+    //checks that if { is passed its a full scale then call scale saved check 
+    if(mode && END_OF_LINE_CHAR(*str)) return SYNTAX_OK;
+    
+    char* tmp=str;
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
+   // if(mode && END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+    if(*tmp=='{'){
+        S_SCALE check = parse_scale(str);
+        if(check==0x7FF){//checks that the scale is full :)
+            return parsescalecheck(tmp);
+        }
+    }else if(END_OF_LINE_CHAR(*tmp)){
+        if(mode) return SYNTAX_OK;
+        return SYNTAX_TOO_FEW_ARGS;
+    }
+    return SYNTAX_INVALID_ARG;
 }
 
-SYNTAX_ERROR seriecheck(char * str){//syntaxchecker for dodecaphonic series related operations
+SYNTAX_ERROR zer_one_saved_one_check(char * str){//worst function name I ever came up with ffs
+    /*returns SYNTAX_OK if :
+    noarg
+    or
+    1 integer arg
+    or 
+    number + saved + number  
+    or 
+    1 sdodec arg
+    or 
+    number + sdodec args
+    */
+    char *tmp=str;
+    while (NEUTRAL_CHAR(*tmp)) tmp++;
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
 
-    char * tmp=str; 
-    while(NEUTRAL_CHAR(*tmp) ) tmp++;
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
+    else if(isdigit(*tmp)){
+        while (isdigit(*tmp)) tmp++; 
+        while (NEUTRAL_CHAR(*tmp)) tmp++;
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
 
-    else if(!strncmp(tmp, "save", 4)){
-       return seriesavecheck(tmp+4);
-    }else if (!strncmp(tmp, "remove",6)){
-       return removecheck(tmp+6);
-    }else if (!strncmp(tmp, "print",5)){
-       return printcheck(tmp+5);
-    }else if (!strncmp(tmp, "inv",3)){
-        
-    }else if (!strncmp(tmp, "retro",5)){
-        
-    }else if (!strncmp(tmp, "retroinv",8)){
-        
-    }else if (!strncmp(tmp, "prime",5)){
-       
-    }else if (!strncmp(tmp, "matrix",6)){
-       
+        else if(!strncmp(tmp, "saved", 5)){
+            return saved_one_arg_check(tmp);
+        }else if(*tmp == '{'){
+            return serieparsecheck(tmp, false);
+        }
+    }else if(*tmp =='{'){
+        return serieparsecheck(tmp, false);
+    }else if(!strncmp(tmp, "saved", 5)){
+        return saved_one_arg_check(tmp);
     }
-    return SYNTAX_OK;
+    return SYNTAX_GENERIC_ERROR;
 }
 
 SYNTAX_ERROR dodeccheck(char*str){
-    return 0;
+    char * tmp=str; 
+    while(NEUTRAL_CHAR(*tmp) ) tmp++;
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
+    
+    else if(!strncmp(tmp, "save", 4)){
+       return serieparsecheck(tmp+4, true);
+
+    }else if (!strncmp(tmp, "remove",6)){
+       return removecheck(tmp+6);
+
+    }else if (!strncmp(tmp, "print",5)){
+       return printcheck(tmp+5);
+
+    }else if (!strncmp(tmp, "invert",6)){
+        return zer_one_saved_one_check(tmp+6);
+
+    }else if (!strncmp(tmp, "retroinv",8)){
+        return zer_one_saved_one_check(tmp+8);
+
+    }else if (!strncmp(tmp, "retro",5)){
+        return zer_one_saved_one_check(tmp+5);
+
+    }else if (!strncmp(tmp, "prime",5)){
+       return zer_one_saved_one_check(tmp+5);
+
+    }else if (!strncmp(tmp, "matrix",6)){
+       return zer_one_saved_one_check(tmp+6);
+
+    }else if(!strncmp (tmp, "rand", 4)){
+        return emptycheck(tmp+4);
+    }
+    return SYNTAX_INVALID_CHAR;
 }
 
 SYNTAX_ERROR syntaxcheck(char *str){
@@ -589,9 +621,9 @@ SYNTAX_ERROR syntaxcheck(char *str){
     }else if (!strncmp(tmp, "write",5)){
         ret =writecheck(tmp+5);
     }else if (!strncmp(tmp, "serie",5)){
-        ret =seriecheck(tmp+5);
-    }else if (!strncmp(tmp, "dodec",4)){
-        ret =dodeccheck(tmp+4);
+        ret =dodeccheck(tmp+5);
+    }else if (!strncmp(tmp, "dodec",5)){
+        ret =dodeccheck(tmp+5);
     }else if (!strncmp(tmp, "quit",4)){
         ret=emptycheck(tmp+4);
         if(ret) ret= SYNTAX_INVALID_CHAR;

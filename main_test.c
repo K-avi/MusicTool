@@ -244,22 +244,29 @@ int main(){
 //  S_DODEC * mat= serie_to_12tmat(serie);
  // print_12t_mat(mat);
  // free(mat);
- //printf("a");
+ //printf("a");f
   //printf("b");
   //fprintf(stderr, "vc");
 
   /*for(int i=0 ; i<10; i++){
     print_scale(gen_ran_scale_var());
   }*/
-  funcs_struct=malloc(sizeof(ALL_FUNC));
-  init_allfunc(funcs_struct);
 
-  funcs_struct->scl_funcs->print(funcs_struct->scl_funcs->rand(7));
+  SYNTAX_ERROR savet1= dodeccheck("save { 0 1 2 3 4 5 6 7 8 9 10 11}");
+ // printf("%d\n" , savet1);
+  SYNTAX_ERROR savet2= dodeccheck("save");
+  //printf("%d\n" , savet2);
 
-  funcs_struct->dodec_funcs->save( funcs_struct->dodec_funcs->shuflle(HARMO_SERIE, 100), user_data);
-  funcs_struct->dodec_funcs->print_saved(user_data,1);
+  SYNTAX_ERROR randt1= dodeccheck("rand");
+
+  SYNTAX_ERROR funct1= dodeccheck("invert ");
+  SYNTAX_ERROR funct2= dodeccheck(" retro saved 3");
+  SYNTAX_ERROR funct3= dodeccheck(" comp 5 saved 4");
+  SYNTAX_ERROR funct4= dodeccheck(" retroinv 8");
+
+  printf("savet1: %d savet2: %d randt: %d\nfunc1: %d func2: %d func3: %d func4: %d\n", savet1, savet2, randt1, funct1, funct2, funct3,funct4);
+
   free_userinfo(user_data);
-  free_allfunc(funcs_struct);
   return 0;
 
 }

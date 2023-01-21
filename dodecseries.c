@@ -211,7 +211,6 @@ S_DODEC parse_serie(char * str){//parses a str into a serie
         if(isdigit(*tmp) ){
             note=atoi(tmp);
             ret=add_to_dodec(ret,  note);
-             printf("%d\n",note);
             while(isdigit(*tmp)) tmp++;
             continue;
         }else tmp++;

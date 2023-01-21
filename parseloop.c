@@ -28,7 +28,7 @@ void dodecparse(char* line, S_USERINFO* user_saved){
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
     if(line[i]==10 || line[i]=='\0'){ printf("dodec parse error\n"); return;}
-
+ 
     if(!strncmp(&line[i],"rand",4)){
         generic_rand(&line[i+4], 'd');
     }else if (!strncmp( &line[i], "save", 4)){
@@ -50,8 +50,8 @@ void dodecparse(char* line, S_USERINFO* user_saved){
             save_dodec(dodec_to_save, user_saved);
           }else printf("runtime error in dodec save {..}\n");
         }
-    }else if (!strncmp (&line[i], "print", 4)){
-      generic_print_uinfo(&print_saved_serie, &print_dodec_env,&line[i+4], user_saved);
+    }else if (!strncmp (&line[i], "print", 5)){
+      generic_print_uinfo(&print_saved_serie, &print_dodec_env,&line[i+5], user_saved);
 
     }else if(!strncmp(&line[i], "remove",6)){         
       succes=generic_remove(&remove_dodec, &line[i+6], user_saved);
@@ -59,11 +59,11 @@ void dodecparse(char* line, S_USERINFO* user_saved){
     }else if(!strncmp(&line[i], "invert",6)){         
       generic_dodec_dodec(&inverse_serie, &nth_inv, &line[i+6], user_saved);
 
-    }else if(!strncmp(&line[i], "retro",5)){         
-        generic_dodec_dodec(&retrograde_serie, &nth_retrograde, &line[i+5], user_saved);
-
     }else if(!strncmp(&line[i], "retroinv",8)){         
         generic_dodec_dodec(&retrograde_inverse_serie, &nth_retrograde_inverse, &line[i+8], user_saved);
+
+    }else if(!strncmp(&line[i], "retro",5)){         
+        generic_dodec_dodec(&retrograde_serie, &nth_retrograde, &line[i+5], user_saved);
 
     }else if(!strncmp(&line[i], "prime",5)){         
         generic_dodec_dodec(&first_prime, &nth_prime, &line[i+5], user_saved);
@@ -886,8 +886,8 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       }else if(!strncmp(&line[i], "chprog", 6)){
         chprogparse(&line[i+6] , user_saved);
         printf("  >>>");
-      }else if(!strncmp(&line[i], "dodec", 4)){
-        dodecparse(&line[i+4] , user_saved);
+      }else if(!strncmp(&line[i], "dodec", 5)){
+        dodecparse(&line[i+5] , user_saved);
         printf("  >>>");
       }else if(!strncmp(&line[i], "help",4)){
         helpparse(&line[i+4]);

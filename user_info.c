@@ -389,16 +389,17 @@ void remove_dodec(  S_USERINFO * user_info, CPT index ){ //removes scale at inde
 		if(tmp->next->next){
 			
 			tmp1=tmp->next;
-			print_serie(tmp1->serie);
+			//print_serie(tmp1->serie);
 			tmp->next=tmp->next->next;
 			free(tmp1);
 		}else {
 			
 			tmp1=tmp->next;
-			print_serie(tmp1->serie);
+			//print_serie(tmp1->serie);
 			tmp->next=NULL;
-			print_serie(tmp->serie);
+			//print_serie(tmp->serie);
 			free(tmp1);
+			printf("serie removed succesfully\n");
 		}
 	}
 	user_info->dodec_num--;

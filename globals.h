@@ -46,6 +46,7 @@ extern SIGNED_LENGTH l1, l2;
 //dodec globals 
 extern S_DODEC tmp_saved_dodec;
 extern S_DODEC generated_dodec, dodec_to_save ; 
+extern S_DODEC* tmp_matrix;
 
 
 

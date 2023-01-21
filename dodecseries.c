@@ -2,10 +2,7 @@
 #include "bitop.h"
 #include "scalegen.h"
 #include "types.h"
-#include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 
 
 ////utility functions ///////////
@@ -217,6 +214,17 @@ S_DODEC parse_serie(char * str){//parses a str into a serie
     }
     if(isvalid_serie(ret)) return ret;
 
-    return ret;
+    return DODEC_ERRFLAG;
 
+}
+
+
+void fprint_serie( FILE* f,const S_DODEC serie ){//same as print serie but u can choose the buffer where scale is printed 
+
+    int i;
+    fprintf(f,"{ ");
+    for( CPT cpt=0; cpt <12; cpt ++){
+        fprintf(f,"%llu ",  (serie>> (4*cpt))& 0xF);
+    }
+   fprintf(f," }\n");
 }

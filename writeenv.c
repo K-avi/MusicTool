@@ -113,8 +113,8 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     
     if(!user_info) return 0;
     if(f==NULL) return 0;
-
-    fprintf(f,"env scale (\n");
+    
+    fprintf(f,"\nenv scale (\n");
 
     S_SAVED_SCALES * tmp= user_info->saved_scales;
     
@@ -138,16 +138,27 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
             tmp1=tmp1->next;
         }
     }
-    fprintf(f,")\n");
 
     S_SAVED_PROGS * tmp2= user_info->saved_progs;
-     fprintf(f,"env chprog (\n");
+     fprintf(f,")\nenv chprog (\n");
     if(tmp2){
         while(tmp2){
             if(tmp2->ch_prog){
                 fprint_chord_prog(f,tmp2->ch_prog); 
             }
             tmp2=tmp2->next;
+        }
+    }
+
+    fprintf(f,")\nenv dodec (\n");
+
+    S_SAVED_DODEC * tmp3= user_info->saved_dodecs;
+    if(tmp3){
+        while(tmp3){
+            if(tmp3->serie){
+                fprint_serie(f,tmp3->serie); 
+            }
+            tmp3=tmp3->next;
         }
     }
     fprintf(f,")\n");

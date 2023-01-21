@@ -69,10 +69,42 @@ void dodecparse(char* line, S_USERINFO* user_saved){
         generic_dodec_dodec(&first_prime, &nth_prime, &line[i+5], user_saved);
 
     }else if(!strncmp(&line[i], "matrix",6)){         
+        char * tmp=&line[i+6]; 
+        while(NEUTRAL_CHAR(*tmp)) tmp++; 
+        if(END_OF_LINE_CHAR(*tmp)){
+          if(tmp_saved_dodec){
+            if(tmp_matrix) free(tmp_matrix);
+            tmp_matrix= serie_to_12tmat(tmp_saved_dodec); 
+            print_12t_mat(tmp_matrix);
+          }else {
+            printf("no serie saved in tmp; nothing will be done\n");
+          }
         
-    }else{
-      printf("runtime error in dodec\n");
-    }
+        }else if (!strncmp(tmp, "saved", 5)){
+          tmp+=5;
+          while(NEUTRAL_CHAR(*tmp)) tmp++; 
+          if(isdigit(*tmp)){
+            indexx=atoi(tmp);
+            if(indexx!=-1 && indexx){
+              generated_dodec=get_saved_dodec(user_saved, indexx); 
+              if(tmp_matrix) free(tmp_matrix);
+              tmp_matrix=serie_to_12tmat(generated_dodec);
+              print_12t_mat(tmp_matrix);
+            }
+          }else {
+            printf("runtime error in dodec fun saved\n");
+          }
+        }else if(*tmp=='{'){
+          S_DODEC parsed_dodec= parse_serie(tmp);
+          if(tmp_matrix) free(tmp_matrix);
+          tmp_matrix=serie_to_12tmat(parsed_dodec);
+          print_12t_mat(tmp_matrix);
+        }else {
+          printf("runtime error in dodec matrix\n");
+        }
+  }else{
+    printf("runtime error in dodec\n");
+  }
 } 
 
 void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsing
@@ -428,6 +460,7 @@ void clearglobals(){
     if(tmp_saved_mode) free(tmp_saved_mode);
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
+    if(tmp_matrix) free(tmp_matrix);
     free_chord_prog(generated_chprog);
     free_chord_prog(tmp_chprog);
   
@@ -629,6 +662,73 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
           fclose(f);
           return;
         }
+      }else if(!strncmp(&line[i], "env dodec", 9)){
+        //check that '(' is the next not space \t \n character
+        char* tmp= &line[i+9];
+        ushort line_env= line_num+1;
+        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        S_DODEC tmp_dodec= 0;
+
+        if(nxt_chr==1){
+         while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
+            i=0;
+            while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
+               i++;
+            }
+            if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
+              ++line_num; continue;//empty line or comment
+            }else{
+              tmp_dodec=parse_serie(&line[i]);
+              save_dodec( tmp_dodec, user_info);
+              
+            }
+
+          }
+          if(!f){
+            free(clean_filename);
+            fclose(f);
+            return;
+          }
+        }else if(nxt_chr==2) {
+          while(fgets(line, 256, f)){
+            nxt_chr= next_not_blank_comment(line, '(');
+           
+            if(nxt_chr==1){
+              while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){
+               
+                i=0;
+                while( (line[i]==' ' || line[i]=='\t') && line[i]!=10 ){
+                  i++;
+                }
+                if(line[i]== '\n' || line[i]=='#') { 
+                  ++line_num; continue;//empty line or comment
+                }else{
+                  tmp_dodec=(parse_serie(&line[i]));
+                  save_dodec( tmp_dodec, user_info);
+                
+                }
+              }
+              if(!f){
+                free(clean_filename);
+                fclose(f);
+                return;
+              }
+            }else if( nxt_chr==2){
+              continue;
+            }else{
+               printf("runtime error at line: %d no open parentheses after dodec env\n", line_env);
+               free(clean_filename);
+               fclose(f);
+               return;
+            }
+            line_num++;
+          }
+        }else{
+           printf("runtime error at line %d\n", line_num+1);
+          free(clean_filename);
+          fclose(f);
+          return;
+        }
       }else if(!strncmp(&line[i], "env chprog", 9)){
           //check that '(' is the next not space \t \n character
         char* tmp= &line[i+10];
@@ -776,6 +876,9 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
         
       }else if(!strncmp(&line[l], "chprog", 6)){
         chprogparse(&line[l+6], user_saved);
+        
+      }else if(!strncmp(&line[l], "dodec", 5)){
+        dodecparse(&line[l+6], user_saved);
         
       }else if(!strncmp(&line[l], "help",4)){
         helpparse(&line[l+4]);

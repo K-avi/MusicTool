@@ -1,6 +1,7 @@
 #include "syntaxcheck.h"
 #include "bitop.h"
 #include "chordgen.h"
+#include "dodecseries.h"
 #include "parsing.h"
 #include "scalegen.h"
 #include "types.h"
@@ -564,6 +565,19 @@ SYNTAX_ERROR zer_one_saved_one_check(char * str){//worst function name I ever ca
     return SYNTAX_GENERIC_ERROR;
 }
 
+SYNTAX_ERROR zero_serie_saved_check( char * str) {//returns syntax ok if str is empty or a valid serie 
+//or saved n ; returns an erorr otherwise 
+    char *tmp=str;
+    while (NEUTRAL_CHAR(*tmp)) tmp++;
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+    
+    else if(*tmp =='{'){
+        return serieparsecheck(tmp, false);
+    }else if(!strncmp(tmp, "saved", 5)){
+        return saved_one_arg_check(tmp);
+    }
+    return SYNTAX_GENERIC_ERROR;
+}
 SYNTAX_ERROR dodeccheck(char*str){
     char * tmp=str; 
     while(NEUTRAL_CHAR(*tmp) ) tmp++;
@@ -591,7 +605,7 @@ SYNTAX_ERROR dodeccheck(char*str){
        return zer_one_saved_one_check(tmp+5);
 
     }else if (!strncmp(tmp, "matrix",6)){
-       return zer_one_saved_one_check(tmp+6);
+       return zero_serie_saved_check(tmp+6);
 
     }else if(!strncmp (tmp, "rand", 4)){
         return emptycheck(tmp+4);
@@ -744,6 +758,52 @@ SYNTAX_ERROR env_chprog_check ( char *str) {//checks the syntax of the substring
     return SYNTAX_OK;
 
 }
+
+SYNTAX_ERROR env_dodec_check(char *str){
+    S_DODEC dodec_check=DODEC_ERRFLAG;
+
+    while( *str!='('){ //found open parenthesis
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+            str=skip_line(str) ;
+             continue;
+        }else if(*str=='('){ 
+            str++;
+            break;
+        }else{
+            return SYNTAX_INVALID_CHAR;
+        }
+    }
+    if(*str=='(') str++;
+    while( *str!=')'){
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+
+      
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+
+            str=skip_line(str) ;        
+            continue;
+        }else if (*str=='{'){
+            dodec_check= parse_serie(str);
+           //print_serie(dodec_check);
+            if(dodec_check==DODEC_ERRFLAG){
+                return SYNTAX_INVALID_DODEC;
+            }else {
+                str= strstr(str, "}");
+            }
+            str++; 
+            continue;
+        }else if(*str==')'){ 
+            break;
+        }else{
+          // printf("%c in seeking ) inval\n", *str);
+            return SYNTAX_INVALID_CHAR;
+        }
+    }  
+    return SYNTAX_OK;
+}
 SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as one beeeg string.
 
     if(!str) return SYNTAX_INVALID_ARG;
@@ -799,7 +859,17 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                // printf("%s\n", tmp);
                 scheck=env_chprog_check(tmp);
                 if(scheck) return scheck;
-                tmp=strstr(tmp, "]");
+                tmp=strstr(tmp, ")");
+                tmp++;
+              // printf("%s\n", tmp); 
+               continue;
+            }else if(!strncmp(tmp, "dodec", 5)){
+                //printf("chprog reached\n");
+                tmp+=5;
+               // printf("%s\n", tmp);
+                scheck=env_dodec_check(tmp);
+                if(scheck) return scheck;
+                tmp=strstr(tmp, ")");
                 tmp++;
               // printf("%s\n", tmp); 
                continue;

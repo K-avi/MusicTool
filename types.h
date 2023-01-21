@@ -166,8 +166,8 @@ typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ;
 #define SYNTAX_UNMATCHED_CLOSED_PAR 14 //par closed never opened
 #define SYNTAX_UNCLOSED_ENV 15
 #define SYNTAX_MISSING_PAR 16
-//#define SYNTAX_INVALID_SCALE 17
 #define SYNTAX_INVALID_SOF 17 //invalid start of file
+#define SYNTAX_INVALID_DODEC 18
 
 /////////////// saved stuff//////////////
 

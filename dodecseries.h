@@ -4,6 +4,8 @@
 #include "types.h"
 #include <stdlib.h>
 #include <sys/types.h>
+#include <ctype.h>
+#include <stdio.h>
 
 #define INIT_DODEC 0xDDDDDDDDDDDD
 #define ISFULL_SERIE(serie) ( ((serie)& 0xF00000000000)!= 0xD00000000000)
@@ -28,6 +30,7 @@ extern S_DODEC nth_retrograde_inverse( S_DODEC serie, INDEX n);
 //stdio functions
 extern void print_serie(S_DODEC serie);
 extern void print_12t_mat(S_DODEC* mat);
+void fprint_serie( FILE* f,const S_DODEC serie );
 
 extern S_DODEC parse_serie(char * str);
 

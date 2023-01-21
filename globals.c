@@ -34,4 +34,5 @@ SIGNED_LENGTH l1=-1, l2=-1;
 //dodec globals 
 S_DODEC tmp_saved_dodec=0;
 S_DODEC generated_dodec=0, dodec_to_save=0; 
+S_DODEC * tmp_matrix=NULL;
 

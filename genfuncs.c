@@ -151,7 +151,6 @@ u_char generic_dodec_dodec( S_DODEC (*operation)(S_DODEC serie), S_DODEC(*nth_op
   f : str -> S_DODEC -> S_DODEC -> stdout
   returns a positive integer when succes , 0 when fails
   */
-printf("%s\n", str);
   char * tmp=str; 
   while(NEUTRAL_CHAR(*tmp)) tmp++; 
   if(END_OF_LINE_CHAR(*tmp)){

@@ -177,7 +177,6 @@ S_DODEC * serie_to_12tmat( S_DODEC serie){
 
 //stdio functions /////////////
 void print_serie(S_DODEC serie){//prints a dodec serie
-
     printf("{ ");
     for( CPT cpt=0; cpt <12; cpt ++){
         printf("%llu ",  (serie>> (4*cpt))& 0xF);
@@ -185,30 +184,52 @@ void print_serie(S_DODEC serie){//prints a dodec serie
     printf(" }\n");
 }
 void print_serie_num(S_DODEC serie){//prints the num of a dodec serie
-    for( CPT cpt=0; cpt <12; cpt ++)  printf("%llu ",  (serie>> (4*cpt))& 0xF); 
+    S_DODEC cur=0;
+    for( CPT cpt=0; cpt <12; cpt ++)  {
+        cur=(serie>> (4*cpt))& 0xF;
+        if(cur>=10){
+             printf("%llu  ", cur)  ; 
+        }else printf("%llu   ", cur); 
+    }
 
 }
 
 void print_12t_mat(S_DODEC* mat){//prints a 12tone mat to stdout
     if(!mat) return;
     char p0= mat[0] & 0xF;
+    S_DODEC cur= 0;
     CPT i=0;
-     printf("%d,%llu\n", p0, mat[0]>>4*1 & 0xF);
-    printf("I: 0 ");
+    printf("    I0  ");
+
     for ( i=1; i<12; i++){
-        //operation is mat[0] >> 4*i & 0xF
-        printf("%d ",  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12));
+        cur=  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12);
+        if(cur>=10){
+            printf("I%x  ", (int)cur);
+        }else printf("I%d  ", (int)cur);
     }
     printf("\n");
+
+    
     for( i=0; i<12; i++){
-        printf("P%d  ", mod( (int)(mat[i]& 0xF)- p0 ,12)); 
-        print_serie_num(mat[i]);
-       printf(" R%d\n", mod( (int)(mat[i]& 0xF)- p0 ,12));
-       
+        cur=mod( (int)(mat[i]& 0xF)- p0 ,12);
+        if(cur>=10){
+            printf("P%d ", (int)cur ); 
+            print_serie_num(mat[i]);
+        printf(" R%d\n", (int) cur);
+        }else {
+            printf("P%d  ", (int)cur ); 
+            print_serie_num(mat[i]);
+            printf(" R%d\n", (int) cur);
+        }
+    
     }
-    printf("RI: 0 ");
-   for ( i=0; i<12; i++){
-      printf("%d ",  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12));
+    printf("    RI0 ");
+
+    for ( i=1; i<12; i++){
+        cur=  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12);
+        if(cur>=10){
+            printf("RI%x ", (int)cur);
+        }else printf("RI%d ", (int)cur);
     }
     printf("\n");
 }//need to add the lil indexes like I0 I1,....

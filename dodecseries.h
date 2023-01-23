@@ -13,7 +13,7 @@
 
 //random gen function
 extern S_DODEC generate_serie();
-extern S_DODEC shuffle_serie(S_DODEC seed, u_long num);
+extern S_DODEC shuffle_serie(S_DODEC seed, unsigned long num);
 
 
 //utility functions 

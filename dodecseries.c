@@ -1,8 +1,11 @@
 #include "dodecseries.h"
 #include "bitop.h"
 #include "scalegen.h"
+#include "misc.h"
 #include "types.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 
 ////utility functions ///////////
@@ -181,7 +184,6 @@ void print_serie(S_DODEC serie){//prints a dodec serie
     }
     printf(" }\n");
 }
-
 void print_serie_num(S_DODEC serie){//prints the num of a dodec serie
     for( CPT cpt=0; cpt <12; cpt ++)  printf("%llu ",  (serie>> (4*cpt))& 0xF); 
 
@@ -189,14 +191,26 @@ void print_serie_num(S_DODEC serie){//prints the num of a dodec serie
 
 void print_12t_mat(S_DODEC* mat){//prints a 12tone mat to stdout
     if(!mat) return;
-    // printf("  I0 I1 I2 I3 I4 I5 I6 I7 I8 I9 I10 I11  \n");
-    for(CPT i=0; i<12; i++){
-        //printf("P%d ",i); 
-        print_serie_num(mat[i]);
-       //printf(" R%d\n",i);
-       printf("\n");
+    char p0= mat[0] & 0xF;
+    CPT i=0;
+     printf("%d,%llu\n", p0, mat[0]>>4*1 & 0xF);
+    printf("I: 0 ");
+    for ( i=1; i<12; i++){
+        //operation is mat[0] >> 4*i & 0xF
+        printf("%d ",  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12));
     }
-    //printf("  RI0 RI1 RI2 RI3 RI4 RI5 RI6 RI7 RI8 RI9 RI10 RI11  \n");
+    printf("\n");
+    for( i=0; i<12; i++){
+        printf("P%d  ", mod( (int)(mat[i]& 0xF)- p0 ,12)); 
+        print_serie_num(mat[i]);
+       printf(" R%d\n", mod( (int)(mat[i]& 0xF)- p0 ,12));
+       
+    }
+    printf("RI: 0 ");
+   for ( i=0; i<12; i++){
+      printf("%d ",  mod(((-p0+(int)( (mat[0] >> 4*i) & 0xF))%12),12));
+    }
+    printf("\n");
 }//need to add the lil indexes like I0 I1,....
 
 S_DODEC parse_serie(char * str){//parses a str into a serie

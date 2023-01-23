@@ -9,13 +9,16 @@ dodec invert 5 #returns IN (n being the integer arg passed)
 
 dodec save 
 dodec print 1
-dodec retro saved 1 #returns R0
+dodec retro saved 1 
+#returns R0
 
-dodec retroinv { 0 1 2 3 4 5 6 7 8 9 10 11} #returns RI0
+dodec retroinv { 0 1 2 3 4 5 6 7 8 9 10 11} 
+#returns RI0
 
 dodec remove 1
 
 dodec rand 
 dodec matrix 
-dodec prime 4 # returns P4
+dodec prime 4 
+# returns P4
 

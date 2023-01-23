@@ -451,6 +451,12 @@ SYNTAX_ERROR helpcheck(char * str){
         while(NEUTRAL_CHAR(*tmp))tmp++; 
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
         
+    }else if (!strncmp(tmp, "dodec",5)){
+        
+        tmp+=5;
+        while(NEUTRAL_CHAR(*tmp))tmp++; 
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+        
     }
     return SYNTAX_INVALID_ARG;
 }

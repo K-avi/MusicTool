@@ -949,7 +949,7 @@ void writeparse(char * str , S_USERINFO* user_info){
 }
 
 void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
-   
+
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
     char line[256];
@@ -957,14 +957,19 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
     SYNTAX_ERROR syntax_error= SYNTAX_OK;
 
     while (true){
-           
+      
       i=0;
 
       fflush(stdin);
       memset(&line[0], 0, 256*sizeof(char));
       fflush(stdout);
-      if (!fgets(line, 256, stdin))	continue;
-      
+     
+      if (!fgets(line, 256, stdin))	{
+        clearglobals(); 
+        printf("\n  >>>bye!\n");
+        break;
+      }
+
       while(NEUTRAL_CHAR(line[i])){
         i++;
       }

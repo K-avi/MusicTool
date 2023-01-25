@@ -7,7 +7,7 @@
 #include "scalegen.h"
 #include "misc.h"
 #include "chordgen.h"
-
+#include "extchordgen.h"
 
 CHORD_BITS relevant_at_fund (S_SCALE scale){//returns the relevant notes to generate triads on the first degree of a scale 
 
@@ -19,6 +19,8 @@ CHORD_BITS relevant_at_fund (S_SCALE scale){//returns the relevant notes to gene
   ret|= (triads  & (1<<5)) ? (1<<2) : 0;
   ret|= (triads  & (1<<6)) ? (1<<3) : 0;
   ret|= (triads  & (1<<7)) ? (1<<4) : 0;
+  ret|= (triads & (1<<1)) ? (1<<5) : 0;//sus2 n sus4 arent tested
+  ret|= (triads & (1<<4)) ? (1<<6) : 0;
   return ret;
 }
 
@@ -30,7 +32,8 @@ TRIADS_IN_SCALE triads_at_fund( S_SCALE scale){ //returns the triads that can be
   ret|= ( (relevant_notes & MAJ_MASK)==MAJ_MASK) ? (1<<1) : 0;
   ret|= ( (relevant_notes & DIM_MASK)== DIM_MASK) ? (1<<2) : 0;
   ret|= ( (relevant_notes & AUG_MASK)==AUG_MASK) ? (1<<3) : 0;
-
+  ret|= (( relevant_notes & SUS2_MASK)== SUS2_MASK) ? (1<<4): 0;
+ret|= (( relevant_notes & SUS4_MASK)== SUS4_MASK) ? (1<<4): 0;
   return ret;
 } 
 
@@ -151,18 +154,21 @@ void free_chord_prog(S_CHORD_PROG* source){
     return ret;
 }//tested
 
-CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a chord from a triad and a degree 
+CHORD_EXT generate_chord_ext(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg, S_SCALE extensions){//generates a chord from a triad and a degree 
   
   if(!triads || !deg) return 0;
-  CHORD ret=0;
+  CHORD_EXT ret=0;
 
   switch(triads){
-    case MIN_CHORD : ret=(MIN<<4); break;
+    case MIN_CHORD : ret=(MIN_EXT<<4); break;
     case MAJ_CHORD : ret=(MAJ<<4); break;
     case AUG_CHORD : ret=(AUG<<4); break;
     case DIM_CHORD : ret=(DIM<<4); break;
+    case SUS2_CHORD : ret=(SUS2<<4); break;
+    case SUS4_CHORD: ret=(SUS4<<4); break;
     default: ret=0; break;
   } 
+  ret|= extensions<<4;
   ret=ret |get_deg_from_chdeg(deg);
   return ret;
 }
@@ -196,23 +202,16 @@ void print_pcs( const PITCH_CLASS_SET pcs){ //prints the notes of a scale and it
 
 
 
-PITCH_CLASS_SET chord_to_pcs(CHORD chord){
+PITCH_CLASS_SET extchord_to_pcs(CHORD_EXT chord){
   //turns a chord into it's triad in chord degrees notation.
 
   if(!chord ) return 0;
   
-  BITS triad= chord >>4;
+  BITS ret= chord >>4;
   BITS degree = chord & 15;
-  PITCH_CLASS_SET ret= 0;
 
-  switch (triad){
-    case MIN: ret= MINOR_PCS; break;
-    case MAJ: ret= MAJOR_PCS; break;
-    case AUG: ret= AUG_PCS; break;
-    case DIM: ret=DIM_PCS; break;
-    default:  ret=0;
-  }
   if(!ret )return 0;
+
   return rot_pcs(ret, degree);
 }
 

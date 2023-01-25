@@ -32,6 +32,8 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define MAJ_MASK 0xA // 0000 1010
 #define DIM_MASK 5 // 0000 0101
 #define AUG_MASK 0x12 // 0001 0010
+#define SUS2_MASK 0x30 // 0011 0000 
+#define SUS4_MASK 0x50 // 0101 0000 
 
 
 //MASKS FOR TRIADS_IN_SCALE 
@@ -40,6 +42,8 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define MAJ_CHORD 2
 #define DIM_CHORD 4
 #define AUG_CHORD 8
+#define SUS2_CHORD 16 
+#define SUS4_CHORD 32
 
 //masks for S_CHORD_PROG 
 
@@ -55,6 +59,8 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define MAJ 2
 #define DIM 3
 #define AUG 4
+#define SUS2 5
+#define SUS4 6
 
 
 enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_bVI, DEG_VI, DEG_bVII, DEG_VII};
@@ -78,9 +84,21 @@ enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_b
 #define MAJOR_PCS 0x91 // 0000 0000 1001 0001
 #define DIM_PCS 0x49 // 0000 0000 0100 1001
 #define AUG_PCS 0x111 // 0000 0001 0001 0001
+#define SUS2_PCS 0x85 //0000 0000 1000 0101
+#define SUS4_PCS 0xA1 // 0000 0000 1010 0001
 
 #define PCS_TO_SCALE(pcs)  ((pcs)>>1)
 #define ERROR_FLAG_PCS 0xF000
 
+
+
+// TRIADS_IN_SCALE to CHORD_EXTENDED
+//!!!!!!!!!!!!!!!!!!!!!!! NOT THE SAME AS _CHORD DO NOT INTERCHANGE BE VERY CAREFULL    
+#define MIN_EXT 0x44
+#define MAJ_EXT 0x48
+#define DIM_EXT 0x24
+#define AUG_EXT 0x88
+#define SUS2_EXT 0x42
+#define SUS4_EXT 0x50
 
 #endif

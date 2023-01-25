@@ -11,8 +11,8 @@ typedef unsigned char u_char;
 typedef unsigned short u_short; 
 typedef unsigned short ushort; 
 typedef unsigned int uint;
-typedef unsigned long u_long; 
-typedef unsigned long ulong;
+typedef unsigned long long u_long; 
+typedef unsigned long long ulong;
 #endif
 
 #define NEUTRAL_CHAR( chr) ( (chr)==' ' || (chr)=='\t' || (chr)=='\n')
@@ -27,17 +27,22 @@ typedef unsigned char DEGREES; // -/-
 typedef signed char TRIADS_BITS; // specific use ; symbolises the 4 bits of a chord that contain the triad
 typedef signed char DEGREES_BITS; // -/- that contains the degree
 typedef unsigned char INDEX; // generic index
-typedef unsigned char CHORD; //chord rpz : 
+typedef unsigned char CHORD; //chord rpz : first 4 bits r degree ; last 4 r triad
 typedef unsigned char SYNTAX_ERROR;
 typedef unsigned char BITS; //generic uchar 
 typedef unsigned char RUNTIME_ERROR;
 /*
-first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
-3 diminished and 4 augmented
+  first 4 bits are which degree w 0 being I and 11 being major 7 and last 4 bits which triad with 1 being minor, 2 major 
+  3 diminished and 4 augmented
 */
 
 typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
 typedef char SIGNED_BOOL; //1 if true; 0 false ; -1 error
+
+typedef unsigned short CHORD_EXT; //used to rpz chord w extensions
+  //first 4 bits r degree; 
+  //next 11 bits r a scale interpreted as a chord 
+  //last bit is an error flag
 
 typedef unsigned short S_SCALE; 
 
@@ -68,7 +73,7 @@ typedef unsigned long long S_DODEC; /*
 
 typedef unsigned char CHORD_BITS; //used to know which fifth and thirds are in a scale
 // 0000 0000
-// lsb bit is wether minor third; 7th major third; 6th dim fifth; 5th just fifth; 4th aug fifth 
+// lsb bit is wether minor third; 7th major third; 6th dim fifth; 5th just fifth; 4th aug fifth ; 3rd bit is for second; 2nd bit is for fourth
 
 typedef unsigned char TRIADS_IN_SCALE; //used to know which triads are contained in a scale 
 /* lsb is set if minor chord, is in the scale 7 bit if major chord, 6th bit if dim chord, 5th if augmented chord */
@@ -76,7 +81,8 @@ typedef unsigned char TRIADS_IN_SCALE; //used to know which triads are contained
 typedef unsigned short PITCH_CLASS_SET; //used to know which degrees are in a scale. 
 //behaves similarly to S_SCALE but w an important difference: the LSB corresponds to the fundamental note in the scale 
 
-/* for example: the I IV V chord pattern would be stored as 
+/* 
+  for example: the I IV V chord pattern would be stored as 
   0000 0000 1010 0001
   LSB is fund next set bit is 4th and the last set bit is the fifth 
 
@@ -103,7 +109,7 @@ typedef unsigned short WORD_BITS; //bits representing the characters parsed from
 
 
 #ifndef WIN32
-typedef unsigned long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bits so this makes me kinda sad
+typedef unsigned long long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bits so this makes me kinda sad
 #endif
 
 #ifdef WIN32 

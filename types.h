@@ -39,11 +39,6 @@ typedef unsigned char RUNTIME_ERROR;
 typedef short SIGNED_LENGTH; //length with the possibility to set at -1 to check for errors
 typedef char SIGNED_BOOL; //1 if true; 0 false ; -1 error
 
-typedef unsigned short CHORD_EXT; //used to rpz chord w extensions
-  //first 4 bits r degree; 
-  //next 11 bits r a scale interpreted as a chord 
-  //last bit is an error flag
-
 typedef unsigned short S_SCALE; 
 
 /*
@@ -97,6 +92,24 @@ typedef struct S_CHORD_PROG{
    LENGTH length;
 }S_CHORD_PROG; //each chord is stored as a uchar w the first 4 bits being the degrees 
 //n the next 3 bits the triad type (min/maj/aug/dim); 
+
+
+
+
+typedef unsigned short CHORD_EXT; //used to rpz chord w extensions
+  //first 4 bits r degree; 
+  //next 11 bits r a scale interpreted as a chord 
+  //last bit is an error flag
+
+
+typedef unsigned short S_EXTENSIONS; //used to rpz extension in CHORD_EXt; 
+//encoded the same way as S_SCALE but synonym cuz it makes me happier
+//uses the same error flag than S_SCALE due to it being the same thing in another context.
+
+typedef struct S_EXTCHPROG{
+  CHORD_EXT* chprog; 
+  LENGTH length;
+}S_EXTCHPROG;
 
 //////////////chord parsing///////////////
 

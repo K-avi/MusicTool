@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dodecseries.h"
+#include "extchord.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parseloop.h"
@@ -266,8 +267,14 @@ int main(){
 
   printf("savet1: %d savet2: %d randt: %d\nfunc1: %d func2: %d func3: %d func4: %d\n", savet1, savet2, randt1, funct1, funct2, funct3,funct4);
 */
-  SYNTAX_ERROR docheck= env_check(file_to_string("examples/environment_ex5.txt"));
-  printf("%d\n", docheck);
+
+ // print_scale (1370);
+  //char * str= extensions_to_str(1370);
+ // printf("%s\n", str);
+   // print_extensions(1370);
+    print_ext_chord((1370<<4));
+  
+  //free(str);
   free_userinfo(user_data);
   return 0;
 

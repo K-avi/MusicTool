@@ -58,7 +58,7 @@ char *bits_deg_to_str(DEGREES_BITS deg){
 
 }
 
-char * chord_to_str(CHORD chord){//turns a chord into a string.
+char * chord_to_str(CHORD chord){//turns a triad  into a string.
 
     if(!chord) return NULL;
 
@@ -70,10 +70,6 @@ char * chord_to_str(CHORD chord){//turns a chord into a string.
   
     char* degree= bits_deg_to_str(first);
     char* triad= bits_triad_to_str(last);
-    
-
-     
-
     if( (!triad) || (!degree) ) return NULL;
 
   

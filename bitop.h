@@ -54,6 +54,7 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define FIRST4 0x0F 
 #define LAST4 0xF0
 
+//triad in scale :
 //!!!!!!!!!!!!!!!!!!!!!!! NOT THE SAME AS _CHORD DO NOT INTERCHANGE BE VERY CAREFULL    
 #define MIN 1 
 #define MAJ 2
@@ -92,13 +93,14 @@ enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_b
 
 
 
+//redudant w chord bits
 // TRIADS_IN_SCALE to CHORD_EXTENDED
 //!!!!!!!!!!!!!!!!!!!!!!! NOT THE SAME AS _CHORD DO NOT INTERCHANGE BE VERY CAREFULL    
-#define MIN_EXT 0x44
-#define MAJ_EXT 0x48
-#define DIM_EXT 0x24
-#define AUG_EXT 0x88
-#define SUS2_EXT 0x42
-#define SUS4_EXT 0x50
+#define MIN_EXT 0x44 // 0000 0000 0100 0100
+#define MAJ_EXT 0x48 // 0000 0000 0100 1000
+#define DIM_EXT 0x24 // 0000 0000 0010 0100
+#define AUG_EXT 0x88 // 0000 0000 1000 1000
+#define SUS2_EXT 0x42 // 0000 0000 0100 0010
+#define SUS4_EXT 0x50 // 0000 0000 0101 0000
 
 #endif

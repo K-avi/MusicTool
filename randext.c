@@ -7,10 +7,9 @@
 #include "types.h"
 #include "globals.h"
 #include "bitop.h"
-#include "randext.h"
+#include "rand.h"
 #include "misc.h"
 
-#include <stdarg.h>
 
 
 
@@ -29,7 +28,7 @@ CHORD_EXT triad_to_chord( TRIADS_IN_SCALE triads){
 TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads){//selects a random triads in a TRIADS_IN_SCALE struct
   
   if(!triads) return 0;
-  if( triads==1 || triads== 2 || triads== 4 || triads==8 || triads==16 || triads== 32) {return  triads;} // case if only one triad
+  if( triads==1 || triads== 2 || triads== 4 || triads==8 ) {return  triads;} // case if only one triad
 
   LENGTH length=count_bits(triads);
 
@@ -41,7 +40,7 @@ TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads){//selects a random tr
     incr++;
   }
   return (1<<ret);
-}//not tested 
+}
 
 PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random degree in a PITCH_CLASS_SET short
 
@@ -57,7 +56,7 @@ PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random de
 
 
 
-S_EXTCHPROG* generate_chord_prog(S_SCALE scale, LENGTH length,...){ //generates a random chord prog of length length 
+S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
 
 
     print_scale(scale);
@@ -105,6 +104,8 @@ S_EXTCHPROG* generate_chord_prog(S_SCALE scale, LENGTH length,...){ //generates 
         }
       }
       
+
+
     }else{//u can generate two or more chords
 
         PITCH_CLASS_SET curdeg= select_rand_degree(deg_w_chord);
@@ -142,5 +143,7 @@ S_EXTCHPROG* generate_chord_prog(S_SCALE scale, LENGTH length,...){ //generates 
 
     }
 
-    return (S_EXTCHPROG*) ret;
-}//not done 
+    return ret;
+}//tested ; could be made better checking if multiple triads can be generated from a degree n allowing 
+//the same degree to be used two times if so. 
+//the current generating algorithm prevents a prog like [ IIm II I] from happenind.

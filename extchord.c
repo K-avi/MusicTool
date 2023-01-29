@@ -22,29 +22,36 @@
 
 CHORD_BITS extrelevant_at_fund (S_SCALE scale){//returns the relevant notes to generate triads on the first degree of a scale 
 
-  S_SCALE triads= scale& TRIAD_MASK;
+  S_SCALE triads= scale& EXTTRIAD_MASK;
+//  print_scale(triads);
   //print_bits(triads);
   CHORD_BITS ret=0;
-  ret= (triads  & (1<<2)) ? 1 : 0;
-  ret|= (triads  & (1<<3)) ? (1<<1) : 0;
-  ret|= (triads  & (1<<5)) ? (1<<2) : 0;
-  ret|= (triads  & (1<<6)) ? (1<<3) : 0;
-  ret|= (triads  & (1<<7)) ? (1<<4) : 0;
+  ret= (triads  & (1<<2)) ? 1 : 0; //if minor third
+  ret|= (triads  & (1<<3)) ? (1<<1) : 0; //if major third
+  ret|= (triads  & (1<<5)) ? (1<<2) : 0; //if tritone
+  ret|= (triads  & (1<<6)) ? (1<<3) : 0; //if fifth
+  ret|= (triads  & (1<<7)) ? (1<<4) : 0;// if augmented fifth
   ret|= (triads & (1<<1)) ? (1<<5) : 0;//sus2 n sus4 arent tested
-  ret|= (triads & (1<<4)) ? (1<<6) : 0;
+  ret|= (triads & (1<<4)) ? (1<<6) : 0;//if fourth
+  //printf("ret is %b\n", ret);
+  
   return ret;
 }//not tested 
 
 TRIADS_IN_SCALE exttriads_at_fund( S_SCALE scale){ //returns the triads that can be generated from a scale stored as an uchar
   //the base value is zero
+ // print_scale(scale);
   TRIADS_IN_SCALE ret=0; 
+ 
   CHORD_BITS relevant_notes= extrelevant_at_fund(scale);
+ // printf("%b, %b\n", relevant_notes, SUS2_MASK);
   ret= ( (relevant_notes & MIN_MASK)==MIN_MASK) ? 1 : 0;
   ret|= ( (relevant_notes & MAJ_MASK)==MAJ_MASK) ? (1<<1) : 0;
   ret|= ( (relevant_notes & DIM_MASK)== DIM_MASK) ? (1<<2) : 0;
   ret|= ( (relevant_notes & AUG_MASK)==AUG_MASK) ? (1<<3) : 0;
   ret|= (( relevant_notes & SUS2_MASK)== SUS2_MASK) ? (1<<4): 0;
-  ret|= (( relevant_notes & SUS4_MASK)== SUS4_MASK) ? (1<<4): 0;
+  ret|= (( relevant_notes & SUS4_MASK)== SUS4_MASK) ? (1<<5): 0;
+ // printf("in exttriads at fund %d\n", ret);
   return ret;
 } //not tested 
 
@@ -90,14 +97,15 @@ PITCH_CLASS_SET extget_degrees( S_SCALE scale){//returns the degrees from which 
     INDEX pos;
 
     S_MODES modes= generate_modes(scale);
-  
+   // print_scale(modes[0]);
+//    printf("triad: %d\n", exttriads_at_fund(modes[0]));
 
     for(CPT i=0; i<length ; i++){
 
     
       if( !exttriads_at_fund(modes[i])){
         
-         //printf("%d\n", i);
+        // printf("%d\n", i);
          pos=nth_bit_pos(mask,i+1);  
         
          ret^=(1<<pos);
@@ -159,7 +167,7 @@ CHORD_EXT generate_chord_ext(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg, S_SCAL
   CHORD_EXT ret=0;
 
   switch(triads){
-    case MIN_CHORD : ret=(MIN_EXT<<4); break;
+    case MIN_CHORD : ret=(MIN<<4); break;
     case MAJ_CHORD : ret=(MAJ<<4); break;
     case AUG_CHORD : ret=(AUG<<4); break;
     case DIM_CHORD : ret=(DIM<<4); break;
@@ -219,37 +227,55 @@ S_SCALE extrog_to_scl(const S_EXTCHPROG* chprog){
 TRIADS_IN_SCALE select_triad( CHORD_EXT chord){
   //selects a triad in a ext chord. 
   //The first triad tested is maj, then min, aug, dim, sus4, sus2
+  
+  S_SCALE scl= (chord >>4) ;  //retrieves the "scale" in chord
 
-  S_SCALE scl= (chord >>4) & ~0xF;  //retrieves the "scale" in chord
-
-  if( scl & MAJ_EXT){
-    chord= MAJ_CHORD;
-  }else if( scl & MIN_EXT){
-    chord= MIN_CHORD;
-  }else if( scl & AUG_EXT){
-    chord=AUG_CHORD;
-  }else if (scl & DIM_EXT){
-    chord=DIM_CHORD;
-  }else if (scl & SUS4_EXT){
-    chord= SUS4_CHORD;
-  }else if (scl & SUS2_EXT){
-    chord= SUS2_CHORD;
+  TRIADS_IN_SCALE ret=0;
+  if(  (scl & MAJ_EXT)==MAJ_EXT){
+    ret= MAJ_CHORD;
+  }else if( (scl & MIN_EXT)==MIN_EXT){
+  
+    ret= MIN_CHORD;
+  }else if( (scl & AUG_EXT) ==AUG_EXT){
+    ret=AUG_CHORD;
+  }else if ( (scl & DIM_EXT)==DIM_EXT){
+    ret=DIM_CHORD;
+  }else if ( (scl & SUS4_EXT) ==SUS4_EXT){
+    ret= SUS4_CHORD;
+   // printf("in sus4 ext\n");
+  }else if ( (scl & SUS2_EXT)==SUS2_EXT){
+    ret= SUS2_CHORD;
+   // printf("in sus2 ext\n");
   }else {
-    chord=0;
+    print_scale(scl);
+    ret=0;
   }
-  return chord;
+  //printf("ret is %d\n", ret);
+  return ret;
 }//yes
+TRIADS_BITS triad_to_triad_bits( TRIADS_IN_SCALE triads){
+  switch (triads){
+    case MIN_CHORD: return MIN; 
+    case MAJ_CHORD: return MAJ; 
+    case AUG_CHORD: return AUG; 
+    case DIM_CHORD: return DIM; 
+    case SUS2_CHORD: return SUS2; 
+    case SUS4_CHORD: return SUS4; 
+    default:  return 0;
+  }
+}
 
 CHORD extchord_to_triad( CHORD_EXT chord){
 
   CHORD ret= (chord& 0xF); //retrieves first 4 bits which store the degree 
-  ret|= select_triad(chord)<<4;
+  ret|= triad_to_triad_bits(select_triad(chord))<<4; //wtf
  // printf("select is : %b\n", ret);
   return ret;
   
 }//kinda tested 
 
 char*  extbits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
+//printf("%d\n", triad);
     switch (triad) {
     case MIN: return "m"; 
     case MAJ: return ""; 
@@ -261,18 +287,18 @@ char*  extbits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
     }
 }//tested
 
-CHORD_EXT pop_triad( S_EXTENSIONS extensions, TRIADS_IN_SCALE triad){
+CHORD_EXT pop_triad( S_EXTENSIONS extensions, TRIADS_BITS triad){
   //pops the triad passed as arg in the extensions of a chord
  
   CHORD_EXT ret=0;
  // printf("triad in pop triad is: %b\n", triad);
   switch(triad){
-    case (MAJ_CHORD): ret= extensions^MAJ_EXT; break;
-    case (MIN_CHORD): ret= extensions^MIN_EXT; break;
-    case(AUG_CHORD): ret= extensions^AUG_EXT; break;
-    case (DIM_CHORD): ret= extensions^DIM_EXT; break;
-    case(SUS2_CHORD): ret= extensions^SUS2_EXT; break;
-    case(SUS4_CHORD): ret= extensions^SUS4_EXT; break;
+    case (MAJ): ret= extensions^MAJ_EXT; break;
+    case (MIN): ret= extensions^MIN_EXT; break;
+    case(AUG): ret= extensions^AUG_EXT; break;
+    case (DIM): ret= extensions^DIM_EXT; break;
+    case(SUS2): ret= extensions^SUS2_EXT; break;
+    case(SUS4): ret= extensions^SUS4_EXT; break;
     default : ret=extensions; break;
   }
   return ret;
@@ -344,29 +370,36 @@ void print_extensions(S_EXTENSIONS extensions){//prints the extensions of an ext
   printf("%s", bit_shift_to_degree(bitval));
 }//tested
 
+
+
 void print_ext_chord( CHORD_EXT chord){//prints an extended chord to command line
 
   
   if(!chord)return ;
+  //printf("%b\n", chord);
+  //print_scale(chord>>4);
   
   DEGREES_BITS degree= chord & 0xF; 
+ // print_scale(chord>>4);
   CHORD triad= extchord_to_triad(chord);
- // printf("triad is: %s\n", chord_to_str(triad));
- // printf("triad is: %d, %b\n", triad, triad);
-  //printf("%b, %d\n", triad, triad);;
-  S_EXTENSIONS extensions= pop_triad( (chord>>4), triad >>4); //I need to pop the bits of the triad 
-
-  char* strdeg= extbits_deg_to_str(degree);
-  char* strtriad= extbits_triad_to_str(triad);
-
-  if(strtriad){
-  printf("%s%s", strdeg, strtriad);
-  }else {
-    printf("%s", strdeg);
-  }
+  // printf("triad is: %s\n", chord_to_str(triad));
+  // printf("triad is: %d, %b\n", triad, triad);
  
+  S_EXTENSIONS extensions= pop_triad( (chord>>4), triad >>4); //I need to pop the bits of the triad 
+ // printf("extension is: \n");
+ // print_scale(extensions);
+ // printf("triad is: %d\n", triad>>4);
+  char* strdeg= extbits_deg_to_str(degree);
+ // printf("%b\n", triad);
+  
+  char* strtriad= extbits_triad_to_str((triad>>4));
+
+ 
+  printf("%s%s", strdeg, strtriad);
+  
+  
   print_extensions(extensions);
-   printf("%b\n", extensions);
+ //  printf("%b\n", extensions);
   return;
 }//kinda tested 
 //doesnt work well 
@@ -400,6 +433,8 @@ CHORD_EXT triad_to_chord( TRIADS_IN_SCALE triads){
   }
 }
 
+
+
 CHORD_EXT ext_gen_chord  (CHORD_EXT chord, CPT extension_num, CPT extension_total, TRIADS_IN_SCALE triad){
     //erases randoms extensions from chord in order to keep extension_num extensions. 
     //returns chord if extension_total < extension_num 
@@ -411,25 +446,28 @@ CHORD_EXT ext_gen_chord  (CHORD_EXT chord, CPT extension_num, CPT extension_tota
     if(extension_num > extension_total) return 0;
 
     //extension_total is also the lentgth of the scale in chord (how many bits set n so on)
+  // print_scale(chord>>4);
+    if(extension_total==0) return chord;
     S_EXTENSIONS chord_extension= chord>>4; 
- //   printf("triad in ext_gen_chordi s: %d\n", triad);
-  //  print_scale(chord_extension); 
-    chord_extension= pop_triad(chord_extension, triad);
-    printf("extnum is: %d %d\n", extension_num, extension_total);
- //   print_scale(chord_extension);
+
+    chord_extension= pop_triad(chord_extension, triad_to_triad_bits(triad));
+   // printf("scl after pop is:\n");
+   // print_scale(chord_extension);
+ 
     unsigned char rand_index= nth_bit_pos( chord_extension, rand()%extension_total+1);
 
     for(CPT i=0; i<extension_total-extension_num; i++){
-        print_scale(chord_extension);
+        //(chord_extension);
         chord_extension= POP_BIT( chord_extension, rand_index);
         rand_index= nth_bit_pos( chord_extension, rand()%(extension_total-i)+1);
 
     }
     CHORD_EXT ret=  chord & 0xF;
-    chord_extension=pop_triad(chord_extension,  triad);
+    chord_extension=pop_triad(chord_extension, triad_to_triad_bits( triad));
     ret|= chord_extension<<4;
-    print_scale(ret>>4);
+  //  print_scale(ret>>4);
     return ret; 
+
 }//problem cuz it can kill the triad which is real bad
 //this function is: awful 
 
@@ -483,8 +521,12 @@ want it to rely on a specific scale. It's gonna change scale at each chord becau
         seltriads=select_rand_triads(curtriads);
 
         curchord=selected_deg_converted | (curmode <<4);
-        
-        curchord= ext_gen_chord(curchord, rand()%extension_num, extension_num, seltriads);
+       // printf("extension_num is : %d\n", extension_num);
+        if(extension_num){
+          curchord= ext_gen_chord(curchord, rand()%extension_num, extension_num, seltriads);
+        }else { 
+          curchord= ext_gen_chord(curchord, 0, 0, seltriads);
+        }
 
         ret->chprog[i] = curchord;
       }
@@ -497,7 +539,8 @@ want it to rely on a specific scale. It's gonna change scale at each chord becau
 
       CPT i=0 ;
       char* arg;
-      LENGTH proglength=0, scllen=0, extension_max=0;
+      LENGTH proglength=0, scllen=0;
+      char extension_max=-1;
       S_SCALE scl=0;
 
 
@@ -516,7 +559,7 @@ want it to rely on a specific scale. It's gonna change scale at each chord becau
             if(isdigit(*(arg+8))){
               extension_max= atoi(arg+8);
             }
-            printf("%d\n", extension_max);
+            //printf("%d\n", extension_max);
         }else if(!strncmp(arg, "-scl=", 5)){      
             scl=parse_scale(arg+5);
         }//default behavior for invalid args is to ignore them; might be bad dunno
@@ -539,16 +582,17 @@ want it to rely on a specific scale. It's gonna change scale at each chord becau
         proglength=rand()%10+1;
       }
 
-      if(!extension_max){
+      if(extension_max==-1){
         extension_max=9;
       }
 
       CPT extension_num= count_bits(scl)-2;
       extension_num= extension_num<0 ? 0 : extension_num; //prevents it from being negative
       CHORD_EXT curchord= 0; //chord to pop extensions from 
-
-      PITCH_CLASS_SET relevant_deg= get_degrees(scl); //gets deg of scl 
+    //  printf("reached 0\n");
+      PITCH_CLASS_SET relevant_deg= extget_degrees(scl); //gets deg of scl 
       if(!relevant_deg) return NULL; //case if scale doesnt contain any chords
+    //  printf("reached 1\n");
       PITCH_CLASS_SET selected_deg= 0;
       DEGREES selected_deg_converted= 0;
 
@@ -564,17 +608,23 @@ want it to rely on a specific scale. It's gonna change scale at each chord becau
         
 
         selected_deg= select_rand_degree(relevant_deg);
-        selected_deg_converted= get_deg_from_chdeg(selected_deg);
+        selected_deg_converted= extget_deg_from_chdeg(selected_deg);
         
         curmode= rot( scl, nth_bit_pos(selected_deg, 1));
 
-        curtriads=triads_at_fund(curmode); 
+        curtriads=exttriads_at_fund(curmode); 
+       // printf("curtriads is: %d\n", curtriads);
         seltriads=select_rand_triads(curtriads);
 
         curchord=selected_deg_converted | (curmode <<4);
-        printf("%d %d\n", extension_max, extension_num);
-        if(extension_num){
-          curchord= ext_gen_chord(curchord, ((rand()%extension_num)%extension_max), extension_num, seltriads);
+       // printf("%d %d\n", extension_max, extension_num);
+        if(extension_num ){
+          if(!extension_max){
+            curchord= ext_gen_chord(curchord,0 , extension_num, seltriads);
+          }else{
+            extension_max= extension_max>extension_num ? extension_num: extension_max;
+            curchord= ext_gen_chord(curchord, extension_max, extension_num, seltriads);
+          }
         }else{
           curchord= ext_gen_chord(curchord, 0, 0, seltriads);
         }

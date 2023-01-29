@@ -161,6 +161,7 @@ CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a 
     case MAJ_CHORD : ret=(MAJ<<4); break;
     case AUG_CHORD : ret=(AUG<<4); break;
     case DIM_CHORD : ret=(DIM<<4); break;
+  
     default: ret=0; break;
   } 
   ret=ret |get_deg_from_chdeg(deg);

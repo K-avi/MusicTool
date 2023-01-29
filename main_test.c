@@ -278,12 +278,16 @@ int main(){
   
   //free(str);
 
-  S_EXTCHPROG* prog= generate_ext_chprog(2, "-scl={0 2 4 5 7 9 11}", "-extmax=1");
+  S_EXTCHPROG* prog= generate_ext_chprog(3, "-scl={0 2 4 5 7 9 11}", "-length=3", "-extmax=0");
  // printf(" %p ", prog);
 
- ext_print_chprog(prog);
-  free(prog->chprog);
-  free(prog); 
+  ext_print_chprog(prog);
+  if(prog){
+    if(prog->chprog){
+      free(prog->chprog);
+    }
+    free(prog); 
+  }
   free_userinfo(user_data);
   return 0;
 

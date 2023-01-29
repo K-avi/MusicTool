@@ -24,6 +24,7 @@
 
 //MASK FOR S_SCALE -> CHORD_BITS
 #define TRIAD_MASK 0xEC 
+#define EXTTRIAD_MASK 0xFE
 /* binary rep is 0000 0000 1110 1100; used to retrieve the bits where 
 relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generation */
 
@@ -32,8 +33,8 @@ relevant notes  (aug/dim/ just 5th , min/maj third) are stored for triad generat
 #define MAJ_MASK 0xA // 0000 1010
 #define DIM_MASK 5 // 0000 0101
 #define AUG_MASK 0x12 // 0001 0010
-#define SUS2_MASK 0x30 // 0011 0000 
-#define SUS4_MASK 0x50 // 0101 0000 
+#define SUS2_MASK 0x28 // 0011 0000 
+#define SUS4_MASK 0x48 // 0101 0000 
 
 
 //MASKS FOR TRIADS_IN_SCALE 

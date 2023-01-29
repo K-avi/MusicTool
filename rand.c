@@ -14,17 +14,7 @@
 
 
 
-CHORD_EXT triad_to_chord( TRIADS_IN_SCALE triads){
-  switch (triads){
-    case MIN_CHORD: return MIN_EXT; 
-    case MAJ_CHORD: return MAJ_EXT; 
-    case AUG_CHORD: return AUG_EXT; 
-    case DIM_CHORD: return DIM_EXT; 
-    case SUS2_CHORD: return SUS2_EXT; 
-    case SUS4_CHORD: return SUS4_EXT; 
-    default:  return 1<<15;
-  }
-}
+
 
 TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads){//selects a random triads in a TRIADS_IN_SCALE struct
   
@@ -57,7 +47,7 @@ PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random de
 
 
 
-S_EXTCHPROG* generate_chord_prog(S_SCALE scale, LENGTH length,...){ //generates a random chord prog of length length 
+S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
 
 
     print_scale(scale);
@@ -142,5 +132,5 @@ S_EXTCHPROG* generate_chord_prog(S_SCALE scale, LENGTH length,...){ //generates 
 
     }
 
-    return (S_EXTCHPROG*) ret;
+    return ret;
 }//not done 

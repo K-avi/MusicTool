@@ -23,30 +23,37 @@ Features for MusicTool 1.4:
     
     writing stuff to midi files maybe ? 
 
-
-CTR+D BREAKS MTOOL I HAVE TO FIX THIS
-
 MusicTool 1.3: 
-
-
-generating extended chords: 
 
 
 rewrite structure : 
 
     from 8 bits to 16 bits -> stored as scale + degree
 
-
-generation : 
-    
-    -how many extensions 
-    -which triad 
-    -maybe extension class? like 7th is more common than b10 n so on 
-
 printing: 
     
-    christ. 
+    done!
+
+generating extended chords:  
+    
+    generation w/o arguments is done n works (as far as I know)
+    currently doing generation w args 
 
 parsing:
 
     actual hell
+
+syntaxchecking: 
+
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+saving: 
+
+    need to repurpose chord to store extended chords 
+    current chords will be renamed as "triads" 
+
+
+
+Chordbook: 
+
+not there yet 

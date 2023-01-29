@@ -272,9 +272,18 @@ int main(){
   //char * str= extensions_to_str(1370);
  // printf("%s\n", str);
    // print_extensions(1370);
-    print_ext_chord((1370<<4));
+   // print_ext_chord((1370<<4| 3 ));
+   // printf("\n");
+   //print_extensions(1370);
   
   //free(str);
+
+  S_EXTCHPROG* prog= generate_ext_chprog(2, "-scl={0 2 4 5 7 9 11}", "-extmax=1");
+ // printf(" %p ", prog);
+
+ ext_print_chprog(prog);
+  free(prog->chprog);
+  free(prog); 
   free_userinfo(user_data);
   return 0;
 

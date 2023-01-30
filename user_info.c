@@ -361,12 +361,12 @@ void remove_chprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at in
 		if(tmp->next->next){
 			tmp1=tmp->next;
 			tmp->next=tmp->next->next;
-			free_chord_prog(tmp1->ch_prog);
+			free_triad_prog(tmp1->ch_prog);
 			free(tmp1);
 		}else {
 			tmp1=tmp->next;
 			tmp->next=NULL;
-			free_chord_prog(tmp1->ch_prog);
+			free_triad_prog(tmp1->ch_prog);
 			free(tmp1);
 		}
 	}

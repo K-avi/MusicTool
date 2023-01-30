@@ -358,7 +358,7 @@
                                 if passed with one argument x will generate a random triad prog of random length from a
                                 scale of length x 
                                 if passed with none will generate a prog of rand length from a rand scale.
-                        <br/><br/>-save : passed with one triad prog or no arguments; if passed with a triad prog will save the chprog
+                        <br/><br/>-save : passed with one triad prog or no arguments; if passed with a triad prog will save the prog
                                 if passed without will save the temporary saved prog if it exists.
                         <br/><br/>-print : passed with one integer argument or the env keyword prints the triad prog stored at index n if it exists or all the progs currenlty saved if passed with env. 
                         <br/><br/>-remove : passed with one integer argument removes the prog stored at index n if it exists 
@@ -477,7 +477,7 @@
                         write the scales you want to load as MusicTool scale. 
                         writing down harmonised scales works the same as scales except the environment must begin by 
                         env harmo" 
-                        writing down a chprog env also works the same except the env must begin by "env triad".
+                        writing down a triad prog env also works the same except the env must begin by "env triad".
                         finally, dodecaphonic series environment works similarly, but the environment must begin with 
                         "env dodec".
                         Multiple environments can be written in a single environment file.
@@ -512,7 +512,7 @@
                         <p class="text-left">
                             smtool implements all the commands that can be parsed from music tool except the "read env" and "write env" functions
                             Instead of launching an interpreter an smtool command is called from command line and takes two arguments; 
-                            the first one corresponding to a MusicTool keyword (scale, harmo , chprog,...) preceeded by a single "-"
+                            the first one corresponding to a MusicTool keyword (scale, harmo , triad,...) preceeded by a single "-"
                             the second argument is a MusicTool command available with the keyword. 
                             To parse the command correctly, it has to be contained between double quotes. 
 

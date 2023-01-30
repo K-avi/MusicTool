@@ -107,8 +107,8 @@ SYNTAX_ERROR parsetriadprogcheck(char *str){//syntax check for saving triads
     if(*tmp=='['){
         //return invalid prog
         S_TRIAD_PROG* check= str_to_chord_prog(tmp); 
-        if(!check ) { free_chord_prog(check); return SYNTAX_INVALID_PROG;}//trying to generate is costly ; maybe shouldn't do this way 
-        free_chord_prog(check);
+        if(!check ) { free_triad_prog(check); return SYNTAX_INVALID_PROG;}//trying to generate is costly ; maybe shouldn't do this way 
+        free_triad_prog(check);
        
         while(*tmp!=']') tmp++; 
         tmp++;
@@ -750,7 +750,7 @@ SYNTAX_ERROR env_triad_check ( char *str) {//checks the syntax of the substring 
             }else {
                 str= strstr(str, "]");
             }
-            free_chord_prog(prog_test);
+            free_triad_prog(prog_test);
             str++; 
             continue;
         }else if(*str==')'){ 

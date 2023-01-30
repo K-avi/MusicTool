@@ -47,19 +47,19 @@ bool generic_rand( char * str, char mode  ){
     l1=parse_index(str);
     l2=parse_next(str);
       
-    free_chord_prog(tmp_chprog);
+    free_triad_prog(tmp_triad);
      
     if(l1==-1){
         
-        tmp_chprog=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
+        tmp_triad=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
     }else if(l2==-1){
-            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , rand()%10+1   );
+            tmp_triad=generate_chord_prog(generate_ran_scale(l1) , rand()%10+1   );
     }else{
-            tmp_chprog=generate_chord_prog(generate_ran_scale(l1) , l2   );
+            tmp_triad=generate_chord_prog(generate_ran_scale(l1) , l2   );
     }
         
-    if(!tmp_chprog) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
-    else print_triad_prog(tmp_chprog);
+    if(!tmp_triad) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
+    else print_triad_prog(tmp_triad);
   }
   else if(mode =='d'){
     tmp_saved_dodec=shuffle_serie(HARMO_SERIE, 100);

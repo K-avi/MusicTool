@@ -7,11 +7,11 @@ scale rand
 
 harmo rand 4 
 
-chprog rand 
+triad rand 
 
 harmo save 
 scale save 
-chprog save 
+triad save 
 
 read env examples/environment_ex3.txt
 #being able to load an environment 

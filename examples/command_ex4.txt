@@ -3,13 +3,13 @@ MusicTool:commands
 
 #this example file shows the other new functions added in 1.1
 
-chprog toscale [ I , IV, V]
+triad toscale [ I , IV, V]
 
-chprog rand 
-chprog toscale 
+triad rand 
+triad toscale 
 
-chprog save 
-chprog toscale saved 1
+triad save 
+triad toscale saved 1
 
 scale save
 scale print 1
@@ -20,6 +20,6 @@ harmo rand
 harmo save 
 harmo print env 
 
-chprog rand 
-chprog save 
-chprog print env 
+triad rand 
+triad save 
+triad print env 

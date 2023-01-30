@@ -178,14 +178,14 @@ void add_chprog( S_SAVED_TRIAD * saved_progs , S_TRIAD_PROG * chprog){
 }//not tested 
 
 void print_saved_prog( S_USERINFO * user_data, INDEX index){
-	if(index> user_data->progs_num){ printf("index superior to number of scales currently stored please enter a valid index; number of chord progs is : %d\n", user_data->progs_num); return;}
+	if(index> user_data->progs_num){ printf("index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->progs_num); return;}
 	CPT i=0; 
 	S_SAVED_TRIAD *tmp = user_data->saved_progs;
 	while(i<index && tmp){
 		if(tmp->next)tmp=tmp->next;
 		i++;
 	}
-	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of chord progs is : %d\n", user_data->progs_num); return; }
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->progs_num); return; }
 	print_triad_prog(tmp->ch_prog);
 }//not tested
 
@@ -276,7 +276,7 @@ void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in t
 
 void save_chprog(S_TRIAD_PROG* chprog, S_USERINFO * user_info){//used to save a chprog in the data struct
 	INDEX index= chprog_in_saved(chprog, user_info->saved_progs);
-  	if(index) { printf("chord prog already in struct at index %d ; no chord prog saved\n", index-1); return;}
+  	if(index) { printf("triad prog already in struct at index %d ; no triad prog saved\n", index-1); return;}
 	user_info->progs_num++;
 	add_chprog(user_info->saved_progs, chprog);
 	printf("chprog saved at index %d\n", user_info->progs_num);

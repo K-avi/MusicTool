@@ -27,8 +27,8 @@ S_INTERVAL_VECTOR generated_intv_vect=0;
  S_MODES modes=NULL;
 
 //chprog globals
-S_CHORD_PROG * tmp_chprog=NULL;
-S_CHORD_PROG* generated_chprog=NULL;
+S_TRIAD_PROG * tmp_triad=NULL;
+S_TRIAD_PROG* generated_triad=NULL;
 SIGNED_LENGTH l1=-1, l2=-1;
 
 //dodec globals 

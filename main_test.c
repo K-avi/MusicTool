@@ -278,7 +278,7 @@ int main(){
   
   //free(str);
 
-  S_EXTCHPROG* prog= generate_ext_chprog(3, "-scl={0 2 4 5 7 9 11}", "-length=3", "-extmax=0");
+  S_EXTCHPROG* prog= generate_ext_chprog(3, "-scl={0 2 4 5 7 8 9 11}", "-length=8", "-extmax=1");
  // printf(" %p ", prog);
 
   ext_print_chprog(prog);

@@ -27,7 +27,7 @@ typedef unsigned char DEGREES; // -/-
 typedef signed char TRIADS_BITS; // specific use ; symbolises the 4 bits of a chord that contain the triad
 typedef signed char DEGREES_BITS; // -/- that contains the degree
 typedef unsigned char INDEX; // generic index
-typedef unsigned char CHORD; //chord rpz : first 4 bits r degree ; last 4 r triad
+typedef unsigned char TRIAD; //chord rpz : first 4 bits r degree ; last 4 r triad
 typedef unsigned char SYNTAX_ERROR;
 typedef unsigned char BITS; //generic uchar 
 typedef unsigned char RUNTIME_ERROR;
@@ -87,10 +87,10 @@ typedef unsigned short PITCH_CLASS_SET; //used to know which degrees are in a sc
 
 
 
-typedef struct S_CHORD_PROG{
+typedef struct S_TRIAD_PROG{
    unsigned char* chord_prog;
    LENGTH length;
-}S_CHORD_PROG; //each chord is stored as a uchar w the first 4 bits being the degrees 
+}S_TRIAD_PROG; //each chord is stored as a uchar w the first 4 bits being the degrees 
 //n the next 3 bits the triad type (min/maj/aug/dim); 
 
 
@@ -202,9 +202,9 @@ typedef struct S_LINKED_MODE{
 
 typedef struct S_LINKED_CHPROGS{
  
-  S_CHORD_PROG *ch_prog;
+  S_TRIAD_PROG *ch_prog;
   struct S_LINKED_CHPROGS * next ; 
-}S_SAVED_PROGS;
+}S_SAVED_TRIAD;
 
 typedef struct  S_LINKED_DODEC{
     S_DODEC serie; 
@@ -214,7 +214,7 @@ typedef struct  S_LINKED_DODEC{
 typedef struct{ 
     S_SAVED_MODES *saved_modes;
     S_SAVED_SCALES *saved_scales;
-    S_SAVED_PROGS * saved_progs;
+    S_SAVED_TRIAD * saved_progs;
     S_SAVED_DODEC * saved_dodecs;
     CPT progs_num;
     CPT scales_num;

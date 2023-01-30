@@ -333,12 +333,12 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
 }
 
 
-void chprogparse(char * line , S_USERINFO* user_saved){
+void triadprogparse(char * line , S_USERINFO* user_saved){
     
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
-    if(line[i]==10 || line[i]=='\0'){ printf("runtime chprogparse error\n"); return;}
+    if(line[i]==10 || line[i]=='\0'){ printf("runtime triadprogparse error\n"); return;}
     
     if(!strncmp(&line[i], "rand",4)){
         generic_rand(&line[i+4], 'c');  
@@ -348,29 +348,29 @@ void chprogparse(char * line , S_USERINFO* user_saved){
          i+=4;
          while(NEUTRAL_CHAR(line[i])) i++;
          if(line[i]=='['){
-            S_CHORD_PROG * ch_parsed= str_to_chord_prog(&line[i]);
+            S_TRIAD_PROG * ch_parsed= str_to_chord_prog(&line[i]);
             if(!ch_parsed){
-                printf("couldn't parse a chord prog, please pass a correct chord prog\n");
+                printf("couldn't parse a triad prog, please pass a correct chord prog\n");
 
             }else{
               save_chprog(ch_parsed, user_saved);
-              free_chord_prog(ch_parsed);
+              free_triad_prog(ch_parsed);
             }
          }else if(END_OF_LINE_CHAR(line[i])){
          
-            if(tmp_chprog){
-              save_chprog(tmp_chprog, user_saved);
+            if(tmp_triad){
+              save_chprog(tmp_triad, user_saved);
               // printf("chord prog saved at index %d\n", user_saved->progs_num);
 
-              //printf("in save chprog %p\n", tmp_chprog);
-              print_chord_prog(tmp_chprog);
-              free_chord_prog(tmp_chprog);
-              tmp_chprog=NULL;
+              //printf("in save chprog %p\n", tmp_triad);
+              print_triad_prog(tmp_triad);
+              free_triad_prog(tmp_triad);
+              tmp_triad=NULL;
 
             }else{
               printf("no temporary prog saved\n");
             }
-            }else printf("runtime error in chprog save\n");
+            }else printf("runtime error in triad save\n");
         
       } else if(!strncmp(&line[i], "print",5)) {
           generic_print_uinfo(&print_saved_prog, print_env, &line[i+5], user_saved);
@@ -386,11 +386,11 @@ void chprogparse(char * line , S_USERINFO* user_saved){
           }
           if(line[i]=='['){
             //printf("%s\n", &line[i]);
-            free_chord_prog(generated_chprog);
-            generated_chprog=str_to_chord_prog(&line[i]);
+            free_triad_prog(generated_triad);
+            generated_triad=str_to_chord_prog(&line[i]);
             
-            if(generated_chprog!=NULL){
-              tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_chprog));
+            if(generated_triad!=NULL){
+              tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
               printf("the scale containing the chprog parsed is:");
               print_scale(tmp_saved_scale);
             }else{
@@ -403,11 +403,11 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             }
             indexx=parse_index(&line[i]);
             if(indexx!=-1){
-              free_chord_prog(generated_chprog);
-              generated_chprog=duplicate_chprog(get_chprog(user_saved, indexx)); 
+              free_triad_prog(generated_triad);
+              generated_triad=duplicate_chprog(get_chprog(user_saved, indexx)); 
               
-              if(generated_chprog!=NULL){
-                tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_chprog));
+              if(generated_triad!=NULL){
+                tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
                 printf("the scale containing the chprog at index parsed is:");
                 print_scale(tmp_saved_scale);
               }else{
@@ -415,9 +415,9 @@ void chprogparse(char * line , S_USERINFO* user_saved){
               }
             }
           }else if(END_OF_LINE_CHAR(line[i])){
-            if(tmp_chprog){
-              tmp_saved_scale= PCS_TO_SCALE(chprog_to_pcs(tmp_chprog));
-              printf("the scale containing the chprog in tmp_chprog is:"); 
+            if(tmp_triad){
+              tmp_saved_scale= PCS_TO_SCALE(chprog_to_pcs(tmp_triad));
+              printf("the scale containing the chprog in tmp_triad is:"); 
               print_scale(tmp_saved_scale);
             }else printf("no temporary saved scale to retrieve\n");
           }else printf("runtime error in scale inverse\n");
@@ -429,7 +429,7 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
     if(line[i]==10 || line[i]=='\0'){ 
-        printf("MusicTool is a simple interpreter that does music oriented operations.\nMusicTool currently supports 6 types of commands.\ncommand starting with the keyword \"scale\" do operations on scales.\ncommands starting with the keyword \"harmo\" do operations on harmonised scales.\nCommand starting with the keyword \"chprog\" do operations on chord progressions.\nCommands starting with the keyword \"dodec\" handle operations on tone rows/ dodecaphonic series.\nCommands starting with read do file parsing.\nCommands starting with write do file writing.\nTo see the list of functions for each keyword please type \"help\" followed by one of the 5 keywords.\nIf you wish to quit MusicTool, simply type \"quit\"\n");
+        printf("MusicTool is a simple interpreter that does music oriented operations.\nMusicTool currently supports 6 types of commands.\ncommand starting with the keyword \"scale\" do operations on scales.\ncommands starting with the keyword \"harmo\" do operations on harmonised scales.\nCommand starting with the keyword \"triad\" do operations on triad progressions.\nCommands starting with the keyword \"dodec\" handle operations on tone rows/ dodecaphonic series.\nCommands starting with read do file parsing.\nCommands starting with write do file writing.\nTo see the list of functions for each keyword please type \"help\" followed by one of the 5 keywords.\nIf you wish to quit MusicTool, simply type \"quit\"\n");
     }else if(!strncmp(&line[i], "scale", 5)){
       
         printf("\ntype 'scale rand x' to generate a scale of x length with x being an integer between 1 and 12\ntype 'scale rand' to generate a scale of a random length\ntype 'scale save { 0 .... }' to save the scale you passed after it if  save scale is called without argument, the last generated scale will be saved\ntype 'scale print n' to print the nth scale you saved\ntype 'scale remove n' to remove the scale saved at index n\n'scale inverse' to calculate the inverse of the scale passed and save it in the tmp saved scale. invert can also be passed w/o argument in which case it will calculate the invert of tmp saved scale or w 'saved n' to calculate the invert of the nth saved scale.\n'scale comp' to calcultate the complementary of a scale and save it in tmp, comp can be passed with a scale argument, \"saved n\" n being the number of the saved scale u want to get the inverse of or w/o argument to calculate the comp of tmp and replace it in tmp\n'scale prime' calculates the prime form of a scale and behaves similarly\n");
@@ -437,9 +437,9 @@ void helpparse(char * line ){ //prints the informations corresponding to a strin
     }else if(!strncmp(&line[i], "harmo", 5)){
        
         printf("\ntype 'harmo rand x' to generate an harmonised scale of length x with x being an integer between 1 and 12\ntype 'harmo rand' to generate an harmonised scale of random length\ntype 'harmo scale { 0 ... }' to harmonise a scale passed as argument \ntype 'harmo saved scale n' to harmonise the nth scale you saved\ntype 'save { ... }' to harmonise and save a scale passed as argument. If no scale is passed the last harmonized scale is saved\ntype 'print n' to print the harmonised scale saved at index n \ntype 'save as scale J I' to save the Ith scale of the Jth mode as a scale, nothing is saved if J n I arent given\ntype 'remove n' to remove the modes saved at index n\n");        
-    }else if(!strncmp(&line[i], "chprog",6 )){
+    }else if(!strncmp(&line[i], "triad",5 )){
       
-        printf("\ntype 'chprog rand x y' to generate a chord prog of length x using a scale of length y\ntype 'chprog rand x' to generate a chord prog of length x using a scale of a random length\ntype 'chprog rand' to generate a chord prog of a random length from a scale of random length \ntype 'chprog save [ I, IIm, .... ]' to save the chprog you passed after it if  save chprog is called without argument, the last generated chprog will be saved\ntype 'chprog print n' to print the nth chprog you saved\ntype 'chprog remove n' to remove the chprog saved at index n\n");
+        printf("\ntype 'triad rand x y' to generate a triad prog of length x using a scale of length y\ntype 'triad rand x' to generate a triad prog of length x using a scale of a random length\ntype 'triad rand' to generate a triad prog of a random length from a scale of random length \ntype 'triad save [ I, IIm, .... ]' to save the triad you passed after it if  save triad is called without argument, the last generated triad will be saved\ntype 'triad print n' to print the nth triad you saved\ntype 'triad remove n' to remove the triad saved at index n\n");
     }else if(!strncmp(&line[i], "dodec" , 5)){
         printf("'dodec rand' to generates a random tone row; dodec rand doesn't take any arguments\ndodec print, save and remove behaves the same way as the others.\nThe available operations on tone rows are 'invert'; 'retro' ;'prime'; 'retroinv'; 'matrix'\nThe invert, retro prime n retroinv have the same syntax.\nThey implement the inverse, retrograde prime and retrograde inverse operations on tone rows.\nThey can be passed w/o args in which case the operation will be applied on the P0 form of the tmp saved dodec.\nIf passed with a number n and no other args the operation will be done on Pn.\nThe operations can also be called on 'saved n' w or w/o number to to the operation on a saved tone row.\nfinally they can be passed with a serie to do the operation on the tone row.\nThe last function available is matrix which behaves similarly as the previous ones except no integer argument can be passed with it.\n");
 
@@ -462,8 +462,8 @@ void clearglobals(){
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
     if(tmp_matrix) free(tmp_matrix);
-    free_chord_prog(generated_chprog);
-    free_chord_prog(tmp_chprog);
+    free_triad_prog(generated_triad);
+    free_triad_prog(tmp_triad);
   
 }
 
@@ -730,12 +730,12 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
           fclose(f);
           return;
         }
-      }else if(!strncmp(&line[i], "env chprog", 9)){
+      }else if(!strncmp(&line[i], "env triad", 9)){
           //check that '(' is the next not space \t \n character
-        char* tmp= &line[i+10];
+        char* tmp= &line[i+9];
         ushort line_env= line_num+1;
         u_char nxt_chr= next_not_blank_comment( tmp, '(');
-        S_CHORD_PROG *tmp_chprog=NULL;
+        S_TRIAD_PROG *tmp_triad=NULL;
 
         if(nxt_chr==1){
          while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
@@ -746,9 +746,9 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
               ++line_num; continue;//empty line or comment
             }else{      
-              tmp_chprog=str_to_chord_prog(&line[i]);
-              save_chprog( tmp_chprog, user_info);
-              free_chord_prog(tmp_chprog);      
+              tmp_triad=str_to_chord_prog(&line[i]);
+              save_chprog( tmp_triad, user_info);
+              free_triad_prog(tmp_triad);      
             }
           }
           if(!f){
@@ -769,11 +769,11 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
                 if(line[i]== '\n' || line[i]=='#') { 
                   ++line_num; continue;//empty line or comment
                 }else{
-                  tmp_chprog=str_to_chord_prog(&line[i]);
+                  tmp_triad=str_to_chord_prog(&line[i]);
                   //printf("%s\n", line);
-                  print_chord_prog(tmp_chprog);
-                  save_chprog( tmp_chprog, user_info);
-                  free_chord_prog(tmp_chprog);
+                  print_triad_prog(tmp_triad);
+                  save_chprog( tmp_triad, user_info);
+                  free_triad_prog(tmp_triad);
                 }
               }
               if(!f){
@@ -784,7 +784,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             }else if( nxt_chr==2){
               continue;
             }else{
-               printf("runtime error at line: %d no open parentheses after chprog env\n", line_env);
+               printf("runtime error at line: %d no open parentheses after triad env\n", line_env);
                free(clean_filename);
                fclose(f);
                return;
@@ -875,8 +875,8 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       }else if(!strncmp(&line[l], "harmo",5)){
         harmoparse(&line[l]+5, user_saved);
         
-      }else if(!strncmp(&line[l], "chprog", 6)){
-        chprogparse(&line[l+6], user_saved);
+      }else if(!strncmp(&line[l], "triad", 5)){
+        triadprogparse(&line[l+6], user_saved);
         
       }else if(!strncmp(&line[l], "dodec", 5)){
         dodecparse(&line[l+6], user_saved);
@@ -992,8 +992,8 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
         
         harmoparse(&line[i]+5, user_saved);
         printf("  >>>");
-      }else if(!strncmp(&line[i], "chprog", 6)){
-        chprogparse(&line[i+6] , user_saved);
+      }else if(!strncmp(&line[i], "triad", 5)){
+        triadprogparse(&line[i+6] , user_saved);
         printf("  >>>");
       }else if(!strncmp(&line[i], "dodec", 5)){
         dodecparse(&line[i+5] , user_saved);
@@ -1044,9 +1044,9 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   }else if(!strncmp(keyword, "-harmo",6 )){
       syntaxcheck=harmocheck(command);
       if(!syntaxcheck) harmoparse( command, user_info);
-  }else if(!strncmp(keyword, "-chprog",7 )){
-      syntaxcheck=chprogcheck(command);
-      if(!syntaxcheck) chprogparse( command, user_info);
+  }else if(!strncmp(keyword, "-triad",6 )){
+      syntaxcheck=triadcheck(command);
+      if(!syntaxcheck) triadprogparse( command, user_info);
   }else if(!strncmp(keyword, "-dodec",5 )){
       syntaxcheck=dodeccheck(command);
       if(!syntaxcheck) dodecparse( command, user_info);

@@ -98,7 +98,7 @@ SYNTAX_ERROR parsescalecheck(char *str){//syntax check for parsing scales and mo
     return SYNTAX_NO_ARG;
 }
 
-SYNTAX_ERROR parseprogcheck(char *str){//syntax check for saving chprogs
+SYNTAX_ERROR parsetriadprogcheck(char *str){//syntax check for saving triads
 
     char *tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++;
@@ -106,7 +106,7 @@ SYNTAX_ERROR parseprogcheck(char *str){//syntax check for saving chprogs
 
     if(*tmp=='['){
         //return invalid prog
-        S_CHORD_PROG* check= str_to_chord_prog(tmp); 
+        S_TRIAD_PROG* check= str_to_chord_prog(tmp); 
         if(!check ) { free_chord_prog(check); return SYNTAX_INVALID_PROG;}//trying to generate is costly ; maybe shouldn't do this way 
         free_chord_prog(check);
        
@@ -139,7 +139,7 @@ SYNTAX_ERROR zero_one_arg_check(char * str){//checks the rand command when calle
         
 }
 
-SYNTAX_ERROR zero_one_two_arg_check(char * str){//checks the rand command when called with 0 or 1 or 2 integers argument (used chprog)
+SYNTAX_ERROR zero_one_two_arg_check(char * str){//checks the rand command when called with 0 or 1 or 2 integers argument (used triads)
 
     char *tmp=str;
 
@@ -385,10 +385,10 @@ SYNTAX_ERROR toscalecheck(char* str){
     
     if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     else if(*tmp!='[') return saved_one_arg_check(tmp);
-    else return parseprogcheck(tmp);
+    else return parsetriadprogcheck(tmp);
 
 }
-SYNTAX_ERROR chprogcheck(char * str){ //checks that a string containing a chprog command's syntax is correct
+SYNTAX_ERROR triadcheck(char * str){ //checks that a string containing a triad command's syntax is correct
 
 
     char * tmp=str; 
@@ -405,7 +405,7 @@ SYNTAX_ERROR chprogcheck(char * str){ //checks that a string containing a chprog
     }else if(!strncmp(tmp, "print", 5)){
         return printcheck(tmp+5);
     }else if(!strncmp (tmp ,"save",4)){
-        return parseprogcheck(tmp+4);
+        return parsetriadprogcheck(tmp+4);
     }else if(!strncmp (tmp, "toscale", 7)){
         return toscalecheck(tmp+7);
     }
@@ -433,9 +433,9 @@ SYNTAX_ERROR helpcheck(char * str){
         while(NEUTRAL_CHAR(*tmp))tmp++; 
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
         
-    }else if (!strncmp(tmp, "chprog",6)){
+    }else if (!strncmp(tmp, "triad",5)){
         
-        tmp+=6;
+        tmp+=5;
         while(NEUTRAL_CHAR(*tmp))tmp++; 
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
         
@@ -632,8 +632,8 @@ SYNTAX_ERROR syntaxcheck(char *str){
         ret= scalecheck(tmp+5);
     }else if (!strncmp(tmp, "harmo",5)){
         ret =harmocheck(tmp+5);
-    }else if (!strncmp(tmp, "chprog", 6)){
-        ret =chprogcheck(tmp+6);
+    }else if (!strncmp(tmp, "triad", 5)){
+        ret =triadcheck(tmp+5);
     }else if (!strncmp(tmp, "help",4)){
         ret =helpcheck(tmp+4);
     }else if (!strncmp(tmp, "read",4)){
@@ -708,10 +708,10 @@ SYNTAX_ERROR env_scl_harmo_check ( char *str) {//checks the syntax of the substr
     return SYNTAX_OK;
 }
 
-SYNTAX_ERROR env_chprog_check ( char *str) {//checks the syntax of the substring containing an env scale in 
+SYNTAX_ERROR env_triad_check ( char *str) {//checks the syntax of the substring containing an env scale in 
 //in an env file string.
 
-    S_CHORD_PROG * prog_test=NULL;
+    S_TRIAD_PROG * prog_test=NULL;
 
     while( *str!='('){ //found open parenthesis
         while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
@@ -857,28 +857,29 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;
-               //printf("%s\n", tmp); 
+
                continue;
-            }else if(!strncmp(tmp, "chprog", 6)){
-                //printf("chprog reached\n");
-                tmp+=6;
-               // printf("%s\n", tmp);
-                scheck=env_chprog_check(tmp);
+            }else if(!strncmp(tmp, "triad", 5)){
+                tmp+=5;
+              
+                scheck=env_triad_check(tmp);
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;
-              // printf("%s\n", tmp); 
+               
                continue;
             }else if(!strncmp(tmp, "dodec", 5)){
-                //printf("chprog reached\n");
+          
                 tmp+=5;
-               // printf("%s\n", tmp);
+               
                 scheck=env_dodec_check(tmp);
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;
               // printf("%s\n", tmp); 
                continue;
+            }else {
+                return SYNTAX_INVALID_CHAR;
             }
         }
 

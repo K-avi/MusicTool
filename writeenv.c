@@ -26,7 +26,6 @@
 void print_scl_env( S_USERINFO* uinfo){
    // if (!saved_scales) return; 
 
-
     printf("env scale (\n");
     S_SAVED_SCALES * tmp= uinfo->saved_scales->next;
    
@@ -59,19 +58,19 @@ void print_modes_env( S_USERINFO*uinfo){
     printf(")\n");
 }
 
-void print_chprog_env (S_USERINFO*uinfo){
+void print_triad_env (S_USERINFO*uinfo){
    // if(!saved_progs ) return; 
 
-    S_SAVED_PROGS * tmp= uinfo->saved_progs;
+    S_SAVED_TRIAD * tmp= uinfo->saved_progs;
     if(!tmp) return;
     CPT i=1;
     tmp=tmp->next;
-     printf("env chprog (\n");
+     printf("env triads (\n");
     if(tmp){
         while(tmp){
             printf("\n%d",i++);
             if(tmp->ch_prog){
-                print_chord_prog(tmp->ch_prog); 
+                print_triad_prog(tmp->ch_prog); 
             }
             tmp=tmp->next;
         }
@@ -104,7 +103,7 @@ void print_env(S_USERINFO* user_info){
 
     print_scl_env(user_info);
     print_modes_env(user_info); 
-    print_chprog_env(user_info);
+    print_triad_env(user_info);
     print_dodec_env(user_info);
 }
 
@@ -139,12 +138,12 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
         }
     }
 
-    S_SAVED_PROGS * tmp2= user_info->saved_progs;
-     fprintf(f,")\nenv chprog (\n");
+    S_SAVED_TRIAD * tmp2= user_info->saved_progs;
+     fprintf(f,")\nenv triad (\n");
     if(tmp2){
         while(tmp2){
             if(tmp2->ch_prog){
-                fprint_chord_prog(f,tmp2->ch_prog); 
+                fprint_triad_prog(f,tmp2->ch_prog); 
             }
             tmp2=tmp2->next;
         }

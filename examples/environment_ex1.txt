@@ -16,7 +16,7 @@ env harmo(
 )
 
 
-env chprog(
+env triad(
 
 [II, V, I]
 

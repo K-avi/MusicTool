@@ -39,8 +39,8 @@ extern  char* begin;
 extern  S_MODES modes;
 
 //chprog globals
-extern S_CHORD_PROG * tmp_chprog;
-extern S_CHORD_PROG* generated_chprog;
+extern S_TRIAD_PROG * tmp_triad;
+extern S_TRIAD_PROG* generated_triad;
 extern SIGNED_LENGTH l1, l2;
 
 //dodec globals 

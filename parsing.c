@@ -161,7 +161,7 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
     return word;
 }
 
-CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. Returns zero if the word isn't valid
+TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. Returns zero if the word isn't valid
     
     //chrecks that there is no space between the relevent chars. For example : "        bVIm" is accepted but 
     // " b V I m " is not
@@ -375,7 +375,7 @@ CHORD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
 }
 
 
-CHORD str_to_chord( char* str){
+TRIAD str_to_chord( char* str){
     if(!str) return 0;
 
     return word_bits_to_chord(str_to_wordbits(str));
@@ -431,7 +431,7 @@ void free_str_tab(char ** str_tab, LENGTH length){
 }
 
 
-S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
+S_TRIAD_PROG* str_to_chord_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
 
 
     //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
@@ -461,10 +461,10 @@ S_CHORD_PROG* str_to_chord_prog( char* str){//turns the string containing a chor
 
     char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord);
     
-    S_CHORD_PROG * ch_prog= malloc(sizeof(S_CHORD_PROG));
+    S_TRIAD_PROG * ch_prog= malloc(sizeof(S_TRIAD_PROG));
 
     ch_prog->length=num_of_chord; 
-    ch_prog->chord_prog=malloc(num_of_chord* sizeof(CHORD));
+    ch_prog->chord_prog=malloc(num_of_chord* sizeof(TRIAD));
 
     for(CPT i=0; i<num_of_chord; i++){
         

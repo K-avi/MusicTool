@@ -47,7 +47,7 @@ PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random de
 
 
 
-S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
+S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
 
 
     print_scale(scale);
@@ -58,9 +58,9 @@ S_CHORD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
 
     if(!deg_w_chord ) return NULL;
 
-    S_CHORD_PROG* ret= malloc(sizeof(S_CHORD_PROG));
+    S_TRIAD_PROG* ret= malloc(sizeof(S_TRIAD_PROG));
     ret->length= length;
-    ret->chord_prog= malloc(length* sizeof(CHORD));
+    ret->chord_prog= malloc(length* sizeof(TRIAD));
 
     if(count_bits(deg_w_chord)==1){ //case if u can only generate 1 chord from a scale 
       

@@ -285,13 +285,8 @@ void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval str
     if(!intervals) {printf("[12\n]"); return;}
     printf("[ ");
     for (CPT i=0; i<length_intv_struct(intervals); i++){
-        #ifndef WIN32
-        printf("%lu " , (intervals>>(4*i)&15));
-        #endif
-        #ifdef WIN32
+      
         printf("%llu " , (intervals>>(4*i)&15));
-        #endif
-
     }
     printf("]\n");
     return ;

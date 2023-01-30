@@ -59,7 +59,7 @@ bool generic_rand( char * str, char mode  ){
     }
         
     if(!tmp_chprog) printf("couldn't generate a chord prog with given parameters; please try other ones\n");
-    else print_chord_prog(tmp_chprog);
+    else print_triad_prog(tmp_chprog);
   }
   else if(mode =='d'){
     tmp_saved_dodec=shuffle_serie(HARMO_SERIE, 100);

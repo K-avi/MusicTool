@@ -57,7 +57,7 @@
                                     </li>
                                     <li>
                                         <a href="#p23">
-                                        3: abstract chprog 
+                                        3: abstract triad progressions 
                                         </a>
                                     </li>
                                     <li>
@@ -86,7 +86,7 @@
                                     </li>
                                     <li>
                                         <a href="#p33">
-                                        3: the chprog command
+                                        3: the triad command
                                         </a>
                                     </li>
                                     <li>
@@ -211,11 +211,11 @@
             <div id="p23">
                 <h4>
                 <em>
-                    II.3: what are MusicTool chprog :
+                    II.3: what are MusicTool triad progressions:
                 </em>
                 </h4>
                 <p class="text-left">
-                    A chprog is a list of abstract triads using the degree notation of chords. An abstract triad consists on the root degree of the
+                    A triad prog is a list of abstract triads using the degree notation of chords. An abstract triad consists on the root degree of the
                     triad relative to a tonic chord and the type of the triad. 
                     Due to it being easier to store , the triads are noted as such : 
                     major triad: [DEGREE]
@@ -224,8 +224,8 @@
                     augmented triad: [DEGREE]+ 
                     I didn't use ° to represent the diminished chord bc it's an UTF-8 character and I didn't feel like working with them.
                     
-                    chprogs are noted between brackets. 
-                    For example: the chprog [ IVm, V, Im] represents the chord progression from a minor triad located at the fourth degree of a scale
+                    triad progs are noted between brackets. 
+                    For example: the triad prog [ IVm, V, Im] represents the chord progression from a minor triad located at the fourth degree of a scale
                     to a  major one located at the fifth to another major one located on the tonic. 
                     if we take the C harmonic minor scale, the progression [ IVm , V, I]  would be Fm, G, Cm
 
@@ -347,26 +347,25 @@
                 <div id="p33">
                     <h4>
                     <em>
-                        III.3: The chprog keyword
+                        III.3: The triad keyword
                     </em>
                     </h4>
                     <p class="text-left">
-                        The chprog keyword is used to pass commands on chord progs. At the moment the only type of chord 
-                        progs available are triads. The commands currenlty available are : 
+                        The triad keyword is used to pass commands on triad progs. The commands currenlty available are : 
                         
                         <br/><br/>-rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
-                                will generate a chprog of length I from a scale of length J; 
-                                if passed with one argument x will generate a random chord prog of random length from a
+                                will generate a triad prog of length I from a scale of length J; 
+                                if passed with one argument x will generate a random triad prog of random length from a
                                 scale of length x 
                                 if passed with none will generate a prog of rand length from a rand scale.
-                        <br/><br/>-save : passed with one chprog or no arguments; if passed with a chprog will save the chprog
-                                if passed without will save the temporary saved chprog if it exists.
-                        <br/><br/>-print : passed with one integer argument or the env keyword prints the chprog stored at index n if it exists or all the chprogs currenlty saved if passed with env. 
-                        <br/><br/>-remove : passed with one integer argument removes the chprog stored at index n if it exists 
+                        <br/><br/>-save : passed with one triad prog or no arguments; if passed with a triad prog will save the chprog
+                                if passed without will save the temporary saved prog if it exists.
+                        <br/><br/>-print : passed with one integer argument or the env keyword prints the triad prog stored at index n if it exists or all the progs currenlty saved if passed with env. 
+                        <br/><br/>-remove : passed with one integer argument removes the prog stored at index n if it exists 
                                   and reindexes the remaining saved progs.
-                        <br/><br/>-toscale : can be passed with a chprog arg, "saved n" arg or w/o args. If passed with a chprog will generate the scale containing each note
-                                    of the chprog passed and save it in tmp_scale. If passed with a "saved n" arg will retrieve the chprog saved at index n and generate the scale containing
-                                    the notes of the prog n save it in tmp_scale; if passed without argument will generate the scale containing the notes of the prog in the tmp_chprog and 
+                        <br/><br/>-toscale : can be passed with a triad prog arg, "saved n" arg or w/o args. If passed with a prog will generate the scale containing each note
+                                    of the prog passed and save it in tmp_scale. If passed with a "saved n" arg will retrieve the prog saved at index n and generate the scale containing
+                                    the notes of the prog n save it in tmp_scale; if passed without argument will generate the scale containing the notes of the prog in the tmp_triad and 
                                     put it in tmp_scale.
                     </p>
                 </div>
@@ -478,7 +477,7 @@
                         write the scales you want to load as MusicTool scale. 
                         writing down harmonised scales works the same as scales except the environment must begin by 
                         env harmo" 
-                        writing down a chprog env also works the same except the env must begin by "env chprog".
+                        writing down a chprog env also works the same except the env must begin by "env triad".
                         finally, dodecaphonic series environment works similarly, but the environment must begin with 
                         "env dodec".
                         Multiple environments can be written in a single environment file.

@@ -17,7 +17,7 @@ env harmo (
 
 { 0 10 11 }
 )
-env chprog (
+env triad (
 [ bVIIm, I, IIIm, bVII-, IV+, III-, VI+, bII-, bVm ]
 [ bII+, VII, VI+, bIII-, V+, bII+, bVm, VII+ ]
 )

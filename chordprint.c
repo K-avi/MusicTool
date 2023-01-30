@@ -58,13 +58,13 @@ char *bits_deg_to_str(DEGREES_BITS deg){
 
 }
 
-char * chord_to_str(CHORD chord){//turns a triad  into a string.
+char * chord_to_str(TRIAD chord){//turns a triad  into a string.
 
     if(!chord) return NULL;
 
     //uses a mask to separate first 4 and last 4 bits
-    CHORD first= chord & FIRST4; 
-    CHORD last= chord & LAST4;
+    TRIAD first= chord & FIRST4; 
+    TRIAD last= chord & LAST4;
     last= last>>4; //
 
   
@@ -92,7 +92,7 @@ char * chord_to_str(CHORD chord){//turns a triad  into a string.
     return ret;
 }
 
-void print_chord_prog( S_CHORD_PROG * chord_prog){
+void print_triad_prog( S_TRIAD_PROG * chord_prog){
     if(!chord_prog) return;
     //if( !(chord_prog->degrees && chord_prog->triads && chord_prog->length==0)) return;
     char * curchord= NULL;
@@ -108,7 +108,7 @@ void print_chord_prog( S_CHORD_PROG * chord_prog){
     printf(" ]\n");
 }
 
-void fprint_chord_prog(FILE* f , S_CHORD_PROG * chord_prog){//same as print chprog but u can choose the buffer
+void fprint_triad_prog(FILE* f , S_TRIAD_PROG * chord_prog){//same as print chprog but u can choose the buffer
 
     if(!chord_prog) return;
     if(f==NULL) return;

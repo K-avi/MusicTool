@@ -103,15 +103,15 @@ CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of 
    return ret;
 }
 
-S_CHORD_PROG *chprogdup(  S_CHORD_PROG* source){//copies a cp from dest 
+S_TRIAD_PROG *chprogdup(  S_TRIAD_PROG* source){//copies a cp from dest 
 
    if(!source ) return NULL;
    if(!source->length) return NULL;
    if(!source->chord_prog) return NULL;
   
-   S_CHORD_PROG* ret=malloc(sizeof(S_CHORD_PROG));
+   S_TRIAD_PROG* ret=malloc(sizeof(S_TRIAD_PROG));
    ret->length=source->length;
-   ret->chord_prog=malloc(source->length* sizeof(CHORD));
+   ret->chord_prog=malloc(source->length* sizeof(TRIAD));
    memcpy( ret->chord_prog, source->chord_prog, source->length);
 
    return ret;
@@ -132,7 +132,7 @@ CPT nb_chords( TRIADS_IN_SCALE * scl_triads, LENGTH length){ //returns the numbe
   else return nb_chords(scl_triads++, length-1);
 }
 
-void free_chord_prog(S_CHORD_PROG* source){
+void free_triad_prog(S_TRIAD_PROG* source){
 
   if(!source) return ;
   
@@ -151,10 +151,10 @@ void free_chord_prog(S_CHORD_PROG* source){
     return ret;
 }//tested
 
-CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a chord from a triad and a degree 
+TRIAD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a chord from a triad and a degree 
   
   if(!triads || !deg) return 0;
-  CHORD ret=0;
+  TRIAD ret=0;
 
   switch(triads){
     case MIN_CHORD : ret=(MIN<<4); break;
@@ -168,7 +168,7 @@ CHORD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a 
   return ret;
 }
 
-bool equals_chprog( S_CHORD_PROG* chpr1, S_CHORD_PROG* chpr2){//returns 1 if two chprog contain the same chords 
+bool equals_chprog( S_TRIAD_PROG* chpr1, S_TRIAD_PROG* chpr2){//returns 1 if two chprog contain the same chords 
 //0 otherwise.
   if(! (chpr1 && chpr2)) return 0;
   if(! (chpr1->chord_prog && chpr2->chord_prog)) return 0;
@@ -197,7 +197,7 @@ void print_pcs( const PITCH_CLASS_SET pcs){ //prints the notes of a scale and it
 
 
 
-PITCH_CLASS_SET chord_to_pcs(CHORD chord){
+PITCH_CLASS_SET chord_to_pcs(TRIAD chord){
   //turns a chord into it's triad in chord degrees notation.
 
   if(!chord ) return 0;
@@ -217,7 +217,7 @@ PITCH_CLASS_SET chord_to_pcs(CHORD chord){
   return rot_pcs(ret, degree);
 }
 
-PITCH_CLASS_SET chprog_to_pcs(const S_CHORD_PROG* chprog){
+PITCH_CLASS_SET chprog_to_pcs(const S_TRIAD_PROG* chprog){
   PITCH_CLASS_SET ret= 0;
   for (INDEX cpt =0; cpt < chprog->length ; cpt ++){
     
@@ -226,7 +226,7 @@ PITCH_CLASS_SET chprog_to_pcs(const S_CHORD_PROG* chprog){
   return ret;
 } 
 
-S_SCALE chprog_to_scl(const S_CHORD_PROG* chprog){
+S_SCALE chprog_to_scl(const S_TRIAD_PROG* chprog){
   return chprog_to_pcs(chprog)>>1;
 }
 

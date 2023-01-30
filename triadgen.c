@@ -6,7 +6,7 @@
 #include "harmo.h"
 #include "scalegen.h"
 #include "misc.h"
-#include "chordgen.h"
+#include "triadgen.h"
 
 
 CHORD_BITS relevant_at_fund (S_SCALE scale){//returns the relevant notes to generate triads on the first degree of a scale 

@@ -11,7 +11,7 @@
 #include "parsing.h"
 #include "user_info.h"
 #include "globals.h"
-#include "chordgen.h"
+#include "triadgen.h"
 
 
 

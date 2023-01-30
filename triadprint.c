@@ -1,13 +1,13 @@
-#include "chordprint.h"
+#include "triadprint.h"
 #include <stdlib.h>
 #include <string.h>
-#include "chordgen.h"
+#include "triadgen.h"
 #include "harmo.h"
 #include "scalegen.h"
 #include "types.h"
 #include "globals.h"
 #include "bitop.h"
-#include "chordprint.h"
+#include "triadprint.h"
 
 
 void print_triad( TRIADS_IN_SCALE triads){//prints which triads a scale contains

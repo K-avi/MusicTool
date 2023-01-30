@@ -9,14 +9,14 @@ ALLPROGS = smtool MusicTool test
 all: $(ALLPROGS)
 progs: $(PROGRAMS)
 
-test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o chordgen.o rand.o misc.o chordprint.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o extchord.o main_test.o 
+test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o triadgen.o rand.o misc.o triadprint.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o extchord.o main_test.o 
 	$(CC) -o $@ $(CFLAGS) $^
 
-MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o main_interpreter.o
+MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o triadgen.o triadprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o main_interpreter.o
 	$(CC) -o $@ $(CFLAGS) $^
 
 
-smtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o chordgen.o chordprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o main_command.o
+smtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o triadgen.o triadprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o main_command.o
 	$(CC) -o $@ $(CFLAGS) $^
 	
 %.o:%.c %.h

@@ -1,5 +1,5 @@
-#include "chordgen.h"
-#include "chordprint.h"
+#include "triadgen.h"
+#include "triadprint.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parsing.h"

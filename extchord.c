@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bitop.h"
-#include "chordgen.h"
-#include "chordprint.h"
+#include "triadgen.h"
+#include "triadprint.h"
 #include "parsing.h"
 #include "randext.h"
 #include "types.h"

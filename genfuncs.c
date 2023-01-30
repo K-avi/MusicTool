@@ -1,4 +1,4 @@
-#include "chordprint.h"
+#include "triadprint.h"
 #include "dodecseries.h"
 #include "parsing.h"
 #include "globals.h"
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "harmo.h"
-#include "chordgen.h"
+#include "triadgen.h"
 
 
 

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include "chordgen.h"
+#include "triadgen.h"
 #include "harmo.h"
 #include "scalegen.h"
 #include "types.h"

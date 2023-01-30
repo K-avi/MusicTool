@@ -1,7 +1,7 @@
 
 #include "scalegen.h"
 #include "bitop.h"
-#include "chordgen.h"
+#include "triadgen.h"
 #include "harmo.h"
 #include "types.h"
 #include "misc.h"

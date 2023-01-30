@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#include "chordprint.h"
+#include "triadprint.h"
 #include "dodecseries.h"
 #include "harmo.h"
 #include "types.h"

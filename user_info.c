@@ -1,11 +1,11 @@
 #include "user_info.h"
 #include "bitop.h"
-#include "chordprint.h"
+#include "triadprint.h"
 #include "dodecseries.h"
 #include "types.h"
 #include "harmo.h"
 #include "scalegen.h"
-#include "chordgen.h"
+#include "triadgen.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

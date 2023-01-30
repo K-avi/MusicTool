@@ -1,6 +1,6 @@
 #include "syntaxcheck.h"
 #include "bitop.h"
-#include "chordgen.h"
+#include "triadgen.h"
 #include "dodecseries.h"
 #include "parsing.h"
 #include "scalegen.h"

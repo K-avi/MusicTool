@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dodecseries.h"
-#include "extchord.h"
+#include "chord.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parseloop.h"
@@ -22,24 +22,6 @@
 #include "writeenv.h"
 #include "syntaxcheck.h"
 #include "dodecseries.h"
-
-
-//#include <stdarg.h>
-/*
-S_SCALE generate_ran_scl1( LENGTH length,...){ //generates a random scale of 'length' notes
-
-    S_SCALE  ret=0;
-    int i;
-    length=length%13;
-    for(i=0; i<length-1; i++){
-        add_rand_note(&ret);
-    }
-   return ret;
-}*/
-
-
-
-
 
 int main(){
 
@@ -278,16 +260,23 @@ int main(){
   
   //free(str);
 
-  S_EXTCHPROG* prog= generate_ext_chprog(3, "-scl={0 2 4 5 7 8 9 11}", "-length=8", "-extmax=1");
+  //S_EXTCHPROG* prog= generate_ext_chprog(2, "-length=8", "-extmax=1");
  // printf(" %p ", prog);
 
-  ext_print_chprog(prog);
-  if(prog){
-    if(prog->chprog){
-      free(prog->chprog);
-    }
-    free(prog); 
-  }
+  //ext_print_chprog(prog);
+ // if(prog){
+  //  if(prog->chprog){
+  //    free(prog->chprog);
+  //  }
+  //  free(prog); 
+  //}
+  int b=1;
+  S_TRIAD_PROG *aaa= str_to_triad_prog("[bVIIm, bVII+, bVII-, bVII]");
+  
+  print_triad_prog(aaa);
+ // prog->length=1; 
+ // prog->chord_prog=&aaaa;
+ // print_triad_prog(prog);
   free_userinfo(user_data);
   return 0;
 

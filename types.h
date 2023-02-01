@@ -114,7 +114,7 @@ typedef struct S_EXTCHPROG{
 //////////////chord parsing///////////////
 
 
-typedef unsigned short WORD_BITS; //bits representing the characters parsed from a string to make a chord. 
+typedef unsigned int WORD_BITS; //bits representing the characters parsed from a string to make a chord. 
 //each symbol takes 3 bits ; the symbols are defined as macro in bitop.h. the longest symbol is bVIIm which has a length of 5. 
 //any symbol longer than that is invalid. The 16 bit is a mask. If it is set then the WORD is invalid.
 
@@ -200,11 +200,17 @@ typedef struct S_LINKED_MODE{
   struct S_LINKED_MODE * next;
 }S_SAVED_MODES;
 
-typedef struct S_LINKED_CHPROGS{
+typedef struct S_LINKED_TRIAD{
  
   S_TRIAD_PROG *ch_prog;
-  struct S_LINKED_CHPROGS * next ; 
+  struct S_LINKED_TRIAD * next ; 
 }S_SAVED_TRIAD;
+
+typedef struct S_LINKED_CHPROG{
+
+  S_EXTCHPROG* chprog; 
+  struct S_LINKED_CHPROG* next;
+}S_SAVED_PROG; 
 
 typedef struct  S_LINKED_DODEC{
     S_DODEC serie; 
@@ -214,12 +220,14 @@ typedef struct  S_LINKED_DODEC{
 typedef struct{ 
     S_SAVED_MODES *saved_modes;
     S_SAVED_SCALES *saved_scales;
-    S_SAVED_TRIAD * saved_progs;
+    S_SAVED_TRIAD * saved_progs; //triads
     S_SAVED_DODEC * saved_dodecs;
-    CPT progs_num;
+    S_SAVED_PROG * saved_extprog;
+    CPT progs_num; //triads
     CPT scales_num;
     CPT modes_num;
     CPT dodec_num;
+    CPT extprog_num;
 }S_USERINFO;
 
 #endif

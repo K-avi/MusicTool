@@ -7,12 +7,11 @@
 #include "triadgen.h"
 #include "triadprint.h"
 #include "parsing.h"
-#include "randext.h"
 #include "types.h"
 #include "harmo.h"
 #include "scalegen.h"
 #include "misc.h"
-#include "extchord.h"
+#include "chord.h"
 #include "rand.h"
 #include <stdarg.h> //ohboy
 
@@ -48,7 +47,7 @@ TRIADS_IN_SCALE exttriads_at_fund( S_SCALE scale){ //returns the triads that can
   ret|= (( relevant_notes & SUS2_MASK)== SUS2_MASK) ? (1<<4): 0;
   ret|= (( relevant_notes & SUS4_MASK)== SUS4_MASK) ? (1<<5): 0;
   return ret;
-} //not tested 
+} //redudant; will have to be killed
 
 TRIADS_IN_SCALE * extget_triads( S_SCALE scale){// returns the triads you can generate from a scale at each degree
 
@@ -61,15 +60,15 @@ TRIADS_IN_SCALE * extget_triads( S_SCALE scale){// returns the triads you can ge
   }
   free(modes);
   return ret;
-}
+}//redundant 
 
 TRIADS_IN_SCALE * extget_triads_length( S_SCALE scale, LENGTH length){// same as get triads but without calculating the length
 
   if( (!scale) || (! length)) return NULL;
 
   TRIADS_IN_SCALE* ret= malloc(length*sizeof(TRIADS_IN_SCALE));
-
   S_MODES modes= generate_modes(scale);
+
   for (CPT i=0; i<length; i++) {
     ret[i]=exttriads_at_fund(modes[i]);
   }
@@ -99,17 +98,16 @@ PITCH_CLASS_SET extget_degrees( S_SCALE scale){//returns the degrees from which 
     }
     free(modes);
     return ret;
-
-}//tested
+}//redundant
 
 CPT extnb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of degrees in a scale 
 //that contain at least one chord.
   CPT ret=0;
-   for(CPT i=0; i<length; i++){
+  for(CPT i=0; i<length; i++){
     if (scl_triads[i]!=0) {ret++;}
-   }
-   return ret;
-}//tested 
+  }
+  return ret;
+}//redundant
 
 S_EXTCHPROG *extchprogdup(  S_EXTCHPROG* source){//copies a cp from dest 
 
@@ -235,7 +233,7 @@ TRIADS_IN_SCALE select_triad( CHORD_EXT chord){
   }
   return ret;
 }//yes
-TRIADS_BITS triad_to_triad_bits( TRIADS_IN_SCALE triads){
+TRIADS_BITS triad_in_scl_to_triad_bits( TRIADS_IN_SCALE triads){
   switch (triads){
     case MIN_CHORD: return MIN; 
     case MAJ_CHORD: return MAJ; 
@@ -247,10 +245,14 @@ TRIADS_BITS triad_to_triad_bits( TRIADS_IN_SCALE triads){
   }
 }
 
+CHORD_EXT triad_to_chord_ext( TRIAD triad){
+  return (triad & 0xF) |triadbits_to_chord(triad>>4);
+}
+
 TRIAD extchord_to_triad( CHORD_EXT chord){
 
   TRIAD ret= (chord& 0xF); //retrieves first 4 bits which store the degree 
-  ret|= triad_to_triad_bits(select_triad(chord))<<4; //wtf
+  ret|= triad_in_scl_to_triad_bits(select_triad(chord))<<4; //wtf
   return ret;
   
 }//kinda tested 
@@ -265,7 +267,7 @@ char*  extbits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
     case SUS4: return "sus4";
     default: return NULL;
     }
-}//tested
+}//redundant
 
 CHORD_EXT pop_triad( S_EXTENSIONS extensions, TRIADS_BITS triad){
   //pops the triad passed as arg in the extensions of a chord
@@ -301,7 +303,7 @@ char *extbits_deg_to_str(DEGREES_BITS deg){
     case 11: return "VII";
     default: { return NULL;}
     }
-}//tested
+}//redundant
 char *bit_shift_to_degree(unsigned char num){//turns a 
 //bit shift into a degree str
 
@@ -381,7 +383,7 @@ void ext_print_chprog( S_EXTCHPROG* extprog){
 }
 
 
-CHORD_EXT triad_to_chord( TRIADS_IN_SCALE triads){
+CHORD_EXT triad_in_scl_to_chord( TRIADS_IN_SCALE triads){
   switch (triads){
     case MIN_CHORD: return MIN_EXT; 
     case MAJ_CHORD: return MAJ_EXT; 
@@ -393,7 +395,17 @@ CHORD_EXT triad_to_chord( TRIADS_IN_SCALE triads){
   }
 }
 
-
+CHORD_EXT triadbits_to_chord( TRIADS_BITS triads){
+  switch (triads){
+    case MIN: return MIN_EXT; 
+    case MAJ: return MAJ_EXT; 
+    case AUG: return AUG_EXT; 
+    case DIM: return DIM_EXT; 
+    case SUS2: return SUS2_EXT; 
+    case SUS4: return SUS4_EXT; 
+    default:  return 1<<15;
+  }
+}
 
 CHORD_EXT ext_gen_chord  (CHORD_EXT chord, CPT extension_num, CPT extension_total, TRIADS_IN_SCALE triad){
     //erases randoms extensions from chord in order to keep extension_num extensions. 
@@ -409,7 +421,7 @@ CHORD_EXT ext_gen_chord  (CHORD_EXT chord, CPT extension_num, CPT extension_tota
     if(extension_total==0) return chord;
     S_EXTENSIONS chord_extension= chord>>4; 
 
-    chord_extension= pop_triad(chord_extension, triad_to_triad_bits(triad));
+    chord_extension= pop_triad(chord_extension, triad_in_scl_to_triad_bits(triad));
     unsigned char rand_index= nth_bit_pos( chord_extension, rand()%extension_total+1);
 
     for(CPT i=0; i<extension_total-extension_num; i++){
@@ -418,7 +430,7 @@ CHORD_EXT ext_gen_chord  (CHORD_EXT chord, CPT extension_num, CPT extension_tota
 
     }
     CHORD_EXT ret=  chord & 0xF;
-    chord_extension=pop_triad(chord_extension, triad_to_triad_bits( triad));
+    chord_extension=pop_triad(chord_extension, triad_in_scl_to_triad_bits( triad));
     ret|= chord_extension<<4;
     return ret; 
 

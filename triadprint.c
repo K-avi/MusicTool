@@ -33,6 +33,8 @@ char*  bits_triad_to_str( TRIADS_BITS triad){//pretty self expleanatory
     case MAJ: return "";
     case DIM: return "-";
     case AUG: return "+";
+    case SUS2: return "sus2"; 
+    case SUS4: return "sus4";
     default: { return NULL;}
     }
 }

@@ -1,4 +1,5 @@
 #include "parsing.h"
+#include "chord.h"
 #include "types.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -124,26 +125,33 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
     CPT cpt=0; //the longest word of the lang is bVIIm , cpt is a filter -> any word longer than bVIIm is not valid
 
     
-    while(*tmp!='\0' && tmp && cpt<=5){
+    while(*tmp!='\0' && tmp && cpt<=6){
 
         
         if( *tmp == ' ') break;
 
         else if(*tmp=='I' )
-            word |= (WORD_BITS_I<<(3*cpt));
+            word |= (WORD_BITS_I<<(4*cpt));
         
         else if(*tmp=='V' )
-            word |= (WORD_BITS_V<<(3*cpt));
+            word |= (WORD_BITS_V<<(4*cpt));
 
         else if(*tmp=='b' )
-            word |= (WORD_BITS_b<<(3*cpt));
+            word |= (WORD_BITS_b<<(4*cpt));
         else if(*tmp=='m' )
-            word |= (WORD_BITS_m<<(3*cpt));
+            word |= (WORD_BITS_m<<(4*cpt));
         
         else if(*tmp=='+' )
-            word |= (WORD_BITS_aug<<(3*cpt));
+            word |= (WORD_BITS_aug<<(4*cpt));
         else if(*tmp=='-' )
-            word |= (WORD_BITS_dim<<(3*cpt));
+            word |= (WORD_BITS_dim<<(4*cpt));
+        else if(!strncmp(tmp, "sus2", 4)){
+            word|= (WORD_BITS_sus2<<(4*cpt));
+            tmp+=3;
+        }else if(!strncmp(tmp, "sus4", 4)){
+            word|= (WORD_BITS_sus2<<(4*cpt));
+            tmp+=3;
+        }
         
         else return 0; //case if the word contains a non valid character
         
@@ -151,7 +159,7 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
         tmp++;
     }
 
-    if(cpt>5) return 0; //case if word too big 
+    if(cpt>6) return 0; //case if word too big 
 
     if(*tmp!='\0'){
         while(*tmp== ' ') tmp++; //makes sure that there isn't two substrings separated by spaces in str
@@ -172,30 +180,26 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
     I check the validity of every character. 
     this function is ugly AF tbh I might make it cleaner at some point 
     */
-
     //the function is a monstrous amalgamation of boilerplates n I feel pretty bad about it.
     // I'll rewrite it at some point
-
    
     if(!word) return 0;
     
-    
     CPT shift=0;
-
-    unsigned short mask =7; // 111 
+    unsigned short mask = 0xF; // 111 
 
     if( (word &mask)== WORD_BITS_b ){ //b? 
         //priprintf("in b\n");
-        shift+=3;
+        shift+=4;
 
         //printf("%b\n", word & (mask<<shift));
         if( (word & (mask<<shift))== (WORD_BITS_I)<<shift){ //bI?
 
-            shift+=3;
+            shift+=4;
             if((word & (mask<<shift))== (WORD_BITS_I)<<shift){ //bII?
-                shift+=3;
+                shift+=4;
                 if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bIII?
-                   shift+=3; 
+                   shift+=4 ;
                     if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bIIIm
                         return DEG_bIII|(MIN <<4);
 
@@ -205,6 +209,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bIII-
                         return DEG_bIII|(DIM <<4);
 
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bIIIsus2
+                        return DEG_bIII|(SUS2 <<4);
+
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bIIIsus4
+                        return DEG_bIII|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//bIII 
                         return DEG_bIII|(MAJ <<4);
 
@@ -217,22 +226,24 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     return DEG_bII|(AUG <<4);
                 }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bII-
                     return DEG_bII|(DIM <<4);
+                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bIIsus2
+                        return DEG_bII|(SUS2 <<4);
+
+                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bIIsus4
+                        return DEG_bII|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//bII
                     return DEG_bII|(MAJ <<4);
                 }else return 0; //error case 
-
                    
             }else {return 0;} //error case 
 
-
-
         }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){ //bV?
                
-            shift+=3;
+            shift+=4;
             if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bVI?
-                shift+=3;
+                shift+=4;
                 if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bVII?
-                    shift+=3;
+                    shift+=4;
                     
                     if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bVIIm
                         return DEG_bVII|(MIN <<4);
@@ -240,6 +251,12 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                         return DEG_bVII|(AUG <<4);
                     }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bVII-
                         return DEG_bVII|(DIM <<4);
+                      
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVIIsus2
+                        return DEG_bVII|(SUS2 <<4);
+
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVIIsus4
+                        return DEG_bVII|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//bVII
                         return DEG_bVII|(MAJ <<4);
                     }else return 0; //error if char other than correct ones
@@ -250,6 +267,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     return DEG_bVI|(AUG <<4);
                 }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bVI-
                     return DEG_bVI|(DIM <<4);
+                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVIsus2
+                    return DEG_bVI|(SUS2 <<4);
+
+                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVIsus4
+                    return DEG_bVI|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//bVI
                     return DEG_bVI|(MAJ <<4);  
                 }else return 0; //error if char other than correct ones
@@ -260,22 +282,26 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                 return DEG_bV|(AUG <<4);
             }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bV-
                 return DEG_bV|(DIM <<4);
+            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVsus2
+                return DEG_bV|(SUS2 <<4);
+
+            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVsus4
+                return DEG_bV|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//bV
                 return DEG_bV|(MAJ <<4);  
             }else return 0; //error if char other than correct ones
         }else{
-           //("in error b\n");
             return 0;
         }
 
     }else if((word & (mask))== (WORD_BITS_I)){//I?
         //cases: I Im I+ I- II III IV 
-        shift+=3;
+        shift+=4;
         
         if((word & (mask<<shift))== (WORD_BITS_I)<<shift){ //II?
-                shift+=3;
+                shift+=4;
                 if( (word & (mask<<shift))== (WORD_BITS_I)<<shift){//III?
-                   shift+=3; 
+                   shift+=4; 
                     if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IIIm
                         return DEG_III|(MIN <<4);
 
@@ -285,6 +311,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//III-
                         return DEG_III|(DIM <<4);
 
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IIIsus2
+                        return DEG_III|(SUS2 <<4);
+
+                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IIIsus4
+                        return DEG_III|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//III 
                         return DEG_III|(MAJ <<4);
 
@@ -297,15 +328,16 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     return DEG_II|(AUG <<4);
                 }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//II-
                     return DEG_II|(DIM <<4);
+                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IIsus2
+                        return DEG_II|(SUS2 <<4);
+                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IIsus4
+                    return DEG_II|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//II
                     return DEG_II|(MAJ <<4);
-                }else return 0; //error case 
-
-                   
-        
+                }else return 0; //error case        
         
         }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){//IV?
-            shift+=3;
+            shift+=4;
 
             if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IVm
                 return DEG_IV|(MIN <<4);
@@ -313,6 +345,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                 return DEG_IV|(AUG <<4);
             }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//IV+
                 return DEG_IV|(AUG <<4);
+            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IVsus2
+                    return DEG_IV|(SUS2 <<4);
+
+            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IVsus4
+                    return DEG_IV|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//IV maj
                 return DEG_IV|(MAJ <<4);   
             }else return 0; //error if char other than correct ones
@@ -323,20 +360,23 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
             return DEG_I|(AUG <<4);
         }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//I-
             return DEG_I|(DIM <<4);
+        }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//Isus2
+            return DEG_I|(SUS2 <<4);
+
+        }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//Isus4
+            return DEG_I|(SUS4 <<4);
         }else if( !(word & (mask<<shift) )){//I maj
             return DEG_I|(MAJ <<4);
-        }else return 0; //error case 
-        
+        }else return 0; //error case      
 
     }else if ( (word & (mask<<shift))== (WORD_BITS_V)<<shift){//V?
         //cases : V VI VII
-      
 
-        shift+=3;
+        shift+=4;
         if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//VI?
-            shift+=3;
+            shift+=4;
             if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//VII?
-                shift+=3;
+                shift+=4;
                     
                 if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//VIIm
                     return DEG_VII|(MIN <<4);
@@ -344,6 +384,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     return DEG_VII|(AUG <<4);
                 }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//VII-
                     return DEG_VII|(DIM <<4);
+                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//VIIsus2
+                    return DEG_VII|(SUS2 <<4);
+
+                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//VIIsus4
+                    return DEG_VII|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//VII
                     return DEG_VII|(MAJ <<4);
                 }else return 0; //error if char other than correct ones
@@ -354,6 +399,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                 return DEG_VI|(AUG <<4);
             }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//VI-
                 return DEG_VI|(DIM <<4);
+            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//VIsus2
+                return DEG_VI|(SUS2 <<4);
+
+            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//VIsus4
+                return DEG_VI|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//VI
                 return DEG_VI|(MAJ <<4);  
             }else return 0; //error if char other than correct ones
@@ -364,6 +414,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
             return DEG_V|(AUG <<4);
         }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//V-
             return DEG_V|(AUG <<4);
+        }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//Vsus2
+            return DEG_V|(SUS2 <<4);
+
+        }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//Vsus4
+            return DEG_V|(SUS4 <<4);
         }else if( !(word & (mask<<shift) )){//V
             return DEG_V|(MAJ <<4);   
         }else return 0; //error if char other than correct ones
@@ -372,18 +427,33 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
         return 0;
     }
     return 0;
-}
+}//need to add sus2 n sus4 support to this (annoying)
 
 
-TRIAD str_to_chord( char* str){
+
+TRIAD str_to_triad( char* str){
     if(!str) return 0;
-
     return word_bits_to_chord(str_to_wordbits(str));
 }
 
+CHORD_EXT str_to_chord_ext( char* str){
+    if(!str) return 0;
+    TRIAD chord= word_bits_to_chord(str_to_wordbits(str));
+    CHORD_EXT ret = chord & 0xF;
+    switch (chord>>4){
+        case MIN: ret|= MINOR_PCS<<4; break;
+        case MAJ: ret|= MAJOR_PCS<<4; break;
+        case AUG: ret|= AUG_PCS<<4; break;
+        case DIM: ret|=DIM_PCS<<4; break;
+        case SUS2: ret|= SUS2_PCS<<4; break; 
+        case SUS4: ret|= SUS4_PCS<<4; break;
+        default:  ret=0;
+    }
+    return ret;
+}
 
 
-char ** chprog_str_to_tab_chord_str( char* str, LENGTH length){//turns a string containing 
+char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator){//turns a string containing 
 //a chord prog to a tab of string where each index of the tab contains a substring of str w one chord 
     if(!str) return NULL;
     if(!length) return NULL;
@@ -391,12 +461,12 @@ char ** chprog_str_to_tab_chord_str( char* str, LENGTH length){//turns a string 
     char ** ret= malloc(length* sizeof(char*));
     INDEX i=0;
     CPT cpt=0;
-int debug=0;
+
     char * tmp= str, *tmp1=str; 
 
     while(*tmp!='\0' && *tmp1!='\0'){
 
-        while(*tmp1!= ',' && *tmp1!=']' && *tmp1!='\0'){
+        while(*tmp1!= separator && *tmp1!=']' && *tmp1!='\0'){
             cpt++;
             tmp1++;
              
@@ -431,19 +501,14 @@ void free_str_tab(char ** str_tab, LENGTH length){
 }
 
 
-S_TRIAD_PROG* str_to_chord_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
-
-
+S_TRIAD_PROG* str_to_triad_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
     //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
     //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
     //at the end check if every chord is not null and return zero if so
     if(!str) return NULL;
-
     char * tmp= strstr(str , "["), *tmp1=tmp;
-
     
     if(!tmp) return NULL; //checks that str contains [
-    
     if(!strstr(str, "]")) return NULL; //checks that the string contains a closing bracket
 
     if(*(++tmp)=='\0') return NULL; //checks that [ isnt the last character of the string
@@ -455,11 +520,8 @@ S_TRIAD_PROG* str_to_chord_prog( char* str){//turns the string containing a chor
         tmp++;
     }
 
-
-    
     tmp1++;
-
-    char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord);
+    char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord, ',');
     
     S_TRIAD_PROG * ch_prog= malloc(sizeof(S_TRIAD_PROG));
 
@@ -468,7 +530,7 @@ S_TRIAD_PROG* str_to_chord_prog( char* str){//turns the string containing a chor
 
     for(CPT i=0; i<num_of_chord; i++){
         
-        ch_prog->chord_prog[i]= str_to_chord(chord_tab[i]);
+        ch_prog->chord_prog[i]= str_to_triad(chord_tab[i]);
 
         if( !(ch_prog->chord_prog[i])){ 
           
@@ -477,14 +539,14 @@ S_TRIAD_PROG* str_to_chord_prog( char* str){//turns the string containing a chor
             free_str_tab(chord_tab, num_of_chord); 
 
             return NULL;
-
         }
     }
-
     free_str_tab(chord_tab, num_of_chord);
     return ch_prog;
-
 }
+
+
+
 
 
 unsigned char next_not_blank_comment( char *str, char chr){
@@ -517,8 +579,6 @@ char* syntax_error_flag_to_str(SYNTAX_ERROR flag ){
     case SYNTAX_INVALID_PROG:return "invalid chprog\n"; //invalid prog
     case SYNTAX_GENERIC_ERROR: return "generic error\n";//generic error
     case SYNTAX_INVALID_ARG: return "argument passed isn't valid\n"; //invalid argument error
-
-
     case SYNTAX_TWO_PAR_OPEN: return "two parenthesis opened\n";  //two ( (  not separated by a ) in an env file.
     case SYNTAX_TWO_PAR_CLOSED: return "two parenthesis closed\n";  //same with ))
     case SYNTAX_UNMATCHED_OPENED_PAR :return "parenthesis was opened but never closed \n"; //par opened never closed. 
@@ -552,4 +612,60 @@ char* file_to_string( char* str){
     if(!buffer ) return NULL;
     buffer[length]='\0';
     return buffer;
+}
+
+
+CHORD_EXT str_to_chord( char * str){
+    if(!str) return 0;
+
+    TRIAD chord= str_to_triad(str);
+
+    CHORD_EXT ret= chord & 0xF;
+    ret |= triadbits_to_chord(ret>>4)<<4;
+
+    return ret;
+}
+S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
+    //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
+    //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
+    //at the end check if every chord is not null and return zero if so
+    if(!str) return NULL;
+    char * tmp= strstr(str , "["), *tmp1=tmp;
+    
+    if(!tmp) return NULL; //checks that str contains [
+    if(!strstr(str, "]")) return NULL; //checks that the string contains a closing bracket
+
+    if(*(++tmp)=='\0') return NULL; //checks that [ isnt the last character of the string
+
+    CPT num_of_chord=1;
+
+    while( *tmp!=']' ){
+        if(*tmp==';') num_of_chord++;
+        tmp++;
+    }
+
+    tmp1++;
+    char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord, ';');
+    
+    S_EXTCHPROG * ch_prog= malloc(sizeof(S_EXTCHPROG));
+
+    ch_prog->length=num_of_chord; 
+    ch_prog->chprog=malloc(num_of_chord* sizeof(TRIAD));
+
+    for(CPT i=0; i<num_of_chord; i++){
+        
+        ch_prog->chprog[i]= str_to_triad(chord_tab[i]);
+
+        if( !(ch_prog->chprog[i])){ 
+          
+            free(ch_prog->chprog);
+            free(ch_prog); 
+            free_str_tab(chord_tab, num_of_chord); 
+
+            return NULL;
+        }
+    }
+    free_str_tab(chord_tab, num_of_chord);
+    
+    return ch_prog;
 }

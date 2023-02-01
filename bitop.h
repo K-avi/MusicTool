@@ -77,6 +77,8 @@ enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_b
 #define WORD_BITS_m 4
 #define WORD_BITS_aug 5 
 #define WORD_BITS_dim 6
+#define WORD_BITS_sus2 7
+#define WORD_BITS_sus4 8 //fuck fuck fuck fuck fuck fuck
 
 #define ERROR_WORD 32768
 

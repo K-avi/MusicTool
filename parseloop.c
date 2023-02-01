@@ -348,18 +348,18 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
          i+=4;
          while(NEUTRAL_CHAR(line[i])) i++;
          if(line[i]=='['){
-            S_TRIAD_PROG * ch_parsed= str_to_chord_prog(&line[i]);
+            S_TRIAD_PROG * ch_parsed= str_to_triad_prog(&line[i]);
             if(!ch_parsed){
                 printf("couldn't parse a triad prog, please pass a correct chord prog\n");
 
             }else{
-              save_chprog(ch_parsed, user_saved);
+              save_triadprog(ch_parsed, user_saved);
               free_triad_prog(ch_parsed);
             }
          }else if(END_OF_LINE_CHAR(line[i])){
          
             if(tmp_triad){
-              save_chprog(tmp_triad, user_saved);
+              save_triadprog(tmp_triad, user_saved);
               // printf("chord prog saved at index %d\n", user_saved->progs_num);
 
               //printf("in save chprog %p\n", tmp_triad);
@@ -376,7 +376,7 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
           generic_print_uinfo(&print_saved_prog, print_env, &line[i+5], user_saved);
 
       }  else if(!strncmp(&line[i], "remove ",7)){
-          generic_remove(&remove_chprog, &line[i+7], user_saved);  
+          generic_remove(&remove_triadprog, &line[i+7], user_saved);  
 
       }else if(!strncmp(&line[i], "toscale",7 )){
 
@@ -387,7 +387,7 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
           if(line[i]=='['){
             //printf("%s\n", &line[i]);
             free_triad_prog(generated_triad);
-            generated_triad=str_to_chord_prog(&line[i]);
+            generated_triad=str_to_triad_prog(&line[i]);
             
             if(generated_triad!=NULL){
               tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
@@ -404,7 +404,7 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
             indexx=parse_index(&line[i]);
             if(indexx!=-1){
               free_triad_prog(generated_triad);
-              generated_triad=duplicate_chprog(get_chprog(user_saved, indexx)); 
+              generated_triad=duplicate_triadprog(get_triadprog(user_saved, indexx)); 
               
               if(generated_triad!=NULL){
                 tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
@@ -746,8 +746,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
               ++line_num; continue;//empty line or comment
             }else{      
-              tmp_triad=str_to_chord_prog(&line[i]);
-              save_chprog( tmp_triad, user_info);
+              tmp_triad=str_to_triad_prog(&line[i]);
+              save_triadprog( tmp_triad, user_info);
               free_triad_prog(tmp_triad);      
             }
           }
@@ -769,10 +769,10 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
                 if(line[i]== '\n' || line[i]=='#') { 
                   ++line_num; continue;//empty line or comment
                 }else{
-                  tmp_triad=str_to_chord_prog(&line[i]);
+                  tmp_triad=str_to_triad_prog(&line[i]);
                   //printf("%s\n", line);
                   print_triad_prog(tmp_triad);
-                  save_chprog( tmp_triad, user_info);
+                  save_triadprog( tmp_triad, user_info);
                   free_triad_prog(tmp_triad);
                 }
               }

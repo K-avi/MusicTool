@@ -7,7 +7,6 @@
 #include "types.h"
 #include "globals.h"
 #include "bitop.h"
-#include "randext.h"
 #include "misc.h"
 
 #include <stdarg.h>
@@ -26,7 +25,7 @@ TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads){//selects a random tr
   int select=rand()%length+1;
   
   CPT cpt=0, incr=0, ret=0;
-  while(cpt < select && incr<8){
+  while(cpt < select ){
     if( 1 & (triads>>incr)) {  ret=incr; cpt++;}
     incr++;
   }
@@ -73,7 +72,6 @@ S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
         for(CPT i=0; i<length; i++){
 
           TRIADS_IN_SCALE triad_selected= select_rand_triads(triads);//selects a random triad on the degree 
-        
           ret->chord_prog[i]= generate_chord(triad_selected, deg_w_chord);
         }
       }else{
@@ -110,8 +108,6 @@ S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
             
            //print_bits(deg_w_chord);
             curdeg=select_rand_degree(deg_w_chord);
-            
-
             while(curdeg==prevdeg){
               
               curdeg=select_rand_degree(deg_w_chord);
@@ -126,11 +122,9 @@ S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
             seltriads= select_rand_triads(curtriads);
            // print_bits(curtriads);
             
-            ret->chord_prog[i]= generate_chord(seltriads, curdeg);
-          
+            ret->chord_prog[i]= generate_chord(seltriads, curdeg);     
         }
 
     }
-
     return ret;
-}//not done 
+}

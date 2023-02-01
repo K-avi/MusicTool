@@ -10,20 +10,24 @@ extern char * set_to_first_bracket( char* str);
 extern SIGNED_LENGTH parse_index(const char* string);
 extern SIGNED_LENGTH parse_next (const char* string);
 
-extern TRIAD str_to_triad( char * str);
+extern TRIAD str_to_triad( char * str, unsigned char mode);
 extern S_TRIAD_PROG* str_to_triad_prog( char* str);
 extern unsigned char next_not_blank_comment( char *str, char chr);
 extern char* file_to_string( char* str);
 extern char* syntax_error_flag_to_str(SYNTAX_ERROR flag );
 
+extern S_EXTCHPROG* str_to_chprog( char* str);
+
 
 #ifdef DEBUG
 extern TRIAD word_bits_to_chord (WORD_BITS word);
-extern WORD_BITS str_to_wordbits( char * str);
+extern WORD_BITS str_to_wordbits( char * str, unsigned char mode);
 
 extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator);
 
 extern void free_str_tab(char ** str_tab, LENGTH length);
+
+extern CHORD_EXT str_to_chord( char * str);
 #endif
 
 

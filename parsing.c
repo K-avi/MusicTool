@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include "triadprint.h"
+
 
 #ifdef WIN32 
 
@@ -112,7 +114,7 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if
 }
 
 
-WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that it can then be analyzed 
+WORD_BITS str_to_wordbits( char * str, unsigned char mode){ //turns a string into WORD_BITS so that it can then be analyzed 
 //word bits is an intermediate format for chord prog parsing between a chord written as a string and a chord 
 //written as a short 
     if(!str) return 0;
@@ -125,7 +127,7 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
     CPT cpt=0; //the longest word of the lang is bVIIm , cpt is a filter -> any word longer than bVIIm is not valid
 
     
-    while(*tmp!='\0' && tmp && cpt<=6){
+    while(*tmp!='\0' && tmp && cpt<=5){
 
         
         if( *tmp == ' ') break;
@@ -149,7 +151,7 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
             word|= (WORD_BITS_sus2<<(4*cpt));
             tmp+=3;
         }else if(!strncmp(tmp, "sus4", 4)){
-            word|= (WORD_BITS_sus2<<(4*cpt));
+            word|= (WORD_BITS_sus4<<(4*cpt));
             tmp+=3;
         }
         
@@ -158,12 +160,18 @@ WORD_BITS str_to_wordbits( char * str){ //turns a string into WORD_BITS so that 
         cpt++;
         tmp++;
     }
+    
 
     if(cpt>6) return 0; //case if word too big 
 
-    if(*tmp!='\0'){
+    if(*tmp!='\0' &&  mode=='t'){
         while(*tmp== ' ') tmp++; //makes sure that there isn't two substrings separated by spaces in str
         if(*tmp!= '\0') return 0; //error if two sets of characters separated by a space.
+    }
+
+    if(*tmp!='\0' &&  mode=='c'){
+        while(*tmp== ' ') tmp++; //makes sure that there isn't two substrings separated by spaces in str
+        if(strncmp(tmp, "add", 3) && (*tmp!='\0')) return 0; //error if not EOL or add 
     }
 
     return word;
@@ -431,14 +439,14 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
 
 
 
-TRIAD str_to_triad( char* str){
+TRIAD str_to_triad( char* str, unsigned char mode ){
     if(!str) return 0;
-    return word_bits_to_chord(str_to_wordbits(str));
+    return word_bits_to_chord(str_to_wordbits(str, mode));
 }
 
 CHORD_EXT str_to_chord_ext( char* str){
     if(!str) return 0;
-    TRIAD chord= word_bits_to_chord(str_to_wordbits(str));
+    TRIAD chord= word_bits_to_chord(str_to_wordbits(str, 't'));
     CHORD_EXT ret = chord & 0xF;
     switch (chord>>4){
         case MIN: ret|= MINOR_PCS<<4; break;
@@ -530,7 +538,7 @@ S_TRIAD_PROG* str_to_triad_prog( char* str){//turns the string containing a chor
 
     for(CPT i=0; i<num_of_chord; i++){
         
-        ch_prog->chord_prog[i]= str_to_triad(chord_tab[i]);
+        ch_prog->chord_prog[i]= str_to_triad(chord_tab[i] , 't');
 
         if( !(ch_prog->chord_prog[i])){ 
           
@@ -618,13 +626,79 @@ char* file_to_string( char* str){
 CHORD_EXT str_to_chord( char * str){
     if(!str) return 0;
 
-    TRIAD chord= str_to_triad(str);
+    TRIAD chord= str_to_triad(str, 'c');
 
     CHORD_EXT ret= chord & 0xF;
     ret |= triadbits_to_chord(ret>>4)<<4;
 
     return ret;
 }
+
+S_EXTENSIONS str_to_extension_degree(char * str, char endchar){ //turns a string containing ONLY 
+//1 extension into a S_EXTENSION (scale degree); can sett endchar to ; or ] 
+    char * tmp=str;
+    while(*tmp==' ' || *tmp== '\t') tmp++;
+    S_EXTENSIONS ret=0;
+    while(*tmp!=endchar && *tmp!='\0'){
+       
+        if(!strncmp(tmp, "b2", 2)){
+            tmp+=2; 
+            ret|= NOTE_b2;
+        }else if(*tmp == '2'){
+            tmp++; 
+            ret|= NOTE_2;
+        }else if(!strncmp(tmp , "b3", 2)){
+            tmp+=2; 
+            ret|= NOTE_b3;
+        }else if(*tmp == '3'){
+            tmp++; 
+            ret|= NOTE_3;
+        }else if(*tmp == '4'){
+            tmp++; 
+            ret|= NOTE_4;
+        }else if(!strncmp(tmp , "b5", 2)){
+            tmp+=2; 
+            ret|= NOTE_b5;
+        }else if(*tmp == '5'){
+            tmp++; 
+            ret|= NOTE_5;
+        }else if(!strncmp(tmp , "b6", 2)){
+            tmp+=2; 
+            ret|= NOTE_b6;
+        }else if(*tmp == '6'){
+            tmp++; 
+            ret|= NOTE_6;
+        }else if(!strncmp(tmp , "b7", 2)){
+            tmp+=2; 
+            ret= NOTE_b7;
+        }else if(*tmp == '7'){
+            tmp++; 
+            ret|= NOTE_7;
+        }else if(*tmp==',' || *tmp==' '){
+            tmp++; 
+        }else if(*tmp==endchar){
+            printf("%s\n", tmp);
+            *tmp=endchar;
+            break;
+        }else {//invalid char 
+            return 0;
+        }
+    }
+    printf("tmp at exit is: %s\n", tmp);
+    return ret;
+}
+
+S_EXTENSIONS str_to_extensions( char * str, char endchar){//turns a string of format "add I, J, K,..."
+//into an S_EXTENSIONS short (mirror name for S_SCALE)
+    char * tmp=str;
+    if(strncmp( tmp, "add",3 )){
+        return 0;
+    }
+    tmp+=3;
+    
+    return str_to_extension_degree(tmp, endchar);
+}
+
 S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
     //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
     //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
@@ -650,22 +724,33 @@ S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord pro
     S_EXTCHPROG * ch_prog= malloc(sizeof(S_EXTCHPROG));
 
     ch_prog->length=num_of_chord; 
-    ch_prog->chprog=malloc(num_of_chord* sizeof(TRIAD));
+    ch_prog->chprog=malloc(num_of_chord* sizeof(S_EXTCHPROG));
 
+    TRIADS_BITS curtriad=0; 
+    S_EXTENSIONS curextension=0;
+    char endchar=';';
     for(CPT i=0; i<num_of_chord; i++){
-        
-        ch_prog->chprog[i]= str_to_triad(chord_tab[i]);
 
-        if( !(ch_prog->chprog[i])){ 
-          
-            free(ch_prog->chprog);
-            free(ch_prog); 
-            free_str_tab(chord_tab, num_of_chord); 
+        if(i==num_of_chord-1) endchar=']'; //assigns endchar to ']' in the last iteration
+        printf("%s\n", chord_tab[i]);
+        curtriad= str_to_triad(chord_tab[i], 'c');
+       
+        tmp=strstr(chord_tab[i], "add");
+        if(tmp){ 
+            curextension= str_to_extensions(tmp, endchar )<<4;
 
-            return NULL;
+            if( !(curtriad && curextension)){ 
+                free(ch_prog->chprog);
+                free(ch_prog); 
+                free_str_tab(chord_tab, num_of_chord); 
+                return NULL;
+            }
+            ch_prog->chprog[i]= curextension| curtriad ;
+        }else {
+            ch_prog->chprog[i]= triad_to_chord_ext(curtriad);
         }
     }
     free_str_tab(chord_tab, num_of_chord);
     
     return ch_prog;
-}
+}//incorrect ; smtg is defo wrong 

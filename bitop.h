@@ -106,4 +106,19 @@ enum { DEG_I , DEG_bII, DEG_II , DEG_bIII ,DEG_III, DEG_IV, DEG_bV, DEG_V, DEG_b
 #define SUS2_EXT 0x42 // 0000 0000 0100 0010
 #define SUS4_EXT 0x50 // 0000 0000 0101 0000
 
+
+//flags to get 1 specific note/degree of S_SCALE / S_EXTENSIONS structure 
+
+#define NOTE_b2 1 
+#define NOTE_2 2
+#define NOTE_b3 1<<2 
+#define NOTE_3 1<<3
+#define NOTE_4 1<<4
+#define NOTE_b5 1<<5
+#define NOTE_5 1<<6
+#define NOTE_b6 1<<7
+#define NOTE_6 1<<8
+#define NOTE_b7 1<<9
+#define NOTE_7 1<<10
+
 #endif

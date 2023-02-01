@@ -246,7 +246,7 @@ TRIADS_BITS triad_in_scl_to_triad_bits( TRIADS_IN_SCALE triads){
 }
 
 CHORD_EXT triad_to_chord_ext( TRIAD triad){
-  return (triad & 0xF) |triadbits_to_chord(triad>>4);
+  return (triad & 0xF) | (triadbits_to_chord(triad>>4))<<4;
 }
 
 TRIAD extchord_to_triad( CHORD_EXT chord){

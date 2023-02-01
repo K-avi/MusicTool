@@ -270,14 +270,16 @@ int main(){
   //  }
   //  free(prog); 
   //}
-  int b=1;
-  S_TRIAD_PROG *aaa= str_to_triad_prog("[bVIIm, bVII+, bVII-, bVII]");
+  //int b=1;
+  S_EXTCHPROG *aaa= str_to_chprog("[bVIIm add7; bVII+; bVII-  ; bVII ]");
   
-  print_triad_prog(aaa);
+  ext_print_chprog(aaa);
  // prog->length=1; 
  // prog->chord_prog=&aaaa;
  // print_triad_prog(prog);
   free_userinfo(user_data);
+  free(aaa->chprog); 
+  free(aaa);
   return 0;
 
 }

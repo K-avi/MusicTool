@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <time.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "dodecseries.h"
@@ -22,6 +21,10 @@
 #include "writeenv.h"
 #include "syntaxcheck.h"
 #include "dodecseries.h"
+
+
+#include <string.h>
+
 
 int main(){
 
@@ -271,17 +274,17 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
-  S_EXTCHPROG *aaa= str_to_chprog("[bVIIm add 2b63,,,,, b6; bVII+ add 4; bVII- add 6; bVII add 3,5,b2,2,b3,4,b5,5,b6,6,b7,7]");
+ // S_EXTCHPROG *aaa= str_to_chprog("[bVIIm add 2b63,,,,, b6; bVII+ add 4; bVII- add 6; bVII add 3,5,b2,2,b3,4,b5,5,b6,6,b7,7]");
   
-  ext_print_chprog(aaa);
+ // ext_print_chprog(aaa);
  // prog->length=1; 
  // prog->chord_prog=&aaaa;
  // print_triad_prog(prog);
-  if(aaa) {
-    if(aaa->chprog)free(aaa->chprog); 
-    free(aaa);
-  }
-  free_userinfo(user_data);
+ // if(aaa) {
+ //   if(aaa->chprog)free(aaa->chprog); 
+ //   free(aaa);
+ // }
+
   
   return 0;
 

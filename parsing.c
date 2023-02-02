@@ -472,6 +472,10 @@ char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator){/
 
     char * tmp= str, *tmp1=str; 
 
+    for(CPT cpt1=0; cpt1<length; cpt1++){//initialises to null
+        ret[cpt1]=NULL;
+    }
+
     while(*tmp!='\0' && *tmp1!='\0'){
 
         while(*tmp1!= separator && *tmp1!=']' && *tmp1!='\0'){
@@ -483,6 +487,7 @@ char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator){/
         if(*tmp1== ']'){
            
             ret[i++]= strndup(tmp, cpt);
+            
             break;
         }
         else if(*tmp1== '\0'){//useless normally
@@ -502,8 +507,10 @@ char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator){/
 }
 
 void free_str_tab(char ** str_tab, LENGTH length){
+    if(!str_tab) return;
     for (CPT i=0; i<length; i++){
-        free(str_tab[i]);
+      
+        if(str_tab[i]!=NULL)free(str_tab[i]);
     }
     free(str_tab);
 }

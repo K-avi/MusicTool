@@ -624,43 +624,44 @@ SYNTAX_ERROR dodeccheck(char*str){
 SYNTAX_ERROR prog_degree_check( char * str , u_char * size){
     //doesnt work bc i'm stoopid; have to put the longest strings first lmao 
     char * tmp=str ; 
+    printf("str in prog deg check is %s\n", str);
     while(NEUTRAL_CHAR(*tmp)) tmp++;
 
-    if(*tmp=='I'){
-        (*size)=1; 
+    if (!strncmp(tmp, "bVII", 4)){
+        (*size)=4; 
         return SYNTAX_OK;
-    }else if (!strncmp( tmp , "bII",3)){
-        (*size)=3;
+    }else if (!strncmp(tmp, "bVI", 3)){
+        (*size)=3; 
         return SYNTAX_OK;
-    }else if (!strncmp(tmp, "II", 2)){
+    }else if (!strncmp(tmp, "bV", 2)){
         (*size)=2; 
         return SYNTAX_OK;
     }else if (!strncmp( tmp , "bIII",4)){
         (*size)=4;
         return SYNTAX_OK;
-    }else if (!strncmp(tmp, "III", 3)){
-        (*size)=3; 
+    }else if (!strncmp( tmp , "bII",3)){
+        (*size)=3;
         return SYNTAX_OK;
-    }else if (!strncmp( tmp , "IV",2)){
-        (*size)=2;
-        return SYNTAX_OK;
-    }else if (!strncmp(tmp, "bV", 2)){
-        (*size)=2; 
-        return SYNTAX_OK;
-    }else if (*tmp == 'V'){
-        (*size)=1;
-        return SYNTAX_OK;
-    }else if (!strncmp(tmp, "bVI", 3)){
-        (*size)=3; 
+    }else if (!strncmp( tmp , "VII",3)){
+        (*size)=3;
         return SYNTAX_OK;
     }else if (!strncmp( tmp , "VI",2)){
         (*size)=2;
         return SYNTAX_OK;
-    }else if (!strncmp(tmp, "bVII", 4)){
-        (*size)=4; 
+    }else if (*tmp == 'V'){
+        (*size)=1;
         return SYNTAX_OK;
-    }else if (!strncmp( tmp , "VII",3)){
-        (*size)=3;
+    }else if (!strncmp( tmp , "IV",2)){
+        (*size)=2;
+        return SYNTAX_OK;
+    }else if (!strncmp(tmp, "III", 3)){
+        (*size)=3; 
+        return SYNTAX_OK;
+    }else if (!strncmp(tmp, "II", 2)){
+        (*size)=2; 
+        return SYNTAX_OK;
+    }else if(*tmp=='I'){
+        (*size)=1; 
         return SYNTAX_OK;
     }else if(END_OF_LINE_CHAR(*tmp)){
         (*size)=0; 
@@ -675,72 +676,82 @@ SYNTAX_ERROR prog_degree_check( char * str , u_char * size){
 
 SYNTAX_ERROR prog_triad_check(char * str, u_char* size){
 
-    if(!str){ return SYNTAX_OK; size=0;}
+    if(!str){size=0; return SYNTAX_GENERIC_ERROR; }
+ printf("str in prog triad check is %s\n", str);
     char * tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++ ; 
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
-
-    if(*str=='\0') {return SYNTAX_OK; *size=1;}
-    else if( *str=='m') {return SYNTAX_OK; *size=1;}
-    else if( *str=='+') {return SYNTAX_OK; *size=1;}
-    else if( *str=='-') {return SYNTAX_OK; *size=1;}
-    else if(!strncmp( str, "sus2", 4)){return SYNTAX_OK; *size=4;}
-    else if(!strncmp( str, "sus4", 4)){return SYNTAX_OK; *size=4;}
-
+    if(END_OF_LINE_CHAR(*tmp) ){ (*size)=0; return SYNTAX_OK;}
+    else if(!strncmp(tmp ,"add", 3)) {(*size=0) ; return SYNTAX_OK;}
+    if( *str=='m') {*size=1; return SYNTAX_OK; }
+    else if( *str=='+') {*size=1; return SYNTAX_OK; }
+    else if( *str=='-') {*size=1; return SYNTAX_OK; }
+    else if(!strncmp( str, "sus2", 4)){*size=4; return SYNTAX_OK; }
+    else if(!strncmp( str, "sus4", 4)){*size=4; return SYNTAX_OK; }
+    *size=0;
     return SYNTAX_INVALID_PROG;
 }
 
-SYNTAX_ERROR one_extension_check(char * str){
-    
-    if(!str) return SYNTAX_TOO_FEW_ARGS;
-
+SYNTAX_ERROR one_extension_check(char * str, u_char * size){
+    //checks that one of the extension passed as a string is an existing 
+    //n valid extension. It also sets the pointer size to the 
+    //number of characters of the extension.
+   
+    if(!str) { printf("nullstring caught\n"); return SYNTAX_TOO_FEW_ARGS;}
+ printf("str is: %p , %s, %d\n", str, str ,*str);
     char* tmp=str;
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
     if(!strncmp(tmp,"b2",2)){
-        
+        (*size)=2;
         tmp+=2; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='2'){
+         (*size)=2;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(!strncmp(tmp,"b3",2)){
-        
+         (*size)=2;
         tmp+=2; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='3'){
+         (*size)=1;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='4'){
+         (*size)=1;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(!strncmp(tmp,"b5",2)){
-        
+         (*size)=2;
         tmp+=2; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='5'){
+         (*size)=1;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(!strncmp(tmp,"b6",2)){
-        
+         (*size)=2;
         tmp+=2; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='6'){
+         (*size)=1;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(!strncmp(tmp,"b7",2)){
-        
+         (*size)=2;
         tmp+=2; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
     }else if(*tmp=='7'){
+         (*size)=1;
         tmp++; 
         while (NEUTRAL_CHAR(*tmp)) tmp++;
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
@@ -751,9 +762,12 @@ SYNTAX_ERROR one_extension_check(char * str){
 
 SYNTAX_ERROR all_extensions_check( char *str, u_char* size){//checks if the extensions of a chord r correct ; returns 
 //syntax ok / syntax invalid prog/ syntax too few args 
+//uses the str to tab str func; which is overkill but works very well 
+    if(!str) return SYNTAX_INVALID_PROG;
 
     char * tmp= str; 
-    CPT cpt=0;
+    CPT cpt=1;
+
     while(!END_OF_LINE_CHAR(*tmp)) {
         if(*tmp==',') cpt++; 
         tmp++;
@@ -764,16 +778,18 @@ SYNTAX_ERROR all_extensions_check( char *str, u_char* size){//checks if the exte
     char ** strtab= chprog_str_to_tab_chord_str(str,  cpt,  ',');
    
     for(CPT i=0; i<cpt; i++){
-        check= one_extension_check(strtab[i]);
-        if(check) return check;
+        if(!strtab[i]) { free_str_tab(strtab, cpt) ; return SYNTAX_INVALID_PROG;}
+       // check= one_extension_check(strtab[i],size);
+        //if(check) return check;
     }
 
     free_str_tab(strtab, cpt);   
+ 
     return check;
 }//not finished
 
 SYNTAX_ERROR chordparsecheck(char *str){
-
+//checks that the syntax of an extended chord is correct .
     char *tmp=str;
     while(NEUTRAL_CHAR(*tmp)) tmp++;
     if( END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
@@ -785,7 +801,7 @@ SYNTAX_ERROR chordparsecheck(char *str){
     
     //degree check
     check= prog_degree_check(tmp, size);
-    printf("reached 1 \n");
+
     if(check) { 
         free(size) ;
         return check;
@@ -797,9 +813,8 @@ SYNTAX_ERROR chordparsecheck(char *str){
     //triad check
     check= prog_triad_check(tmp, size);
 
-     printf("reached 2 \n");
+    
     if(check) {
-        printf("exit in check after reached2 %s, %d\n", tmp, *tmp);
         free(size);
         return check;
     }
@@ -811,9 +826,11 @@ SYNTAX_ERROR chordparsecheck(char *str){
         tmp+=3;
         while(NEUTRAL_CHAR(*tmp)) tmp++;
         check= all_extensions_check(tmp,size);
+        free(size);
+        return check;
 
     }else { //just a triad 
-        printf("tmp at exit is: %s\n", tmp);
+   
         if( END_OF_LINE_CHAR(*tmp)){
             free(size); 
             return SYNTAX_OK;
@@ -825,7 +842,7 @@ SYNTAX_ERROR chordparsecheck(char *str){
 }//not finished
 
 SYNTAX_ERROR progparsecheck(char * str){
-
+//checks that the syntax of a chord prog is correct
     char* tmp=str,*tmp1=str; 
     LENGTH length=1;
 
@@ -852,11 +869,8 @@ SYNTAX_ERROR progparsecheck(char * str){
 
     SYNTAX_ERROR check= SYNTAX_TOO_FEW_ARGS;
    
-    for(CPT i=0; i<length;i++){
-     
-        printf("%s\n", strtab[i]);
+    for(CPT i=0; i<length;i++){       
         check= chordparsecheck(strtab[i]);
-        printf("check is :%d\n", check);
        
     }
     free_str_tab(strtab,  length);
@@ -869,7 +883,66 @@ SYNTAX_ERROR progsavecheck(char * str){
         tmp++;
     }
     if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
-    return progparsecheck(tmp);
+
+    SYNTAX_ERROR check= progparsecheck(tmp);
+    if(check) return check; //case if prog not valid 
+
+    tmp=strstr(str, "]"); //sets to end of prog 
+
+    tmp++; 
+    while(NEUTRAL_CHAR(*tmp))tmp++;
+    if(!END_OF_LINE_CHAR(*tmp)) return SYNTAX_INVALID_ARG;
+
+    return SYNTAX_OK;
+}
+
+SYNTAX_ERROR prograndargcheck(char * str){//checks that a string is an argument of prog rand 
+
+    char * tmp=str;
+    if(!strncmp(str, "-length=",8)){
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)) tmp++;
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+            }
+        }else if(!strncmp(tmp, "-scllen=", 8)){
+            
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)) tmp++;
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+            }
+        }else if(!strncmp(tmp, "-extmax=", 8)){  
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)) tmp++;
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+            }
+        }else if(!strncmp(tmp, "-scl=", 5)){      
+            tmp+=5;
+            S_SCALE scl= parse_scale(tmp); 
+            if(!scl ) return SYNTAX_INVALID_SCALE;
+            
+            tmp=strstr(tmp, "}"); //sets to eo scale 
+            tmp++;
+            while(NEUTRAL_CHAR(*tmp)) tmp++;  //checks neutral or eol or next arg
+            if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
+        }
+    return SYNTAX_INVALID_ARG;
+}
+SYNTAX_ERROR prograndcheck(char * str){
+    
+    char * tmp=str ; 
+    int *size= 0;
+
+    while( *tmp!='\0'){
+        break;
+    }
+    free(size);
+    return SYNTAX_GENERIC_ERROR;
 }
 
 SYNTAX_ERROR progcheck(char *str ){
@@ -889,13 +962,13 @@ SYNTAX_ERROR progcheck(char *str ){
        return printcheck(tmp+5);
 
     }else if(!strncmp (tmp, "rand", 4)){
-        return emptycheck(tmp+4);// needs to be changed to custom runtime check for args
+        return prograndcheck(tmp+4);// needs to be changed to custom runtime check for args
     }
     return SYNTAX_INVALID_CHAR;
 }
 
 SYNTAX_ERROR syntaxcheck(char *str){
-    //returns SYNTAX_OK if the syntax of a line is correct; an error flag otherwise
+    //returns SYNTAX_OK if the syntax of a line is corr_eect; an error flag otherwise
     char * tmp=str;
     while(*tmp=='\n' || *tmp==' ' || *tmp=='\t') tmp++; 
     if( *tmp=='\0' || *tmp=='#') return SYNTAX_OK; 

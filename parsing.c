@@ -634,12 +634,14 @@ CHORD_EXT str_to_chord( char * str){
     return ret;
 }
 
-S_EXTENSIONS str_to_extension_degree(char * str, char endchar){ //turns a string containing ONLY 
+S_EXTENSIONS str_to_extension_degree(char * str){ //turns a string containing ONLY 
 //1 extension into a S_EXTENSION (scale degree); can sett endchar to ; or ] 
     char * tmp=str;
+
     while(*tmp==' ' || *tmp== '\t') tmp++;
+    if(*tmp=='\0' ) return 0;
     S_EXTENSIONS ret=0;
-    while(*tmp!=endchar && *tmp!='\0'){
+    while( *tmp!='\0'){
        
         if(!strncmp(tmp, "b2", 2)){
             tmp+=2; 
@@ -670,33 +672,31 @@ S_EXTENSIONS str_to_extension_degree(char * str, char endchar){ //turns a string
             ret|= NOTE_6;
         }else if(!strncmp(tmp , "b7", 2)){
             tmp+=2; 
-            ret= NOTE_b7;
+            ret|= NOTE_b7;
         }else if(*tmp == '7'){
             tmp++; 
             ret|= NOTE_7;
         }else if(*tmp==',' || *tmp==' '){
             tmp++; 
-        }else if(*tmp==endchar){
-            printf("%s\n", tmp);
-            *tmp=endchar;
-            break;
         }else {//invalid char 
+          //  printf("in error ext to deg\n");
             return 0;
         }
     }
-    printf("tmp at exit is: %s\n", tmp);
     return ret;
 }
 
 S_EXTENSIONS str_to_extensions( char * str, char endchar){//turns a string of format "add I, J, K,..."
 //into an S_EXTENSIONS short (mirror name for S_SCALE)
     char * tmp=str;
+   
+    if(strlen(tmp)<=3) return 0;
     if(strncmp( tmp, "add",3 )){
         return 0;
     }
     tmp+=3;
-    
-    return str_to_extension_degree(tmp, endchar);
+    if(*tmp=='\0') return 0;
+    return str_to_extension_degree(tmp);
 }
 
 S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
@@ -708,7 +708,6 @@ S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord pro
     
     if(!tmp) return NULL; //checks that str contains [
     if(!strstr(str, "]")) return NULL; //checks that the string contains a closing bracket
-
     if(*(++tmp)=='\0') return NULL; //checks that [ isnt the last character of the string
 
     CPT num_of_chord=1;
@@ -728,29 +727,27 @@ S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord pro
 
     TRIADS_BITS curtriad=0; 
     S_EXTENSIONS curextension=0;
-    char endchar=';';
+    char endchar=';' ;
     for(CPT i=0; i<num_of_chord; i++){
 
         if(i==num_of_chord-1) endchar=']'; //assigns endchar to ']' in the last iteration
-        printf("%s\n", chord_tab[i]);
         curtriad= str_to_triad(chord_tab[i], 'c');
        
         tmp=strstr(chord_tab[i], "add");
         if(tmp){ 
             curextension= str_to_extensions(tmp, endchar )<<4;
-
+           
             if( !(curtriad && curextension)){ 
                 free(ch_prog->chprog);
                 free(ch_prog); 
                 free_str_tab(chord_tab, num_of_chord); 
                 return NULL;
             }
-            ch_prog->chprog[i]= curextension| curtriad ;
+            ch_prog->chprog[i]= curextension| triad_to_chord_ext(curtriad) ;
         }else {
             ch_prog->chprog[i]= triad_to_chord_ext(curtriad);
         }
     }
     free_str_tab(chord_tab, num_of_chord);
-    
     return ch_prog;
 }//incorrect ; smtg is defo wrong 

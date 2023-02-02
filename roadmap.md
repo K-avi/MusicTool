@@ -36,23 +36,31 @@ printing:
 
 generating extended chords:  
     
-    generation w/o arguments is done n works (as far as I know)
-    currently doing generation w args 
+    YES YES YES 
 
 parsing:
 
-    actual hell
+    YES YES YES 
 
 syntaxchecking: 
 
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    YES YES YES
 
 saving: 
 
     need to repurpose chord to store extended chords 
     current chords will be renamed as "triads" 
 
+frontend implementation: 
 
+    not done yet 
+
+compile MusicTool w/o syntaxchecking: 
+
+    not done yet 
+
+
+1.3.2 : s
 
 Chordbook: 
 

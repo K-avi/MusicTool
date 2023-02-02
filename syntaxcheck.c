@@ -896,53 +896,68 @@ SYNTAX_ERROR progsavecheck(char * str){
     return SYNTAX_OK;
 }
 
-SYNTAX_ERROR prograndargcheck(char * str){//checks that a string is an argument of prog rand 
+SYNTAX_ERROR prograndargcheck(char * str, LENGTH* size  ){//checks that a string is an argument of prog rand 
 
     char * tmp=str;
     if(!strncmp(str, "-length=",8)){
             tmp+=8;
+            *size=8;
             if(isdigit(*(tmp))){
               
-              while(isdigit(*tmp)) tmp++;
+              while(isdigit(*tmp)){ tmp++; (*size)++;}
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
             }
         }else if(!strncmp(tmp, "-scllen=", 8)){
-            
+            *size=8;
             tmp+=8;
             if(isdigit(*(tmp))){
               
-              while(isdigit(*tmp)) tmp++;
+              while(isdigit(*tmp)) { tmp++; (*size)++;}
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
             }
         }else if(!strncmp(tmp, "-extmax=", 8)){  
             tmp+=8;
+            *size=8;
             if(isdigit(*(tmp))){
               
-              while(isdigit(*tmp)) tmp++;
+              while(isdigit(*tmp)) { tmp++; (*size)++;}
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
             }
         }else if(!strncmp(tmp, "-scl=", 5)){      
             tmp+=5;
+            *size=5;
+
             S_SCALE scl= parse_scale(tmp); 
             if(!scl ) return SYNTAX_INVALID_SCALE;
             
-            tmp=strstr(tmp, "}"); //sets to eo scale 
+            while(*tmp!='}'){
+                (*size)++;
+                tmp++;
+            }
             tmp++;
-            while(NEUTRAL_CHAR(*tmp)) tmp++;  //checks neutral or eol or next arg
+            (*size)++;
+            while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
             if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
         }
     return SYNTAX_INVALID_ARG;
 }
+
 SYNTAX_ERROR prograndcheck(char * str){
     
-    char * tmp=str ; 
-    int *size= 0;
+    char * tmp=str , *tmp1=str; 
+   
+    SYNTAX_ERROR check = SYNTAX_OK;
 
-    while( *tmp!='\0'){
-        break;
+    if(!emptycheck( tmp1)) return  SYNTAX_OK;
+    LENGTH *size= 0;
+
+    while( END_OF_LINE_CHAR(*tmp)){
+        check= prograndargcheck( tmp , size);
+        if(check) {free(size); return check;}
+        tmp+=(*size);
     }
     free(size);
-    return SYNTAX_GENERIC_ERROR;
+    return SYNTAX_OK;
 }
 
 SYNTAX_ERROR progcheck(char *str ){

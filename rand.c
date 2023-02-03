@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -8,8 +9,11 @@
 #include "globals.h"
 #include "bitop.h"
 #include "misc.h"
+#include "parsing.h"
+#include "chordgen.h"
 
 #include <stdarg.h>
+#include <string.h>
 
 
 
@@ -128,3 +132,186 @@ S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a r
     }
     return ret;
 }
+
+
+CHORD ext_gen_chord  (CHORD chord, CPT extension_num, CPT extension_total, TRIADS_IN_SCALE triad){
+    //erases randoms extensions from chord in order to keep extension_num extensions. 
+    //returns chord if extension_total < extension_num 
+    //triad is used to pop out n in the triad from chord 
+
+    //various validity checks
+    if(!chord ) return 0; 
+    if(extension_total>9 ) return 0;
+    if(extension_num > extension_total) return 0;
+
+    //extension_total is also the lentgth of the scale in chord (how many bits set n so on)
+    if(extension_total==0) return chord;
+    S_EXTENSIONS chord_extension= chord>>4; 
+
+    chord_extension= pop_triad(chord_extension, triad_in_scl_to_triad_bits(triad));
+    unsigned char rand_index= nth_bit_pos( chord_extension, rand()%extension_total+1);
+
+    for(CPT i=0; i<extension_total-extension_num; i++){
+        chord_extension= POP_BIT( chord_extension, rand_index);
+        rand_index= nth_bit_pos( chord_extension, rand()%(extension_total-i)+1);
+
+    }
+    CHORD ret=  chord & 0xF;
+    chord_extension=pop_triad(chord_extension, triad_in_scl_to_triad_bits( triad));
+    ret|= chord_extension<<4;
+    return ret; 
+
+}//problem cuz it can kill the triad which is real bad
+//this function is: awful 
+
+
+
+S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
+   /*
+   should be able to take arguments 
+  -length=n | rand
+  -scllen=n | rand 
+  -scale={...} | rand 
+  -extnum=1...n | rand ; should be made more complete after that (like min ext max ext etcs)
+   */
+  if(argnum==0){/*generation without arguments is gonna be goofy; I don't 
+  want it to rely on a specific scale. It's gonna change scale at each chord because I said so*/
+
+      LENGTH proglength= rand()%10+1; //proglength between 1 and 10 
+
+      S_SCALE scl= 0;//scl of min length 6 to make sure a chord can be generated
+      CPT extension_num=0; 
+      
+      CHORD curchord= 0; //chord to pop extensions from 
+
+      PITCH_CLASS_SET relevant_deg= 0; //gets deg of scl 
+      PITCH_CLASS_SET selected_deg= 0;
+      DEGREES selected_deg_converted= 0;
+
+      S_SCALE curmode = 0;
+      TRIADS_IN_SCALE curtriads= 0;
+      TRIADS_IN_SCALE seltriads= 0;
+  
+      S_CHPROG *ret=  malloc( sizeof(S_CHPROG));
+      ret->chprog= malloc(proglength* sizeof( CHORD));
+      ret->length=proglength;
+
+      for(CPT i=0; i<proglength; i++){
+          
+        scl=generate_ran_scale( 8);
+        extension_num=count_bits(scl)-2;
+
+        relevant_deg=get_degrees(scl); 
+        selected_deg= select_rand_degree(relevant_deg);
+        selected_deg_converted= get_deg_from_chdeg(selected_deg);
+        
+        curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+
+        curtriads=triads_at_fund(curmode); 
+        seltriads=select_rand_triads(curtriads);
+
+        curchord=selected_deg_converted | (curmode <<4);
+      
+        if(extension_num){
+          curchord= ext_gen_chord(curchord, rand()%extension_num, extension_num, seltriads);
+        }else { 
+          curchord= ext_gen_chord(curchord, 0, 0, seltriads);
+        }
+
+        ret->chprog[i] = curchord;
+      }
+      return ret;
+      
+  }else{ 
+      va_list ap;
+      va_start(ap, argnum);
+
+      CPT i=0 ;
+      char* arg;
+      LENGTH proglength=0, scllen=0;
+      char extension_max=-1;
+      S_SCALE scl=0;
+
+      for(i=0; i<argnum; i++){//retrieves the arguments for generation. 
+        arg=va_arg(ap, char*); 
+        if(!strncmp(arg, "-length=",8)){
+            if(isdigit(*(arg+8))){
+              proglength=atoi(arg+8); 
+            }
+        }else if(!strncmp(arg, "-scllen=", 8)){
+            if(isdigit(*(arg+8))){
+              scllen=atoi(arg+8); 
+            }
+        }else if(!strncmp(arg, "-extmax=", 8)){  
+            if(isdigit(*(arg+8))){
+              extension_max= atoi(arg+8);
+            }
+          
+        }else if(!strncmp(arg, "-scl=", 5)){      
+            scl=parse_scale(arg+5);
+        }//default behavior for invalid args is to ignore them; might be bad dunno
+      }
+      va_end(ap);
+
+      if(scl && scllen) scllen=0; /*scl and scllen are mutually exclusive; scl is more important I think.
+      this behavior might change idk yet*/
+
+      if(scllen){ //sets scl if scllen is set 
+        scl=generate_ran_scale(scllen);
+      }else if(!scl){ //sets scale if not the case
+        scl=generate_ran_scale(rand()%4+7);
+      }
+
+      if(!proglength){
+        proglength=rand()%10+1;
+      }
+
+      if(extension_max==-1){
+        extension_max=9;
+      }
+
+      CPT extension_num= count_bits(scl)-2;
+      extension_num= extension_num<0 ? 0 : extension_num; //prevents it from being negative
+      CHORD curchord= 0; //chord to pop extensions from 
+
+      PITCH_CLASS_SET relevant_deg= get_degrees(scl); //gets deg of scl 
+      if(!relevant_deg) return NULL; //case if scale doesnt contain any chords
+
+      PITCH_CLASS_SET selected_deg= 0;
+      DEGREES selected_deg_converted= 0;
+
+      S_SCALE curmode = 0;
+      TRIADS_IN_SCALE curtriads= 0;
+      TRIADS_IN_SCALE seltriads= 0;
+  
+      S_CHPROG *ret=  malloc( sizeof(S_CHPROG));
+      ret->chprog= malloc(proglength* sizeof( CHORD));
+      ret->length=proglength;
+      
+      for(CPT i=0; i<proglength; i++){
+
+        selected_deg= select_rand_degree(relevant_deg);
+        selected_deg_converted= get_deg_from_chdeg(selected_deg);
+        
+        curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+        curtriads=triads_at_fund(curmode); 
+  
+        seltriads=select_rand_triads(curtriads);
+        curchord=selected_deg_converted | (curmode <<4);
+
+        if(extension_num ){
+          if(!extension_max){
+            curchord= ext_gen_chord(curchord,0 , extension_num, seltriads);
+          }else{
+            extension_max= extension_max>extension_num ? extension_num: extension_max;
+            curchord= ext_gen_chord(curchord, rand()%extension_num, extension_max, seltriads);
+          }
+        }else{
+          curchord= ext_gen_chord(curchord, 0, 0, seltriads);
+        }
+        ret->chprog[i] = curchord;
+      }
+      return ret;
+  }
+  return NULL;
+}//needs to prevent it from generating the same chord twice bc it's kinda dumb

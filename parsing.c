@@ -1,5 +1,5 @@
 #include "parsing.h"
-#include "chord.h"
+#include "chordgen.h"
 #include "types.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -444,10 +444,10 @@ TRIAD str_to_triad( char* str, unsigned char mode ){
     return word_bits_to_chord(str_to_wordbits(str, mode));
 }
 
-CHORD_EXT str_to_chord_ext( char* str){
+CHORD str_to_chord_ext( char* str){
     if(!str) return 0;
     TRIAD chord= word_bits_to_chord(str_to_wordbits(str, 't'));
-    CHORD_EXT ret = chord & 0xF;
+    CHORD ret = chord & 0xF;
     switch (chord>>4){
         case MIN: ret|= MINOR_PCS<<4; break;
         case MAJ: ret|= MAJOR_PCS<<4; break;
@@ -630,12 +630,12 @@ char* file_to_string( char* str){
 }
 
 
-CHORD_EXT str_to_chord( char * str){
+CHORD str_to_chord( char * str){
     if(!str) return 0;
 
     TRIAD chord= str_to_triad(str, 'c');
 
-    CHORD_EXT ret= chord & 0xF;
+    CHORD ret= chord & 0xF;
     ret |= triadbits_to_chord(ret>>4)<<4;
 
     return ret;
@@ -706,7 +706,7 @@ S_EXTENSIONS str_to_extensions( char * str, char endchar){//turns a string of fo
     return str_to_extension_degree(tmp);
 }
 
-S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
+S_CHPROG* str_to_chprog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
     //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
     //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
     //at the end check if every chord is not null and return zero if so
@@ -727,10 +727,10 @@ S_EXTCHPROG* str_to_chprog( char* str){//turns the string containing a chord pro
     tmp1++;
     char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord, ';');
     
-    S_EXTCHPROG * ch_prog= malloc(sizeof(S_EXTCHPROG));
+    S_CHPROG * ch_prog= malloc(sizeof(S_CHPROG));
 
     ch_prog->length=num_of_chord; 
-    ch_prog->chprog=malloc(num_of_chord* sizeof(S_EXTCHPROG));
+    ch_prog->chprog=malloc(num_of_chord* sizeof(S_CHPROG));
 
     TRIADS_BITS curtriad=0; 
     S_EXTENSIONS curextension=0;

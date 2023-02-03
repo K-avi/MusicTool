@@ -26,10 +26,15 @@ S_INTERVAL_VECTOR generated_intv_vect=0;
  char* begin=NULL;
  S_MODES modes=NULL;
 
-//chprog globals
+//triad prog globals
 S_TRIAD_PROG * tmp_triad=NULL;
 S_TRIAD_PROG* generated_triad=NULL;
 SIGNED_LENGTH l1=-1, l2=-1;
+
+//ch prog globals
+S_CHPROG * tmp_prog=NULL;
+S_CHPROG* generated_prog=NULL;
+SIGNED_LENGTH l3=-1, l4=-1;
 
 //dodec globals 
 S_DODEC tmp_saved_dodec=0;

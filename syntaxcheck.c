@@ -1127,9 +1127,60 @@ SYNTAX_ERROR env_triad_check ( char *str) {//checks the syntax of the substring 
     }
     str++;
     return SYNTAX_OK;
-
 }
+SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring containing an env scale in 
+//in an env file string.
 
+    SYNTAX_ERROR check= SYNTAX_GENERIC_ERROR;
+
+    while( *str!='('){ //found open parenthesis
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+            str=skip_line(str) ;
+             continue;
+        }else if(*str=='('){ 
+            str++;
+            break;
+        }else{
+           // printf("in seeking ( inval\n");
+            return SYNTAX_INVALID_CHAR;
+        }
+    }
+     if(*str=='(') str++;
+    while( *str!=')'){
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+
+      
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+
+           // printf("skipping line\n");
+            str=skip_line(str) ;
+          
+           
+            continue;
+        }else if (*str=='['){
+            
+            check= progparsecheck(str);
+            if(check){
+                return check;
+            }else {
+                str= strstr(str, "]");
+            }
+            
+            str++; 
+            continue;
+        }else if(*str==')'){ 
+            break;
+        }else{
+            //printf("%c in seeking ) inval\n", *str);
+            return SYNTAX_INVALID_CHAR;
+        }
+    }
+    str++;
+    return SYNTAX_OK;
+}
 SYNTAX_ERROR env_dodec_check(char *str){
     S_DODEC dodec_check=DODEC_ERRFLAG;
 
@@ -1238,6 +1289,16 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                 tmp+=5;
                
                 scheck=env_dodec_check(tmp);
+                if(scheck) return scheck;
+                tmp=strstr(tmp, ")");
+                tmp++;
+              // printf("%s\n", tmp); 
+               continue;
+            }else if(!strncmp(tmp, "prog", 4)){
+          
+                tmp+=4;
+               
+                scheck=env_prog_check(tmp);
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;

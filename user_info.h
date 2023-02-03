@@ -21,7 +21,7 @@ extern void print_saved_modes(S_USERINFO *user_data, LENGTH index);
 
 extern void save_triadprog(S_TRIAD_PROG* chprog, S_USERINFO * user_info);
 extern void remove_triadprog(  S_USERINFO * user_info, CPT index );
-extern void print_saved_prog( S_USERINFO * user_data, INDEX index);
+extern void print_saved_triadprog( S_USERINFO * user_data, INDEX index);
 
 extern S_SCALE get_scale_of_modes ( S_USERINFO * user_data, CPT modes_num, CPT scale_num);
 
@@ -36,6 +36,11 @@ extern S_TRIAD_PROG* get_triadprog( S_USERINFO *user_data, INDEX index);
 extern S_MODES get_modes( S_USERINFO *user_data, INDEX index);
 extern S_SCALE get_saved_scale( S_USERINFO * user_data, INDEX index);
 extern S_DODEC get_saved_dodec( S_USERINFO * user_data, INDEX index);
+
+extern S_CHPROG* get_chord_prog( S_USERINFO *user_data, INDEX index);
+extern void remove_chprog(  S_USERINFO * user_info, CPT index );
+extern void save_chprog( S_CHPROG* chprog , S_USERINFO * user_info);
+extern void print_saved_chprog( S_USERINFO * user_data, INDEX index);
 
 #ifdef DEBUG
 extern S_TRIAD_PROG * duplicate_triadprog( S_TRIAD_PROG * chprog);

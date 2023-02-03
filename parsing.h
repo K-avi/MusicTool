@@ -16,7 +16,7 @@ extern unsigned char next_not_blank_comment( char *str, char chr);
 extern char* file_to_string( char* str);
 extern char* syntax_error_flag_to_str(SYNTAX_ERROR flag );
 
-extern S_EXTCHPROG* str_to_chprog( char* str);
+extern S_CHPROG* str_to_chprog( char* str);
 
 
 #ifdef DEBUG
@@ -27,7 +27,7 @@ extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separ
 
 extern void free_str_tab(char ** str_tab, LENGTH length);
 
-extern CHORD_EXT str_to_chord( char * str);
+extern CHORD str_to_chord( char * str);
 #endif
 
 

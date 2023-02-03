@@ -1,5 +1,5 @@
-#ifndef CHORDGEN_H 
-#define CHORDGEN_H 
+#ifndef TRIADGEN_H 
+#define TRIADGEN_H 
 
 #include "types.h"
 

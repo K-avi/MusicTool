@@ -1,22 +1,32 @@
 Features needed for MusicTool 1.0: 
-    done! 
+    
+    the scale, chprog, and harmo types. 
+    Being able to read command files. 
+    doing some basic operations on scale/ harmo 
+    saving / printing / removing scales, harmo n 
+    chprogs
+    writing /reading environments
+    a command line interpreter
+    a syntaxchecker/ parser
 
-Features for MusicTool 1.1: 
+Features of MusicTool 1.1: 
    
     a library of utility functions , retrieve inverse of scale, add a note to a scale , check if a chprog can be built from a scale , retrieve scale from chprog, do vector of scale ,... 
 
     calling MusicTool like a shell command with arguments like -read -rand -harmo,...
 
 
-Features for MusicTool 1.2: 
+Features of MusicTool 1.2: 
     
     implementing dodecaphonic series, 12 tone matrixes n operations on them 
     making the parsing look better
 
 Features for MusicTool 1.3: 
     
-    generate chords w extensions or suspended chords
-    a way to generate "coherent" chord progs by stacking coherent patterns(like a I IV V, II V I),...
+    1.3.1: implementing suspended chords in the triad type (formerly chprog type)
+           implementing a prog type (chord prog with extensions)
+           being able to compile MusicTool/smtool w/o syntaxchecking (for the sake of it)
+    1.3.2: a way to generate "coherent" chord progs by stacking coherent patterns(like a I IV V, II V I),...
     a way to add said patterns to an environment.
 
 Features for MusicTool 1.4: 

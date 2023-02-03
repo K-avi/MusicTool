@@ -50,20 +50,20 @@ void free_saved_modes( S_SAVED_MODES * saved_modes){
 	}
 }
 
-void init_saved_triads(S_SAVED_TRIAD* saved_progs){
-	saved_progs->ch_prog=NULL;
-	saved_progs->next=NULL;
+void init_saved_triads(S_SAVED_TRIAD* saved_triads){
+	saved_triads->ch_prog=NULL;
+	saved_triads->next=NULL;
 }
 
 
 
-void free_saved_triads( S_SAVED_TRIAD * saved_progs){
-	if(!saved_progs) return;
+void free_saved_triads( S_SAVED_TRIAD * saved_triads){
+	if(!saved_triads) return;
 	S_SAVED_TRIAD* tmp;
-	while(saved_progs){
-		tmp=saved_progs;
+	while(saved_triads){
+		tmp=saved_triads;
 		if(tmp->ch_prog) free_triad_prog(tmp->ch_prog);
-		saved_progs=saved_progs->next;
+		saved_triads=saved_triads->next;
 		free(tmp);
 	}
 }
@@ -90,24 +90,24 @@ void init_userinfo( S_USERINFO* user_data){
 
   user_data->saved_modes=malloc(sizeof(S_SAVED_MODES));// printf("saved modes pointer: %p\n", user_data->saved_modes);
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);
-  user_data->saved_progs= malloc(sizeof(S_SAVED_TRIAD));
+  user_data->saved_triads= malloc(sizeof(S_SAVED_TRIAD));
   user_data->saved_dodecs=malloc(sizeof(S_SAVED_DODEC));
 
   user_data->modes_num=0;
   user_data->scales_num=0;
-  user_data->progs_num=0;
+  user_data->triads_num=0;
   user_data->dodec_num=0;
 
   init_saved_scale(user_data->saved_scales);
   init_saved_mode(user_data->saved_modes);
-  init_saved_triads(user_data->saved_progs);
+  init_saved_triads(user_data->saved_triads);
   init_saved_dodec(user_data->saved_dodecs);
 }
 
 void free_userinfo( S_USERINFO* user_info){
      free_saved_scale(user_info->saved_scales);
 	 free_saved_modes(user_info->saved_modes);
-	 free_saved_triads(user_info->saved_progs);
+	 free_saved_triads(user_info->saved_triads);
 	 free_saved_dodecs(user_info->saved_dodecs);
 	
 	free(user_info);

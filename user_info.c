@@ -6,7 +6,8 @@
 #include "harmo.h"
 #include "scalegen.h"
 #include "triadgen.h"
-#include "chord.h"
+#include "chordgen.h"
+#include "chordprint.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -163,11 +164,11 @@ S_TRIAD_PROG * duplicate_triadprog( S_TRIAD_PROG * chprog){
 	return ret;
 }//not tested 
 
-void add_triadprog( S_SAVED_TRIAD * saved_progs , S_TRIAD_PROG * chprog){
-	//duplicates a new instance of chprog into a saved_progs linked list
-	if(! (saved_progs && chprog)) return;
+void add_triadprog( S_SAVED_TRIAD * saved_triads , S_TRIAD_PROG * chprog){
+	//duplicates a new instance of chprog into a saved_triads linked list
+	if(! (saved_triads && chprog)) return;
 
-	S_SAVED_TRIAD * tmp= saved_progs; 
+	S_SAVED_TRIAD * tmp= saved_triads; 
 
 	while (tmp->next) {
 		tmp= tmp->next;
@@ -179,25 +180,25 @@ void add_triadprog( S_SAVED_TRIAD * saved_progs , S_TRIAD_PROG * chprog){
 	tmp->next=tmp1;
 }//not tested 
 
-void print_saved_prog( S_USERINFO * user_data, INDEX index){
-	if(index> user_data->progs_num){ printf("index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->progs_num); return;}
+void print_saved_triadprog( S_USERINFO * user_data, INDEX index){
+	if(index> user_data->triads_num){ printf("index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->triads_num); return;}
 	CPT i=0; 
-	S_SAVED_TRIAD *tmp = user_data->saved_progs;
+	S_SAVED_TRIAD *tmp = user_data->saved_triads;
 	while(i<index && tmp){
 		if(tmp->next)tmp=tmp->next;
 		i++;
 	}
-	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->progs_num); return; }
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->triads_num); return; }
 	print_triad_prog(tmp->ch_prog);
 }//not tested
 
 
-CPT triad_in_saved (S_TRIAD_PROG* chprog, S_SAVED_TRIAD * saved_progs){//returns the index +1 of chprog if a chprog is present 
+CPT triad_in_saved (S_TRIAD_PROG* chprog, S_SAVED_TRIAD * saved_triads){//returns the index +1 of chprog if a chprog is present 
 //in a saved progs struct 0 otherwise
 
-	if(! (chprog && saved_progs)) return 0;
+	if(! (chprog && saved_triads)) return 0;
 
-	S_SAVED_TRIAD*tmp= saved_progs; 
+	S_SAVED_TRIAD*tmp= saved_triads; 
 	CPT cpt=1; 
 
 	while (tmp) {
@@ -235,7 +236,7 @@ void print_saved_serie( S_USERINFO * user_data, INDEX index){
 		if(tmp->next)tmp=tmp->next;
 		i++;
 	}
-	if(!tmp){printf("2ND CHECK index superior to number of series currently stored please enter a valid index; number of series is : %d\n", user_data->progs_num); return; }
+	if(!tmp){printf("2ND CHECK index superior to number of series currently stored please enter a valid index; number of series is : %d\n", user_data->triads_num); return; }
 	print_serie(tmp->serie);
 }// tested
 
@@ -258,26 +259,26 @@ CPT serie_in_saved (S_DODEC serie, S_SAVED_DODEC * saved_dodecs){//returns the i
 
 ////////////////CHORD PROG ///////////////////
 
-S_EXTCHPROG * duplicate_chprog( S_EXTCHPROG * chprog){ 
+S_CHPROG * duplicate_chprog( S_CHPROG * chprog){ 
 	//duplicates chprog into a new chord_prog;
 
 	if(!chprog) return NULL; 
 	if(!chprog->length) return NULL;
 
-	S_EXTCHPROG * ret= malloc(sizeof(S_EXTCHPROG));
+	S_CHPROG * ret= malloc(sizeof(S_CHPROG));
 
 	ret->length=chprog->length; 
-	ret->chprog=malloc(chprog->length* sizeof(CHORD_EXT)); 
+	ret->chprog=malloc(chprog->length* sizeof(CHORD)); 
 	memcpy(ret->chprog, chprog->chprog, chprog->length);
 
 	return ret;
 }//not tested 
 
-void add_chprog( S_SAVED_PROG * saved_progs , S_EXTCHPROG * chprog){
-	//duplicates a new instance of chprog into a saved_progs linked list
-	if(! (saved_progs && chprog)) return;
+void add_chprog( S_SAVED_PROG * saved_triads , S_CHPROG * chprog){
+	//duplicates a new instance of chprog into a saved_triads linked list
+	if(! (saved_triads && chprog)) return;
 
-	S_SAVED_PROG * tmp= saved_progs; 
+	S_SAVED_PROG * tmp= saved_triads; 
 
 	while (tmp->next) {
 		tmp= tmp->next;
@@ -290,23 +291,23 @@ void add_chprog( S_SAVED_PROG * saved_progs , S_EXTCHPROG * chprog){
 }//not tested 
 
 void print_saved_chprog( S_USERINFO * user_data, INDEX index){
-	if(index> user_data->extprog_num){ printf("index superior to number of progs currently stored please enter a valid index; number of triad progs is : %d\n", user_data->extprog_num); return;}
+	if(index> user_data->prog_num){ printf("index superior to number of progs currently stored please enter a valid index; number of triad progs is : %d\n", user_data->prog_num); return;}
 	CPT i=0; 
-	S_SAVED_PROG *tmp = user_data->saved_extprog;
+	S_SAVED_PROG *tmp = user_data->saved_prog;
 	while(i<index && tmp){
 		if(tmp->next)tmp=tmp->next;
 		i++;
 	}
-	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->progs_num); return; }
-	ext_print_chprog(tmp->chprog);
+	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->triads_num); return; }
+	print_chprog(tmp->chprog);
 }//not tested
 
-CPT chprog_in_saved (S_EXTCHPROG* chprog, S_SAVED_PROG * saved_progs){//returns the index +1 of chprog if a chprog is present 
+CPT chprog_in_saved (S_CHPROG* chprog, S_SAVED_PROG * saved_triads){//returns the index +1 of chprog if a chprog is present 
 //in a saved progs struct 0 otherwise
 
-	if(! (chprog && saved_progs)) return 0;
+	if(! (chprog && saved_triads)) return 0;
 
-	S_SAVED_PROG*tmp= saved_progs; 
+	S_SAVED_PROG*tmp= saved_triads; 
 	CPT cpt=1; 
 
 	while (tmp) {
@@ -338,11 +339,20 @@ void save_modes(S_MODES modes, S_USERINFO *user_info){//used to save a mode in t
 }
 
 void save_triadprog(S_TRIAD_PROG* chprog, S_USERINFO * user_info){//used to save a chprog in the data struct
-	INDEX index= triad_in_saved(chprog, user_info->saved_progs);
+	INDEX index= triad_in_saved(chprog, user_info->saved_triads);
   	if(index) { printf("triad prog already in struct at index %d ; no triad prog saved\n", index-1); return;}
-	user_info->progs_num++;
-	add_triadprog(user_info->saved_progs, chprog);
-	printf("chprog saved at index %d\n", user_info->progs_num);
+	user_info->triads_num++;
+	add_triadprog(user_info->saved_triads, chprog);
+	printf("triad prog saved at index %d\n", user_info->triads_num);
+}
+
+void save_chprog( S_CHPROG* chprog , S_USERINFO * user_info){
+
+	INDEX index= chprog_in_saved(chprog, user_info->saved_prog);
+  	if(index) { printf(" prog already in struct at index %d ; no triad prog saved\n", index-1); return;}
+	user_info->triads_num++;
+	add_chprog(user_info->saved_prog, chprog);
+	printf("prog saved at index %d\n", user_info->prog_num);
 }
 
 void save_dodec( S_DODEC serie, S_USERINFO * user_info){
@@ -412,8 +422,8 @@ void remove_modes(  S_USERINFO * user_info, CPT index ){ //removes modes at inde
 
 void remove_triadprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at index passed as argument if it exists
 	
-	if( index > user_info->progs_num){ printf("index passed is higher than the number of scales contained; can't clear this scale\n"); return;}
-	S_SAVED_TRIAD* tmp= user_info->saved_progs, *tmp1;
+	if( index > user_info->triads_num){ printf("index passed is higher than the number of triad progs contained; can't clear this triad prog\n"); return;}
+	S_SAVED_TRIAD* tmp= user_info->saved_triads, *tmp1;
 	CPT cpt=0;
 	while(cpt< (index-1) && tmp){
 		tmp=tmp->next;
@@ -433,7 +443,33 @@ void remove_triadprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at
 			free(tmp1);
 		}
 	}
-	user_info->progs_num--;
+	user_info->triads_num--;
+}
+
+void remove_chprog(  S_USERINFO * user_info, CPT index ){ //removes chprog at index passed as argument if it exists
+	
+	if( index > user_info->prog_num){ printf("index passed is higher than the number of progs contained; can't clear this prog\n"); return;}
+	S_SAVED_PROG* tmp= user_info->saved_prog, *tmp1;
+	CPT cpt=0;
+	while(cpt< (index-1) && tmp){
+		tmp=tmp->next;
+		cpt++;
+	}
+	if(!tmp) { printf(" indexation problem; something went wrong\n"); return;}
+	if(tmp->next){
+		if(tmp->next->next){
+			tmp1=tmp->next;
+			tmp->next=tmp->next->next;
+			free_chord_prog(tmp1->chprog);
+			free(tmp1);
+		}else {
+			tmp1=tmp->next;
+			tmp->next=NULL;
+			free_chord_prog(tmp1->chprog);
+			free(tmp1);
+		}
+	}
+	user_info->prog_num--;
 }
 
 
@@ -504,11 +540,11 @@ S_MODES get_modes( S_USERINFO *user_data, INDEX index){//retrieves the mode cont
 S_TRIAD_PROG* get_triadprog( S_USERINFO *user_data, INDEX index){//retrieves the chprog contained at index n NULL otherwise
 
 	if(!user_data) return NULL;
-	if(!user_data->saved_progs) return NULL;
-	if(user_data->progs_num<index) return NULL;
+	if(!user_data->saved_triads) return NULL;
+	if(user_data->triads_num<index) return NULL;
 
 
-	S_SAVED_TRIAD *tmp = user_data->saved_progs; 
+	S_SAVED_TRIAD *tmp = user_data->saved_triads; 
 	u_char i=0;
 	while (tmp && (i<index)) {
 		tmp=tmp->next;
@@ -516,6 +552,23 @@ S_TRIAD_PROG* get_triadprog( S_USERINFO *user_data, INDEX index){//retrieves the
 	}
 	if(!tmp) return NULL; 
 	return tmp->ch_prog;
+}
+
+S_CHPROG* get_chord_prog( S_USERINFO *user_data, INDEX index){//retrieves the chprog contained at index n NULL otherwise
+
+	if(!user_data) return NULL;
+	if(!user_data->saved_prog) return NULL;
+	if(user_data->prog_num<index) return NULL;
+
+
+	S_SAVED_PROG *tmp = user_data->saved_prog; 
+	u_char i=0;
+	while (tmp && (i<index)) {
+		tmp=tmp->next;
+		i++;
+	}
+	if(!tmp) return NULL; 
+	return tmp->chprog;
 }
 
 

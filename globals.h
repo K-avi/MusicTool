@@ -38,10 +38,16 @@ extern  S_MODES tmp_saved_mode, parsed_modes;
 extern  char* begin;
 extern  S_MODES modes;
 
-//chprog globals
+//triad prog globals
 extern S_TRIAD_PROG * tmp_triad;
 extern S_TRIAD_PROG* generated_triad;
 extern SIGNED_LENGTH l1, l2;
+
+
+//ch prog globals
+extern S_CHPROG * tmp_prog;
+extern S_CHPROG* generated_prog;
+extern SIGNED_LENGTH l3, l4;
 
 //dodec globals 
 extern S_DODEC tmp_saved_dodec;

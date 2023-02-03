@@ -10,7 +10,7 @@
 #include "types.h"
 #include "user_info.h"
 #include "scalegen.h"
-
+#include "chordprint.h"
 
 #ifndef WIN32
 #include <unistd.h>
@@ -59,9 +59,9 @@ void print_modes_env( S_USERINFO*uinfo){
 }
 
 void print_triad_env (S_USERINFO*uinfo){
-   // if(!saved_progs ) return; 
+   // if(!saved_triads ) return; 
 
-    S_SAVED_TRIAD * tmp= uinfo->saved_progs;
+    S_SAVED_TRIAD * tmp= uinfo->saved_triads;
     if(!tmp) return;
     CPT i=1;
     tmp=tmp->next;
@@ -78,8 +78,28 @@ void print_triad_env (S_USERINFO*uinfo){
     printf(")\n");
 }
 
+void print_chprog_env (S_USERINFO*uinfo){
+   // if(!saved_triads ) return; 
+
+    S_SAVED_PROG * tmp= uinfo->saved_prog;
+    if(!tmp) return;
+    CPT i=1;
+    tmp=tmp->next;
+     printf("env prog (\n");
+    if(tmp){
+        while(tmp){
+            printf("\n%d",i++);
+            if(tmp->chprog){
+                print_chprog(tmp->chprog); 
+            }
+            tmp=tmp->next;
+        }
+    }
+    printf(")\n");
+}
+
 void print_dodec_env (S_USERINFO*uinfo){
-   // if(!saved_progs ) return; 
+   // if(!saved_triads) return; 
 
     S_SAVED_DODEC * tmp= uinfo->saved_dodecs;
     if(!tmp) return;
@@ -138,7 +158,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
         }
     }
 
-    S_SAVED_TRIAD * tmp2= user_info->saved_progs;
+    S_SAVED_TRIAD * tmp2= user_info->saved_triads;
      fprintf(f,")\nenv triad (\n");
     if(tmp2){
         while(tmp2){
@@ -160,6 +180,20 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
             tmp3=tmp3->next;
         }
     }
+
+
+    S_SAVED_PROG * tmp4= user_info->saved_prog;
+     fprintf(f,")\nenv prog (\n");
+    if(tmp4){
+        while(tmp4){
+            if(tmp4->chprog){
+                fprint_chord_prog(f,tmp4->chprog); 
+            }
+            tmp4=tmp4->next;
+        }
+    }
+
+    
     fprintf(f,")\n");
     return 1;
 }

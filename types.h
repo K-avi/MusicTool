@@ -96,7 +96,7 @@ typedef struct S_TRIAD_PROG{
 
 
 
-typedef unsigned short CHORD_EXT; //used to rpz chord w extensions
+typedef unsigned short CHORD; //used to rpz chord w extensions
   //first 4 bits r degree; 
   //next 11 bits r a scale interpreted as a chord 
   //last bit is an error flag
@@ -106,10 +106,10 @@ typedef unsigned short S_EXTENSIONS; //used to rpz extension in CHORD_EXt;
 //encoded the same way as S_SCALE but synonym cuz it makes me happier
 //uses the same error flag than S_SCALE due to it being the same thing in another context.
 
-typedef struct S_EXTCHPROG{
-  CHORD_EXT* chprog; 
+typedef struct S_CHPROG{
+  CHORD* chprog; 
   LENGTH length;
-}S_EXTCHPROG;
+}S_CHPROG;
 
 //////////////chord parsing///////////////
 
@@ -208,7 +208,7 @@ typedef struct S_LINKED_TRIAD{
 
 typedef struct S_LINKED_CHPROG{
 
-  S_EXTCHPROG* chprog; 
+  S_CHPROG* chprog; 
   struct S_LINKED_CHPROG* next;
 }S_SAVED_PROG; 
 
@@ -220,14 +220,14 @@ typedef struct  S_LINKED_DODEC{
 typedef struct{ 
     S_SAVED_MODES *saved_modes;
     S_SAVED_SCALES *saved_scales;
-    S_SAVED_TRIAD * saved_progs; //triads
+    S_SAVED_TRIAD * saved_triads; //triads
     S_SAVED_DODEC * saved_dodecs;
-    S_SAVED_PROG * saved_extprog;
-    CPT progs_num; //triads
+    S_SAVED_PROG * saved_prog;
+    CPT triads_num; //triads
     CPT scales_num;
     CPT modes_num;
     CPT dodec_num;
-    CPT extprog_num;
+    CPT prog_num;
 }S_USERINFO;
 
 #endif

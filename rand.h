@@ -12,6 +12,6 @@ extern PITCH_CLASS_SET select_rand_degree(PITCH_CLASS_SET deg);
 
 extern TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads);
 
-
+extern S_CHPROG* generate_ext_chprog( unsigned int argnum, ...);
 
 #endif

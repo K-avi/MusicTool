@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dodecseries.h"
-#include "chord.h"
+#include "chordgen.h"
 #include "globals.h"
 #include "harmo.h"
 #include "parseloop.h"
@@ -22,6 +22,8 @@
 #include "syntaxcheck.h"
 #include "dodecseries.h"
 
+#include "chordprint.h"
+#include "rand.h"
 
 #include <string.h>
 
@@ -57,7 +59,7 @@ int main(){
 
 
   //file_command_parseloop( "   examples/command_exp1.txt\n\n");
-//hehe
+//heheg
  // readparse("env examples/environment_ex1.txt", user_saved);
 
  // file_environment_parseloop("examples/environment_ex1.txt", user_saved);
@@ -263,7 +265,7 @@ int main(){
   
   //free(str);
 
-  //S_EXTCHPROG* prog= generate_ext_chprog(2, "-length=8", "-extmax=1");
+ // S_CHPROG* prog= generate_ext_chprog(1, "-scl={0 3 4 7}");
  // printf(" %p ", prog);
 
   //ext_print_chprog(prog);
@@ -274,7 +276,7 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
- // S_EXTCHPROG *aaa= str_to_chprog("[bVIIm add 2b63,,,,, b6; bVII+ add 4; bVII- add 6; bVII add 3,5,b2,2,b3,4,b5,5,b6,6,b7,7]");
+  S_CHPROG *aaa= str_to_chprog("[bVIIm add 2b63,,,,, b6; bVII+ add 4; bVII- add 6; bVII add 3,5,b2,2,b3,4,b5,5,b6,6,b7,7]");
   
  // ext_print_chprog(aaa);
  // prog->length=1; 

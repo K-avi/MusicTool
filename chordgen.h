@@ -5,7 +5,7 @@
 
 
 extern CHORD generate_chord_ext(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg, S_SCALE extensions);
-
+extern S_CHPROG *chprog_dup(  S_CHPROG* source);//not tested
 extern S_SCALE extprog_to_scl(const S_CHPROG* chprog);
 
 extern bool equals_extprog( S_CHPROG* chpr1, S_CHPROG* chpr2);

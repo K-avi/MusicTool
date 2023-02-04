@@ -274,11 +274,11 @@ S_CHPROG * duplicate_chprog( S_CHPROG * chprog){
 	return ret;
 }//not tested 
 
-void add_chprog( S_SAVED_PROG * saved_triads , S_CHPROG * chprog){
+void add_chprog( S_SAVED_PROG * saved_prog , S_CHPROG * chprog){
 	//duplicates a new instance of chprog into a saved_triads linked list
-	if(! (saved_triads && chprog)) return;
+	if(! (saved_prog && chprog)) return;
 
-	S_SAVED_PROG * tmp= saved_triads; 
+	S_SAVED_PROG * tmp= saved_prog; 
 
 	while (tmp->next) {
 		tmp= tmp->next;
@@ -298,7 +298,7 @@ void print_saved_chprog( S_USERINFO * user_data, INDEX index){
 		if(tmp->next)tmp=tmp->next;
 		i++;
 	}
-	if(!tmp){printf("2ND CHECK index superior to number of scales currently stored please enter a valid index; number of triad progs is : %d\n", user_data->triads_num); return; }
+	if(!tmp){printf("2ND CHECK index superior to number of progs currently stored please enter a valid index; number of progs is : %d\n", user_data->prog_num); return; }
 	print_chprog(tmp->chprog);
 }//not tested
 
@@ -350,7 +350,7 @@ void save_chprog( S_CHPROG* chprog , S_USERINFO * user_info){
 
 	INDEX index= chprog_in_saved(chprog, user_info->saved_prog);
   	if(index) { printf(" prog already in struct at index %d ; no triad prog saved\n", index-1); return;}
-	user_info->triads_num++;
+	user_info->prog_num++;
 	add_chprog(user_info->saved_prog, chprog);
 	printf("prog saved at index %d\n", user_info->prog_num);
 }

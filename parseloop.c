@@ -434,7 +434,9 @@ void chprogparse(char * line , S_USERINFO* user_saved){
     if(line[i]==10 || line[i]=='\0'){ printf("runtime chprogparse error\n"); return;}
     
     if(!strncmp(&line[i], "rand",4)){
-        generic_rand(&line[i+4], 'c');  
+        /*
+        need to cut the string to pass each options to the rand function of prog
+        */ 
 
     }else if(!strncmp(&line[i], "save",4)) {
          
@@ -476,15 +478,15 @@ void chprogparse(char * line , S_USERINFO* user_saved){
           }
           if(line[i]=='['){
             //printf("%s\n", &line[i]);
-            free_triad_prog(generated_triad);
-            generated_triad=str_to_triad_prog(&line[i]);
+            free_chord_prog(generated_prog);
+            generated_prog=str_to_chprog(&line[i]);
             
-            if(generated_triad!=NULL){
-              tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
-              printf("the scale containing the chprog parsed is:");
+            if(generated_prog!=NULL){
+              tmp_saved_scale=PCS_TO_SCALE(extprog_to_pcs(generated_prog));
+              printf("the scale containing the prog parsed is:");
               print_scale(tmp_saved_scale);
             }else{
-              printf("please parse a valid chprog\n");
+              printf("please parse a valid prog\n");
             }
           }else if(!strncmp(&line[i], "saved", 5)){
             i+=5;
@@ -493,24 +495,24 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             }
             indexx=parse_index(&line[i]);
             if(indexx!=-1){
-              free_triad_prog(generated_triad);
-              generated_triad=duplicate_triadprog(get_triadprog(user_saved, indexx)); 
+              free_chord_prog(generated_prog);
+              generated_prog=chprog_dup(get_chord_prog(user_saved, indexx)); 
               
               if(generated_triad!=NULL){
-                tmp_saved_scale=PCS_TO_SCALE(chprog_to_pcs(generated_triad));
-                printf("the scale containing the chprog at index parsed is:");
+                tmp_saved_scale=PCS_TO_SCALE(extprog_to_pcs(generated_prog));
+                printf("the scale containing the prog at index parsed is:");
                 print_scale(tmp_saved_scale);
               }else{
-                printf("placeholder error in inverse saved\n");
+                printf("placeholder error in toscale saved\n");
               }
             }
           }else if(END_OF_LINE_CHAR(line[i])){
-            if(tmp_triad){
-              tmp_saved_scale= PCS_TO_SCALE(chprog_to_pcs(tmp_triad));
-              printf("the scale containing the chprog in tmp_triad is:"); 
+            if(tmp_prog){
+              tmp_saved_scale= PCS_TO_SCALE(extprog_to_pcs(tmp_prog));
+              printf("the scale containing the prog in tmp_triad is:"); 
               print_scale(tmp_saved_scale);
             }else printf("no temporary saved scale to retrieve\n");
-          }else printf("runtime error in scale inverse\n");
+          }else printf("runtime error in prg toscale\n");
       }
 }
 

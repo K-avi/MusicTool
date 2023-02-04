@@ -18,7 +18,7 @@
 //temporary file where everything related to extended chords is stored; will be dispatched when extended 
 //chord implementation is done
 
-S_CHPROG *extchprogdup(  S_CHPROG* source){//copies a cp from dest 
+S_CHPROG *chprog_dup(  S_CHPROG* source){//copies a cp from dest 
 
    if(!source ) return NULL;
    if(!source->length) return NULL;

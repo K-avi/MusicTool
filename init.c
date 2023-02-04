@@ -9,6 +9,7 @@
 #include "user_info.h"
 #include "writeenv.h"
 #include "dodecseries.h"
+#include "chordgen.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -68,6 +69,22 @@ void free_saved_triads( S_SAVED_TRIAD * saved_triads){
 	}
 }
 
+void init_saved_prog(S_SAVED_PROG* saved_triads){
+	saved_triads->chprog=NULL;
+	saved_triads->next=NULL;
+}
+
+void free_saved_progs( S_SAVED_PROG * saved_prog){
+	if(!saved_prog) return;
+	S_SAVED_PROG* tmp;
+	while(saved_prog){
+		tmp=saved_prog;
+		if(tmp->chprog) free_chord_prog(tmp->chprog);
+		saved_prog=saved_prog->next;
+		free(tmp);
+	}
+}
+
 void init_saved_dodec(S_SAVED_DODEC* saved_dodecs){
   //initialises a saved scale struct
   saved_dodecs->serie=0;
@@ -92,16 +109,19 @@ void init_userinfo( S_USERINFO* user_data){
   user_data->saved_scales=malloc(sizeof(S_SAVED_SCALES)); //printf("saved scale pointer: %p\n", user_data->saved_scales);
   user_data->saved_triads= malloc(sizeof(S_SAVED_TRIAD));
   user_data->saved_dodecs=malloc(sizeof(S_SAVED_DODEC));
+  user_data->saved_prog= malloc(sizeof(S_SAVED_PROG));
 
   user_data->modes_num=0;
   user_data->scales_num=0;
   user_data->triads_num=0;
   user_data->dodec_num=0;
+  user_data->prog_num=0;
 
   init_saved_scale(user_data->saved_scales);
   init_saved_mode(user_data->saved_modes);
   init_saved_triads(user_data->saved_triads);
   init_saved_dodec(user_data->saved_dodecs);
+  init_saved_prog(user_data->saved_prog);
 }
 
 void free_userinfo( S_USERINFO* user_info){
@@ -109,6 +129,7 @@ void free_userinfo( S_USERINFO* user_info){
 	 free_saved_modes(user_info->saved_modes);
 	 free_saved_triads(user_info->saved_triads);
 	 free_saved_dodecs(user_info->saved_dodecs);
+	 free_saved_progs(user_info->saved_prog);
 	
 	free(user_info);
 }

@@ -849,6 +849,7 @@ SYNTAX_ERROR progparsecheck(char * str){
     char* tmp=str,*tmp1=str; 
     LENGTH length=1;
 
+    printf("str is: %s\n", str);
     CPT open_bracket_check=0, closed_bracket_check=0;
 
 
@@ -1167,7 +1168,8 @@ SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring c
 //in an env file string.
 
     SYNTAX_ERROR check= SYNTAX_GENERIC_ERROR;
-
+    char *cur_strchord=NULL; 
+    LENGTH l=0;
     while( *str!='('){ //found open parenthesis
         while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
         if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
@@ -1186,8 +1188,8 @@ SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring c
     while( *str!=')'){
         while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
 
-      
-        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+    
+        if(EOF_ENV(*str)) { if(cur_strchord) free(cur_strchord); return SYNTAX_MISSING_PAR;}
         else if( COMMENT_ENV(*str)) {  //skips the comment line
 
            // printf("skipping line\n");
@@ -1196,9 +1198,13 @@ SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring c
            
             continue;
         }else if (*str=='['){
-            
-            check= progparsecheck(str);
+            l=strcspn(str, "]");
+            if(cur_strchord) free(cur_strchord);
+            cur_strchord=strndup(str, l+1);
+            check= progparsecheck(cur_strchord);
             if(check){
+                
+                if(cur_strchord) free(cur_strchord);
                 return check;
             }else {
                 str= strstr(str, "]");
@@ -1210,10 +1216,12 @@ SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring c
             break;
         }else{
             //printf("%c in seeking ) inval\n", *str);
+            if(cur_strchord) free(cur_strchord);
             return SYNTAX_INVALID_CHAR;
         }
     }
     str++;
+    if(cur_strchord) free(cur_strchord);
     return SYNTAX_OK;
 }
 SYNTAX_ERROR env_dodec_check(char *str){
@@ -1263,7 +1271,7 @@ SYNTAX_ERROR env_dodec_check(char *str){
 }
 SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as one beeeg string.
 
-    if(!str) return SYNTAX_INVALID_ARG;
+    if(!str){ printf("null string caught\n"); return SYNTAX_INVALID_ARG;}
     char * tmp= str;
     SYNTAX_ERROR scheck=0;
 
@@ -1334,6 +1342,7 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                 tmp+=4;
                
                 scheck=env_prog_check(tmp);
+                printf("scheck : %d\n" ,scheck);
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;

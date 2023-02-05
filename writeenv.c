@@ -187,6 +187,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     if(tmp4){
         while(tmp4){
             if(tmp4->chprog){
+                printf("len is: %d\n", tmp4->chprog->length);
                 fprint_chord_prog(f,tmp4->chprog); 
             }
             tmp4=tmp4->next;

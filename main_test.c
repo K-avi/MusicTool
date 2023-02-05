@@ -275,10 +275,10 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
-  char *str ="  -length=3 -scl={ 0 3 4 7}" ;
+  char *str ="  -length=3 -scl={ 0 3 4 7} -extmax=1" ;
  
   S_CHPROG *aaa= generate_ext_chprog(str);
-  print_chprog(aaa);
+  fprint_chord_prog(stdout,aaa);
   
  // ext_print_chprog(aaa);
  // prog->length=1; 

@@ -62,7 +62,12 @@
                                     </li>
                                     <li>
                                         <a href="#p24">
-                                        4: dodecaphonic series/tone rows
+                                        4: abstract chord progressions 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p25">
+                                        5: dodecaphonic series/tone rows
                                         </a>
                                     </li>
                                 </ul>
@@ -76,32 +81,37 @@
                                 <ul>
                                     <li>
                                         <a href="#p31">
-                                        1: the scale command
+                                        1: the scale keyword
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p32">
-                                        2: the harmo command 
+                                        2: the harmo keyword
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p33">
-                                        3: the triad command
+                                        3: the triad keyword
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p34">
-                                        4: the dodec command
+                                        4: the prog keyword
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p35">
-                                        5: the read / write commands
+                                        5: the dodec keyword
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p36">
-                                        6: additionnal commands/syntax elements
+                                        6: the read / write keyword
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p37">
+                                        7: additionnal keywords/commands/syntax elements
                                         </a>
                                     </li>
                                 </ul>
@@ -218,11 +228,13 @@
                     A triad prog is a list of abstract triads using the degree notation of chords. An abstract triad consists on the root degree of the
                     triad relative to a tonic chord and the type of the triad. 
                     Due to it being easier to store , the triads are noted as such : 
-                    major triad: [DEGREE]
-                    minor triad: [DEGREE]m
-                    diminished triad: [DEGREE]-
-                    augmented triad: [DEGREE]+ 
-                    I didn't use ° to represent the diminished chord bc it's an UTF-8 character and I didn't feel like working with them.
+                   <br/>major triad: [DEGREE]
+                   <br/>minor triad: [DEGREE]m
+                   <br/>diminished triad: [DEGREE]-
+                   <br/>augmented triad: [DEGREE]+
+                   <br/>sus2 triad: [DEGREE]sus2 
+                   <br/>sus4 triad: [DEGREE]sus4 
+                    <br/>I didn't use ° to represent the diminished chord bc it's an UTF-8 character and I didn't feel like working with them.
                     
                     triad progs are noted between brackets. 
                     For example: the triad prog [ IVm, V, Im] represents the triad progression from a minor triad located at the fourth degree of a scale
@@ -230,11 +242,46 @@
                     if we take the C harmonic minor scale, the progression [ IVm , V, I]  would be Fm, G, Cm
 
                 </p>
-            </div>
-            <div id="p24">
+            </div><div id="p24">
                 <h4>
                 <em>
-                    II.4: what are MusicTool dodecaphonic series /tone rows :
+                    II.4: what are MusicTool chord progressions:
+                </em>
+                </h4>
+                <p class="text-left">
+                    A chord prog is a list of abstract chords using the degree notation of chords. An abstract chord consists on the root degree of the
+                    triad relative to a tonic chord and the type of the triad as well as the extensions of the triad, which is why it's called "chord". 
+                    Due to it being easier to store , the chords are noted as such : 
+                    <br/>major chords: [DEGREE] add i,j,..,n
+                    <br/>minor chords: [DEGREE]m add i,j,..,n
+                    <br/>diminished chords: [DEGREE]- add i,j,..,n
+                    <br/>augmented chords: [DEGREE]+ add i,j,..,n
+                    <br/>sus2 chords: [DEGREE]sus2 add i,j,..,n
+                    <br/>sus4 chords: [DEGREE]sus4 add i,j,..,n
+
+                    <br/>The "add" is necessary only if the chord has one or more extensions. The extensions are separated by ",". 
+                    if you wish to parse a triad (chord without extensions) you can simply write the chord without add.
+                   <br/>nb: I didn't use ° to represent the diminished chord bc it's an UTF-8 character and I didn't feel like working with them.
+                    
+                    chord progs are noted between brackets. 
+                    <br/>For example: the chord prog [ IIm add 7 ; V add b7 ; Iadd7] represents the chord progression from a IVmaj7 chord located at the fourth degree of a scale
+                    to a  dominant 7 chord located at the fifth to another major 7 one located on the tonic. 
+                    if we take the C harmonic major scale, the progression would be Dm7, G7, Cmaj7. 
+
+                    <br/><br/>Specifity of extension syntax: 
+
+                    <br/>-the notation of chords that omits the "add" is not supported. a Imaj7 chord HAS to be passed as "Iadd 7"
+                    <br/>-similarly, the extensions are written as degrees. A IV add 6,9 chord HAS to be written IVadd 6,2 (or IVadd2,6 the order doesn't matter)
+                    <br/>-the 7 always stands for major 7 degree and b7 for a minor 7th. Thus the chord Vadd7 is Vmaj7 and not V7. 
+                          a V7 chord is written Vaddb7.
+                          the same thing applies for every other extension.
+
+                </p>
+            </div>
+            <div id="p25">
+                <h4>
+                <em>
+                    II.5: what are MusicTool dodecaphonic series /tone rows :
                 </em>
                 </h4>
                 <p class="text-left">
@@ -368,11 +415,41 @@
                                     the notes of the prog n save it in tmp_scale; if passed without argument will generate the scale containing the notes of the prog in the tmp_triad and 
                                     put it in tmp_scale.
                     </p>
-                </div>
-                <div id="p34">
+                </div><div id="p34">
                     <h4>
                     <em>
-                        III.4: The dodec keyword
+                        III.4: The prog keyword
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        The prog keyword is used to pass commands on chord progs. The commands currenlty available are : 
+                        
+                        <br/><br/>-rand : can be passed without arguments, if passed like so a fully randomised chord prog will be generated. 
+                                    <br/> it can also be passed with one or more of the following args: 
+                                    <ul>
+                                        <li>-scl={..}</li> if the scale is valid and contains at least 1 chord,generates a prog with the scale in between brackets. Returns an error otherwise
+                                        <li>-scllen=N</li> generates a prog with a random scale of length scllen if the length is >2. NB: if -scl and -scllen are passed together, scllen will be ignored.
+                                        <li>-length=N</li> generates a prog of the length passed as argument.
+                                        <li>-extnum=N</li> generates a prog with exactly extnum extensions per chord when possible or the biggest amount of extensions inferior to extnum. 
+                                        <li>-extmax=N</li> generates a prog with maximum extmax extensions per chord. If passed with extnum, it will be ignored.
+                                    </ul>
+
+                                
+                        <br/><br/>-save : passed with one chord prog or no arguments; if passed with a chord prog will save the prog
+                                if passed without will save the temporary saved prog if it exists.
+                        <br/><br/>-print : passed with one integer argument or the env keyword prints the chord prog stored at index n if it exists or all the progs currenlty saved if passed with env. 
+                        <br/><br/>-remove : passed with one integer argument removes the prog stored at index n if it exists 
+                                  and reindexes the remaining saved progs.
+                        <br/><br/>-toscale : can be passed with a chord prog arg, "saved n" arg or w/o args. If passed with a prog will generate the scale containing each note
+                                    of the prog passed and save it in tmp_scale. If passed with a "saved n" arg will retrieve the prog saved at index n and generate the scale containing
+                                    the notes of the prog n save it in tmp_scale; if passed without argument will generate the scale containing the notes of the prog in the tmp_triad and 
+                                    put it in tmp_scale.
+                    </p>
+                </div>
+                <div id="p35">
+                    <h4>
+                    <em>
+                        III.5: The dodec keyword
                     </em>
                     </h4>
                     <p class="text-left">
@@ -407,10 +484,10 @@
 
                     </p>
                 </div>
-                <div id="p35">
+                <div id="p36">
                     <h4>
                     <em>
-                        III.5: The read/write keywords
+                        III.6: The read/write keywords
                     </em>
                     </h4>
                     <p class="text-left">
@@ -424,10 +501,10 @@
                                     will create it and write the current environment on it. 
                     </p>
                 </div>
-                <div id="p36">
+                <div id="p37">
                     <h4>
                     <em>
-                        III.6: Other keywords/syntax elements
+                        III.7: Other keywords/syntax elements
                     </em>
                     </h4>
                     <p class="text-left">
@@ -478,8 +555,10 @@
                         writing down harmonised scales works the same as scales except the environment must begin by 
                         env harmo" 
                         writing down a triad prog env also works the same except the env must begin by "env triad".
-                        finally, dodecaphonic series environment works similarly, but the environment must begin with 
+                        dodecaphonic series environment works similarly, but the environment must begin with 
                         "env dodec".
+                        chord prog environment works similarly, but the environment must begin with 
+                        "env prog".
                         Multiple environments can be written in a single environment file.
                     </p>
                 </div>

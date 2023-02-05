@@ -1069,7 +1069,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
         triadprogparse(&line[l+6], user_saved);
         
       }else if(!strncmp(&line[l], "prog", 4)){
-        printf("here");
+     
         chprogparse(&line[l+4] , user_saved);
         
       }else if(!strncmp(&line[l], "dodec", 5)){

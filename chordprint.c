@@ -134,6 +134,6 @@ void fprint_chord_prog( FILE* f, S_CHPROG* prog){
       fprint_ext_chord(f,prog->chprog[i]);
       fprintf(f," ; ");
     }
-    print_ext_chord(prog->chprog[l-1]); 
+    fprint_ext_chord(f,prog->chprog[l-1]); 
     fprintf(f," ]\n");
 }

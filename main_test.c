@@ -275,7 +275,7 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
-  char *str ="  -length=3 -scl={ 0 3 4 7} -extmax=1" ;
+  char *str ="  -length=3 -scllen=7 -extnum=1" ;
  
   S_CHPROG *aaa= generate_ext_chprog(str);
   fprint_chord_prog(stdout,aaa);

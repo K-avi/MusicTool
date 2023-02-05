@@ -916,6 +916,7 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
 
    // printf("reached prog randarg check: str is: %s\n" , str );
     if(! (str && size) )return SYNTAX_GENERIC_ERROR;
+   // printf("in prog rand arg check str is %s\n ", str);
     char * tmp=str;
     while (NEUTRAL_CHAR(*tmp)) tmp++;
     if(!strncmp(tmp, "-length=",8)){
@@ -925,8 +926,11 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
             if(isdigit(*(tmp))){
               
               while(isdigit(*tmp)){(*size)++; tmp++; }
-              (*size)++;
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+              
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                 return SYNTAX_OK;
+              }
             }
     }else if(!strncmp(tmp, "-scllen=", 8)){
             *size=8;
@@ -934,8 +938,11 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
             if(isdigit(*(tmp))){
               
               while(isdigit(*tmp)) { tmp++; (*size)++;}
-               (*size)++;
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+             
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 //if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                 return SYNTAX_OK;
+              }
             }
     }else if(!strncmp(tmp, "-extnum=", 8)){  
             tmp+=8;
@@ -943,8 +950,10 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
             if(isdigit(*(tmp))){
               
               while(isdigit(*tmp)) { tmp++; (*size)++;}
-              (*size)++;
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                 return SYNTAX_OK;
+              }
             }
     }else if(!strncmp(tmp, "-extmax=", 8)){  
             tmp+=8;
@@ -952,8 +961,11 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
             if(isdigit(*(tmp))){
               
               while(isdigit(*tmp)) { tmp++; (*size)++;}
-              (*size)++;
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-') return SYNTAX_OK;
+              
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                 return SYNTAX_OK;
+              }
             }
     }else if(!strncmp(tmp, "-scl=", 5)){      
             tmp+=5;
@@ -971,24 +983,26 @@ SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is
             while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
             if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
     }
+   
+    printf("str is %s\n tmp is %s\n", str, tmp);
     return SYNTAX_INVALID_ARG;
 }
 
 SYNTAX_ERROR prograndcheck(char * str){
     
     char * tmp=str , *tmp1=str; 
-   
+    //printf("in progrand check str is : %s\n" , str);
     SYNTAX_ERROR check = SYNTAX_OK;
 
     if(!emptycheck( tmp1)) return  SYNTAX_OK;
     int *size= malloc(sizeof(int));
 
     while( !END_OF_LINE_CHAR(*tmp)){
-        
+        *size=0;
         check= prograndargcheck( tmp , size);
         if(check) {free(size); return check;}
         tmp+=(*size);
-        while(NEUTRAL_CHAR(*tmp)) tmp++;
+        while(NEUTRAL_CHAR(*tmp)){ tmp++; }
     }
     free(size);
     return SYNTAX_OK;

@@ -11,7 +11,7 @@
 #include "misc.h"
 #include "parsing.h"
 #include "chordgen.h"
-
+#include "chordprint.h"
 #include <stdarg.h>
 #include <string.h>
 
@@ -252,13 +252,13 @@ S_CHPROG* generate_ext_chprog( char * args){
             }
           
         }else if(!strncmp(tmp, "-extmax=", 8)){  
-          printf("-extmax spotted\n");
+        //  printf("-extmax spotted\n");
             tmp+=8;
             if(isdigit(*(tmp))){
               extension_max= atoi(tmp);
             }
           
-          printf("%d\n", extension_max);
+          //printf("%d\n", extension_max);
         
        }else if(!strncmp(tmp, "-scl=", 5)){  
             tmp+=5;    
@@ -320,7 +320,7 @@ S_CHPROG* generate_ext_chprog( char * args){
       ret->chprog= malloc(proglength* sizeof( CHORD));
       ret->length=proglength;
   
-      if(count_bits(relevant_deg)==1 && extension_total==0 ){ //case when 1 chord only can be generated
+      if( (count_bits(relevant_deg)==1 && extension_total==0) ){ //case when 1 chord only can be generated
          selected_deg=select_rand_degree(relevant_deg);
          curmode= rot( scl, nth_bit_pos(selected_deg, 1));
          curtriads=triads_at_fund(curmode); 
@@ -358,9 +358,19 @@ S_CHPROG* generate_ext_chprog( char * args){
                 }else{
                   extension_num= extension_num>extension_total ? extension_total: extension_num;  
                   curchord= ext_gen_chord(curchord, extension_num, extension_total, seltriads);
-                  if(prevchord==curchord){
+                 // print_ext_chord(curchord);
+                  if( prevchord==curchord ){
                     while(prevchord==curchord){
-                      curchord= ext_gen_chord(curchord, extension_num, extension_total, seltriads);
+                      //printf("uhoh\n");
+                       selected_deg= select_rand_degree(relevant_deg);
+                       selected_deg_converted= get_deg_from_chdeg(selected_deg);
+                        
+                       curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+                       curtriads=triads_at_fund(curmode); 
+                  
+                       seltriads=select_rand_triads(curtriads);
+                       curchord=selected_deg_converted | (curmode <<4);
+                       curchord= ext_gen_chord(curchord, extension_num, extension_total, seltriads);
                     }
                   }
                 }
@@ -370,6 +380,14 @@ S_CHPROG* generate_ext_chprog( char * args){
                   curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
                   if(prevchord==curchord){
                     while(prevchord==curchord){
+                        selected_deg= select_rand_degree(relevant_deg);
+                       selected_deg_converted= get_deg_from_chdeg(selected_deg);
+                        
+                       curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+                       curtriads=triads_at_fund(curmode); 
+                  
+                       seltriads=select_rand_triads(curtriads);
+                       curchord=selected_deg_converted | (curmode <<4);
                         curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
                     }
                   }
@@ -378,6 +396,14 @@ S_CHPROG* generate_ext_chprog( char * args){
                   curchord= ext_gen_chord(curchord, (rand() % (extension_max + 1)) , extension_total, seltriads);
                   if(prevchord==curchord){
                     while(prevchord==curchord){
+                      selected_deg= select_rand_degree(relevant_deg);
+                       selected_deg_converted= get_deg_from_chdeg(selected_deg);
+                        
+                       curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+                       curtriads=triads_at_fund(curmode); 
+                  
+                       seltriads=select_rand_triads(curtriads);
+                       curchord=selected_deg_converted | (curmode <<4);
                       curchord= ext_gen_chord(curchord, (rand()% (extension_max+1)), extension_total, seltriads);
                       }
                     }
@@ -387,6 +413,14 @@ S_CHPROG* generate_ext_chprog( char * args){
                 curchord= ext_gen_chord(curchord, (rand()% (extension_total+1)), extension_total, seltriads);
                 if(prevchord==curchord){
                   while(prevchord==curchord){
+                     selected_deg= select_rand_degree(relevant_deg);
+                       selected_deg_converted= get_deg_from_chdeg(selected_deg);
+                        
+                       curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+                       curtriads=triads_at_fund(curmode); 
+                  
+                       seltriads=select_rand_triads(curtriads);
+                       curchord=selected_deg_converted | (curmode <<4);
                       curchord= ext_gen_chord(curchord, (rand()% (extension_total+1)), extension_total, seltriads);
                   }
                 }
@@ -396,6 +430,14 @@ S_CHPROG* generate_ext_chprog( char * args){
               curchord= ext_gen_chord(curchord, 0, 0, seltriads);
               if(prevchord==curchord){
                 while(prevchord==curchord){
+                  selected_deg= select_rand_degree(relevant_deg);
+                       selected_deg_converted= get_deg_from_chdeg(selected_deg);
+                        
+                       curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+                       curtriads=triads_at_fund(curmode); 
+                  
+                       seltriads=select_rand_triads(curtriads);
+                       curchord=selected_deg_converted | (curmode <<4);
                     curchord= ext_gen_chord(curchord, 0, 0, seltriads);
                 }
               }

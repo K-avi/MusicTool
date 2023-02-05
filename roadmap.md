@@ -70,10 +70,7 @@ compile MusicTool w/o syntaxchecking:
     not done yet 
 
 
-
 rand will break mtool if u pass -extnum > ext_total; gotta fix it 
-
-guarantee scl generation when -scllen is passed ( build from a random triad n add notes?)
 
 make triad rand behave like prog rand
 

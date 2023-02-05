@@ -278,7 +278,21 @@ S_CHPROG* generate_ext_chprog( char * args){
       
 
       if(scllen){ //sets scl if scllen is set 
-        scl=generate_ran_scale(scllen);
+        if(scllen<7){
+
+          if(scllen<3){ return NULL;}
+          TRIADS_IN_SCALE triad= select_rand_triads(0x3F); //selects a random triad;
+         
+          scl= triad_in_scl_to_chord(triad);    
+        
+          for(CPT i =0; i<(scllen-3); i++){
+            add_rand_note(&scl);
+          }
+        }else if (scllen<12){
+          scl=generate_ran_scale(scllen);
+        }else{ 
+          scl=0x7FF;
+        }
       }else if(!scl){ //sets scale if not the case
         scl=generate_ran_scale(rand()%4+7);
       }

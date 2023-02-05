@@ -21,6 +21,8 @@ extern TRIADS_BITS triad_in_scl_to_triad_bits( TRIADS_IN_SCALE triads);
 
 extern void free_chord_prog(S_CHPROG* source);
 
+extern CHORD triad_in_scl_to_chord( TRIADS_IN_SCALE triads);
+
 #ifdef DEBUG 
 extern PITCH_CLASS_SET extprog_to_pcs(const S_CHPROG* chprog); 
 extern void print_pcs( const PITCH_CLASS_SET pcs);

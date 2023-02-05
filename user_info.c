@@ -259,20 +259,6 @@ CPT serie_in_saved (S_DODEC serie, S_SAVED_DODEC * saved_dodecs){//returns the i
 
 ////////////////CHORD PROG ///////////////////
 
-S_CHPROG * duplicate_chprog( S_CHPROG * chprog){ 
-	//duplicates chprog into a new chord_prog;
-
-	if(!chprog) return NULL; 
-	if(!chprog->length) return NULL;
-
-	S_CHPROG * ret= malloc(sizeof(S_CHPROG));
-
-	ret->length=chprog->length; 
-	ret->chprog=malloc(chprog->length* sizeof(CHORD)); 
-	memcpy(ret->chprog, chprog->chprog, chprog->length);
-
-	return ret;
-}//not tested 
 
 void add_chprog( S_SAVED_PROG * saved_prog , S_CHPROG * chprog){
 	//duplicates a new instance of chprog into a saved_triads linked list
@@ -285,7 +271,9 @@ void add_chprog( S_SAVED_PROG * saved_prog , S_CHPROG * chprog){
 	}
 	S_SAVED_PROG* tmp1= malloc(sizeof(S_SAVED_PROG));
 	tmp1->next=NULL; 
-	tmp1->chprog=  duplicate_chprog(chprog); //allocates new chprog ; 
+	tmp1->chprog=  chprog_dup(chprog); //allocates new chprog ; 
+	printf("duplicate is: \n");
+	print_chprog(tmp1->chprog);
 
 	tmp->next=tmp1;
 }//not tested 

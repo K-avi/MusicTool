@@ -2,8 +2,6 @@ CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter -std=c17
 #CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 
-PROGRAMS =   smtool MusicTool
-ALLPROGS = smtool MusicTool test
 .PHONY:	all clean
 
 all: $(ALLPROGS)
@@ -18,7 +16,8 @@ MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o triadgen.o 
 
 smtool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o triadgen.o triadprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o chordgen.o chordprint.o main_command.o
 	$(CC) -o $@ $(CFLAGS) $^
-	
+
+
 %.o:%.c %.h
 	$(CC)  $(GCC_FLAGS) -c  $<
 

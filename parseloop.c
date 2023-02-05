@@ -437,6 +437,27 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         /*
         need to cut the string to pass each options to the rand function of prog
         */ 
+        LENGTH l =0; 
+
+        char * tmp= &line[i]+4; 
+
+        while(!END_OF_LINE_CHAR(*tmp)){
+          if(*tmp=='-') l++;
+          tmp++;
+        }
+        if(l){
+          if(tmp_prog)free_chord_prog(tmp_prog);
+          tmp_prog= generate_ext_chprog(&line[i+4]);
+          if(!tmp_prog){
+            printf("couldn't generate a prog with given parameters; please try again\n");
+          }else{
+            print_chprog(tmp_prog);
+          }
+        }else { 
+          if(tmp_prog)free_chord_prog(tmp_prog);
+          tmp_prog= generate_ext_chprog(NULL);
+          print_chprog(tmp_prog);
+        }
 
     }else if(!strncmp(&line[i], "save",4)) {
          
@@ -444,12 +465,16 @@ void chprogparse(char * line , S_USERINFO* user_saved){
          while(NEUTRAL_CHAR(line[i])) i++;
          if(line[i]=='['){
             S_CHPROG * ch_parsed= str_to_chprog(&line[i]);
+            printf("%s\n", &line[i]);
+            print_chprog(ch_parsed);
             if(!ch_parsed){
                 printf("couldn't parse a chord prog, please pass a correct chord prog\n");
 
             }else{
               save_chprog(ch_parsed, user_saved);
+              print_chprog(ch_parsed);
               free_chord_prog(ch_parsed);
+              print_saved_chprog(user_saved, 1);
             }
          }else if(END_OF_LINE_CHAR(line[i])){
          
@@ -457,7 +482,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
               save_chprog(tmp_prog, user_saved);
               print_chprog(tmp_prog);
               free_chord_prog(tmp_prog);
-              tmp_triad=NULL;
+              tmp_prog=NULL;
 
             }else{
               printf("no temporary prog saved\n");
@@ -482,7 +507,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             generated_prog=str_to_chprog(&line[i]);
             
             if(generated_prog!=NULL){
-              tmp_saved_scale=PCS_TO_SCALE(extprog_to_pcs(generated_prog));
+              tmp_saved_scale=extprog_to_scl(generated_prog);
               printf("the scale containing the prog parsed is:");
               print_scale(tmp_saved_scale);
             }else{
@@ -499,7 +524,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
               generated_prog=chprog_dup(get_chord_prog(user_saved, indexx)); 
               
               if(generated_triad!=NULL){
-                tmp_saved_scale=PCS_TO_SCALE(extprog_to_pcs(generated_prog));
+                tmp_saved_scale=extprog_to_scl(generated_prog);
                 printf("the scale containing the prog at index parsed is:");
                 print_scale(tmp_saved_scale);
               }else{
@@ -508,7 +533,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
             }
           }else if(END_OF_LINE_CHAR(line[i])){
             if(tmp_prog){
-              tmp_saved_scale= PCS_TO_SCALE(extprog_to_pcs(tmp_prog));
+              tmp_saved_scale= extprog_to_scl(generated_prog);
               printf("the scale containing the prog in tmp_triad is:"); 
               print_scale(tmp_saved_scale);
             }else printf("no temporary saved scale to retrieve\n");
@@ -557,6 +582,8 @@ void clearglobals(){
     if(parsed_modes) free(parsed_modes);
     if( modes) free(modes);
     if(tmp_matrix) free(tmp_matrix);
+    free_chord_prog(generated_prog);
+    free_chord_prog(tmp_prog);
     free_triad_prog(generated_triad);
     free_triad_prog(tmp_triad);
   
@@ -830,7 +857,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
         char* tmp= &line[i+8];
         ushort line_env= line_num+1;
         u_char nxt_chr= next_not_blank_comment( tmp, '(');
-        S_TRIAD_PROG *tmp_prog=NULL;
+        S_CHPROG *prog_to_parse=NULL;
 
         if(nxt_chr==1){
          while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
@@ -841,9 +868,9 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
               ++line_num; continue;//empty line or comment
             }else{      
-              tmp_prog=str_to_triad_prog(&line[i]);
-              save_triadprog( tmp_triad, user_info);
-              free_triad_prog(tmp_triad);      
+              prog_to_parse=str_to_chprog(&line[i]);
+              save_chprog( prog_to_parse, user_info);
+              free_chord_prog(prog_to_parse);      
             }
           }
           if(!f){
@@ -864,11 +891,11 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
                 if(line[i]== '\n' || line[i]=='#') { 
                   ++line_num; continue;//empty line or comment
                 }else{
-                  tmp_triad=str_to_triad_prog(&line[i]);
+                  prog_to_parse=str_to_chprog(&line[i]);
                   //printf("%s\n", line);
-                  print_triad_prog(tmp_triad);
-                  save_triadprog( tmp_triad, user_info);
-                  free_triad_prog(tmp_triad);
+                  print_chprog(prog_to_parse);
+                  save_chprog( prog_to_parse, user_info);
+                  free_chord_prog(prog_to_parse);
                 }
               }
               if(!f){
@@ -879,7 +906,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
             }else if( nxt_chr==2){
               continue;
             }else{
-               printf("runtime error at line: %d no open parentheses after triad env\n", line_env);
+               printf("runtime error at line: %d no open parentheses after prog env\n", line_env);
                free(clean_filename);
                fclose(f);
                return;
@@ -1029,16 +1056,21 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       }
         
       while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ) l++;
-
+     
       if(line[l]== 10 || line[l]=='#') { ++line_num; continue;}//empty line or comment
+      
       else if(!strncmp(&line[l], "scale ",6)){     
         scaleparse(&line[l+6], user_saved);
         
       }else if(!strncmp(&line[l], "harmo",5)){
-        harmoparse(&line[l]+5, user_saved);
+        harmoparse(&line[l+5], user_saved);
         
       }else if(!strncmp(&line[l], "triad", 5)){
         triadprogparse(&line[l+6], user_saved);
+        
+      }else if(!strncmp(&line[l], "prog", 4)){
+        printf("here");
+        chprogparse(&line[l+4] , user_saved);
         
       }else if(!strncmp(&line[l], "dodec", 5)){
         dodecparse(&line[l+6], user_saved);
@@ -1212,6 +1244,9 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   }else if(!strncmp(keyword, "-triad",6 )){
       syntaxcheck=triadcheck(command);
       if(!syntaxcheck) triadprogparse( command, user_info);
+  }else if(!strncmp(keyword, "-prog",5 )){
+      syntaxcheck=progcheck(command);
+      if(!syntaxcheck) chprogparse( command, user_info);
   }else if(!strncmp(keyword, "-dodec",5 )){
       syntaxcheck=dodeccheck(command);
       if(!syntaxcheck) dodecparse( command, user_info);

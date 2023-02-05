@@ -63,14 +63,32 @@ saving:
 
 frontend implementation: 
 
-    not done yet 
+    done 
 
 compile MusicTool w/o syntaxchecking: 
 
     not done yet 
 
 
-1.3.2 : s
+
+
+
+
+
+
+
+fix write env 
+
+update docu ; 
+
+make triad rand behave like prog rand
+
+make triad rand behave like prog rand
+
+possibility to compile w/o syntaxchecking (gonna do later)
+
+
+1.3.2 : 
 
 Chordbook: 
 

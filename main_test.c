@@ -36,8 +36,7 @@ int main(){
   setbuf(stdin, NULL);
   setbuf(stdout, NULL);
 
-  user_data=malloc(sizeof(S_USERINFO));
-  init_userinfo(user_data);
+
 
 
  /* char *str= "[II, V,I]";
@@ -276,16 +275,19 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
-  S_CHPROG *aaa= str_to_chprog("[bVIIm add 2b63,,,,, b6; bVII+ add 4; bVII- add 6; bVII add 3,5,b2,2,b3,4,b5,5,b6,6,b7,7]");
+  char *str ="  -length=3 -scl={ 0 3 4 7}" ;
+ 
+  S_CHPROG *aaa= generate_ext_chprog(str);
+  print_chprog(aaa);
   
  // ext_print_chprog(aaa);
  // prog->length=1; 
  // prog->chord_prog=&aaaa;
  // print_triad_prog(prog);
- // if(aaa) {
- //   if(aaa->chprog)free(aaa->chprog); 
- //   free(aaa);
- // }
+  if(aaa) {
+    if(aaa->chprog)free(aaa->chprog); 
+    free(aaa);
+  }
 
   
   return 0;

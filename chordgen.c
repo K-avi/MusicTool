@@ -18,7 +18,7 @@
 //temporary file where everything related to extended chords is stored; will be dispatched when extended 
 //chord implementation is done
 
-S_CHPROG *chprog_dup(  S_CHPROG* source){//copies a cp from dest 
+S_CHPROG *chprog_dup(  S_CHPROG* source){//copies a cp from source
 
    if(!source ) return NULL;
    if(!source->length) return NULL;
@@ -27,10 +27,10 @@ S_CHPROG *chprog_dup(  S_CHPROG* source){//copies a cp from dest
    S_CHPROG* ret=malloc(sizeof(S_CHPROG));
    ret->length=source->length;
    ret->chprog=malloc(source->length* sizeof(CHORD));
-   memcpy( ret->chprog, source->chprog, source->length);
-
+   memcpy( ret->chprog, source->chprog, source->length*sizeof(CHORD));
+  
    return ret;
-}//not tested
+}//tested
 
 
 void free_chord_prog(S_CHPROG* source){
@@ -88,13 +88,24 @@ PITCH_CLASS_SET extchord_to_pcs(CHORD chord){
 
   if(!chord ) return 0;
   
-  BITS ret= chord >>4;
+  BITS ret= chord >>3;
   BITS degree = chord & 15;
 
   if(!ret )return 0;
 
   return rot_pcs(ret, degree);
 }//not tested 
+
+S_SCALE chord_to_scl( CHORD chord){
+   if(!chord ) return 0;
+  
+  BITS ret= chord >>4;
+  BITS degree = chord & 15;
+
+  if(!ret )return 0;
+
+  return rot(ret, degree);
+}
 
 PITCH_CLASS_SET extprog_to_pcs(const S_CHPROG* chprog){
   PITCH_CLASS_SET ret= 0;
@@ -105,8 +116,13 @@ PITCH_CLASS_SET extprog_to_pcs(const S_CHPROG* chprog){
   return ret;
 } //not tested 
 
-S_SCALE extrog_to_scl(const S_CHPROG* chprog){
-  return extprog_to_pcs(chprog)>>1;
+S_SCALE extprog_to_scl(const S_CHPROG* chprog){
+  PITCH_CLASS_SET ret= 0;
+  for (INDEX cpt =0; cpt < chprog->length ; cpt ++){
+    
+    ret|= chord_to_scl(chprog->chprog[cpt]);
+  }
+  return ret;
 }// tested 
 
 

@@ -106,7 +106,7 @@ CPT nb_deg( TRIADS_IN_SCALE* scl_triads, LENGTH length){//returns the number of 
    return ret;
 }
 
-S_TRIAD_PROG *chprogdup(  S_TRIAD_PROG* source){//copies a cp from dest 
+S_TRIAD_PROG *triadprogdup(  S_TRIAD_PROG* source){//copies a cp from dest 
 
    if(!source ) return NULL;
    if(!source->length) return NULL;

@@ -166,7 +166,7 @@ CHORD ext_gen_chord  (CHORD chord, CPT extension_num, CPT extension_total, TRIAD
 
 
 
-S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
+S_CHPROG* generate_ext_chprog( char * args){
    /*
    should be able to take arguments 
   -length=n | rand
@@ -174,7 +174,7 @@ S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
   -scale={...} | rand 
   -extnum=1...n | rand ; should be made more complete after that (like min ext max ext etcs)
    */
-  if(argnum==0){/*generation without arguments is gonna be goofy; I don't 
+  if(!args){/*generation without arguments is gonna be goofy; I don't 
   want it to rely on a specific scale. It's gonna change scale at each chord because I said so*/
 
       LENGTH proglength= rand()%10+1; //proglength between 1 and 10 
@@ -223,38 +223,59 @@ S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
       return ret;
       
   }else{ 
-      va_list ap;
-      va_start(ap, argnum);
+      
 
       CPT i=0 ;
-      char* arg;
+      char* tmp=args;
       LENGTH proglength=0, scllen=0;
+      char extension_num=-1;
       char extension_max=-1;
+     
       S_SCALE scl=0;
 
-      for(i=0; i<argnum; i++){//retrieves the arguments for generation. 
-        arg=va_arg(ap, char*); 
-        if(!strncmp(arg, "-length=",8)){
-            if(isdigit(*(arg+8))){
-              proglength=atoi(arg+8); 
+      while (!END_OF_LINE_CHAR(*tmp)) {//retrieves the arguments for generation. 
+        
+        if(!strncmp(tmp, "-length=",8)){
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              proglength=atoi(tmp); 
             }
-        }else if(!strncmp(arg, "-scllen=", 8)){
-            if(isdigit(*(arg+8))){
-              scllen=atoi(arg+8); 
+        }else if(!strncmp(tmp, "-scllen=", 8)){
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              scllen=atoi(tmp); 
             }
-        }else if(!strncmp(arg, "-extmax=", 8)){  
-            if(isdigit(*(arg+8))){
-              extension_max= atoi(arg+8);
+        }else if(!strncmp(tmp, "-extnum=", 8)){  
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              extension_num= atoi(tmp);
             }
           
-        }else if(!strncmp(arg, "-scl=", 5)){      
-            scl=parse_scale(arg+5);
-        }//default behavior for invalid args is to ignore them; might be bad dunno
+        }else if(!strncmp(tmp, "-extmax=", 8)){  
+          printf("-extmax spotted\n");
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              extension_max= atoi(tmp);
+            }
+          
+          printf("%d\n", extension_max);
+        
+       }else if(!strncmp(tmp, "-scl=", 5)){  
+            tmp+=5;    
+            scl=parse_scale(tmp);
+        }else{//default behavior for invalid args is to ignore them; might be bad dunno
+            tmp++;
+        }
       }
-      va_end(ap);
+
 
       if(scl && scllen) scllen=0; /*scl and scllen are mutually exclusive; scl is more important I think.
       this behavior might change idk yet*/
+
+      if(extension_max!=-1 && extension_num!=-1){//exension_num is privileged over extension_max bc I said so
+        extension_max=-1;
+      }
+      
 
       if(scllen){ //sets scl if scllen is set 
         scl=generate_ran_scale(scllen);
@@ -266,13 +287,9 @@ S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
         proglength=rand()%10+1;
       }
 
-      if(extension_max==-1){
-        extension_max=9;
-      }
-
-      CPT extension_num= count_bits(scl)-2;
-      extension_num= extension_num<0 ? 0 : extension_num; //prevents it from being negative
-      CHORD curchord= 0; //chord to pop extensions from 
+      CPT extension_total= count_bits(scl)-2;
+      extension_total= extension_total<0 ? 0 : extension_total; //prevents it from being negative
+      CHORD curchord= 0 ,prevchord=0;  //chord to pop extensions from 
 
       PITCH_CLASS_SET relevant_deg= get_degrees(scl); //gets deg of scl 
       if(!relevant_deg) return NULL; //case if scale doesnt contain any chords
@@ -283,33 +300,97 @@ S_CHPROG* generate_ext_chprog( unsigned int argnum, ...){
       S_SCALE curmode = 0;
       TRIADS_IN_SCALE curtriads= 0;
       TRIADS_IN_SCALE seltriads= 0;
+       
   
       S_CHPROG *ret=  malloc( sizeof(S_CHPROG));
       ret->chprog= malloc(proglength* sizeof( CHORD));
       ret->length=proglength;
-      
-      for(CPT i=0; i<proglength; i++){
-
-        selected_deg= select_rand_degree(relevant_deg);
-        selected_deg_converted= get_deg_from_chdeg(selected_deg);
-        
-        curmode= rot( scl, nth_bit_pos(selected_deg, 1));
-        curtriads=triads_at_fund(curmode); 
   
-        seltriads=select_rand_triads(curtriads);
-        curchord=selected_deg_converted | (curmode <<4);
+      if(count_bits(relevant_deg)==1 && extension_total==0 ){ //case when 1 chord only can be generated
+         selected_deg=select_rand_degree(relevant_deg);
+         curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+         curtriads=triads_at_fund(curmode); 
+      
+         seltriads=select_rand_triads(curtriads);
+         curchord=selected_deg_converted | (curmode <<4);
+         for(CPT i=0; i<proglength; i++){
+            ret->chprog[i] = curchord;
+         }
+      }else{ //1 or more chord can be generated 
+      
+          for(CPT i=0; i<proglength; i++){
 
-        if(extension_num ){
-          if(!extension_max){
-            curchord= ext_gen_chord(curchord,0 , extension_num, seltriads);
-          }else{
-            extension_max= extension_max>extension_num ? extension_num: extension_max;
-            curchord= ext_gen_chord(curchord, rand()%extension_num, extension_max, seltriads);
+            selected_deg= select_rand_degree(relevant_deg);
+            selected_deg_converted= get_deg_from_chdeg(selected_deg);
+            
+            curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+            curtriads=triads_at_fund(curmode); 
+      
+            seltriads=select_rand_triads(curtriads);
+            curchord=selected_deg_converted | (curmode <<4);
+
+            if(extension_total ){
+
+              if(extension_num!=-1){
+                
+                if(!extension_num){
+              
+                  curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
+                  if(prevchord==curchord){
+                    while(prevchord==curchord){
+                        curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
+                    }
+                  }
+                }else{
+                  extension_num= extension_num>extension_total ? extension_total: extension_num;  
+                  curchord= ext_gen_chord(curchord, extension_num, extension_total, seltriads);
+                  if(prevchord==curchord){
+                    while(prevchord==curchord){
+                      curchord= ext_gen_chord(curchord, extension_num, extension_total, seltriads);
+                    }
+                  }
+                }
+              }else if (extension_max!=-1){
+                if(!extension_max){
+                
+                  curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
+                  if(prevchord==curchord){
+                    while(prevchord==curchord){
+                        curchord= ext_gen_chord(curchord,0 , extension_total, seltriads);
+                    }
+                  }
+                }else{
+                  extension_max= extension_max>extension_total ? extension_total: extension_max;  
+                  curchord= ext_gen_chord(curchord, (rand() % (extension_max + 1)) , extension_total, seltriads);
+                  if(prevchord==curchord){
+                    while(prevchord==curchord){
+                      curchord= ext_gen_chord(curchord, (rand()% (extension_max+1)), extension_total, seltriads);
+                      }
+                    }
+                } 
+              }else {
+                
+                curchord= ext_gen_chord(curchord, (rand()% (extension_total+1)), extension_total, seltriads);
+                if(prevchord==curchord){
+                  while(prevchord==curchord){
+                      curchord= ext_gen_chord(curchord, (rand()% (extension_total+1)), extension_total, seltriads);
+                  }
+                }
+              }
+            }else{
+       
+              curchord= ext_gen_chord(curchord, 0, 0, seltriads);
+              if(prevchord==curchord){
+                while(prevchord==curchord){
+                    curchord= ext_gen_chord(curchord, 0, 0, seltriads);
+                }
+              }
+            }
+          
+
+            ret->chprog[i] = curchord;
+            prevchord=curchord;
           }
-        }else{
-          curchord= ext_gen_chord(curchord, 0, 0, seltriads);
-        }
-        ret->chprog[i] = curchord;
       }
       return ret;
   }

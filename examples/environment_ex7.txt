@@ -1,0 +1,11 @@
+MusicTool:environment
+
+
+env triad (
+[ bIII+, VII-, I-, VII+, I-, bIII+, V+, I-, V ]
+[ V-, Im, V- ]
+)
+env prog (
+[ I; IV; Vsus2]
+[ Iadd 7; IVsus4 add 7,6; bVIIadd 2 ]
+)

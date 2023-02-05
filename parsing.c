@@ -155,8 +155,14 @@ WORD_BITS str_to_wordbits( char * str, unsigned char mode){ //turns a string int
             tmp+=3;
         }
         
-        else return 0; //case if the word contains a non valid character
-        
+        else { 
+            if (mode=='t')return 0; //case if the word contains a non valid character
+            else if(mode=='c'){ 
+                if(!strncmp(tmp, "add", 3) )
+                return word;
+            }
+            else return 0;
+        }
         cpt++;
         tmp++;
     }
@@ -748,6 +754,7 @@ S_CHPROG* str_to_chprog( char* str){//turns the string containing a chord prog t
                 free(ch_prog->chprog);
                 free(ch_prog); 
                 free_str_tab(chord_tab, num_of_chord); 
+              
                 return NULL;
             }
             ch_prog->chprog[i]= curextension| triad_to_chord_ext(curtriad) ;

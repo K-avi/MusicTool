@@ -69,9 +69,9 @@ void free_saved_triads( S_SAVED_TRIAD * saved_triads){
 	}
 }
 
-void init_saved_prog(S_SAVED_PROG* saved_triads){
-	saved_triads->chprog=NULL;
-	saved_triads->next=NULL;
+void init_saved_prog(S_SAVED_PROG* saved_prog){
+	saved_prog->chprog=NULL;
+	saved_prog->next=NULL;
 }
 
 void free_saved_progs( S_SAVED_PROG * saved_prog){

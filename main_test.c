@@ -290,7 +290,7 @@ int main(){
   }*/
 
 
-  S_TRIAD_PROG* t_prog= NEWgenerate_triad_prog("-scllen=2 -length=4 ");
+  S_TRIAD_PROG* t_prog= generate_triad_prog("-scllen=2 -length=4 ");
   SYNTAX_ERROR check = prog_triad_randcheck( "-scllen=2 -length=4", 't');
   printf("%d is check\n", check);
   print_triad_prog(t_prog);

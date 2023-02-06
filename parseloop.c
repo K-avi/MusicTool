@@ -1238,9 +1238,15 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
 
 RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
 
+  if(!argv[1] || !argv[2]) return 0;
   char * keyword= argv[1] ; 
-  char* command = argv[2];
-  LENGTH len= strlen (argv[2]);
+  LENGTH len= strlen(argv[2]);
+  char* command = malloc( (len+2));
+  memcpy(command, argv[2], len+1);
+  command[len]=' ';
+  command[len+1]='\0';
+  
+  printf("%s\n", command);
 
   if(! (keyword &&  command)){
       printf("invalid arguments\n");
@@ -1251,7 +1257,7 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   if(!strncmp(keyword, "-read",5 )){
         syntaxcheck=filename_check_var(command);
         if(!syntaxcheck){
-          printf("in\n");
+          
           file_command_parseloop(command, user_info);
         }
   }else if(!strncmp(keyword, "-scale",5 )){
@@ -1276,5 +1282,6 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
        if(!syntaxcheck) helpparse( command);
   }
   clearglobals();
+  free(command);
   return syntaxcheck;
 }

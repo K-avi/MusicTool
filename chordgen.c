@@ -195,15 +195,15 @@ CHORD pop_triad( S_EXTENSIONS extensions, TRIADS_BITS triad){
 
 
 CHORD triad_in_scl_to_chord( TRIADS_IN_SCALE triads){
-  printf("in tr to chord tr is : %d\n", triads);
+ // printf("in tr to chord tr is : %d\n", triads);
   switch (triads){
-    case MIN_CHORD: printf(" oui");return MIN_EXT; 
+    case MIN_CHORD: return MIN_EXT; 
     case MAJ_CHORD: return MAJ_EXT; 
     case AUG_CHORD: return AUG_EXT; 
     case DIM_CHORD: return DIM_EXT; 
     case SUS2_CHORD: return SUS2_EXT; 
     case SUS4_CHORD: return SUS4_EXT; 
-    default:  printf("HOW!???") ;return 1<<15;
+    default:  return 1<<15;
   }
 }
 

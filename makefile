@@ -1,7 +1,8 @@
 CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter -std=c17
 #CFLAGS = -g -Wno-unused-parameter
 CC = gcc
-
+ALLPROGS= test MusicTool smtool
+PROGRAMS= MusicTool smtool
 .PHONY:	all clean
 
 all: $(ALLPROGS)

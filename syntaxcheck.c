@@ -197,7 +197,6 @@ SYNTAX_ERROR one_num_arg_check( char * str){//checks that a string contains 1 in
 
 SYNTAX_ERROR saved_one_arg_check (char * str){//checks that a string is of the form .... saved n
 
- //   printf("entered saved one arg check\n");
     char * tmp = str; 
 
     while( NEUTRAL_CHAR(*tmp )) tmp++;
@@ -399,19 +398,20 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
     if(!strncmp(tmp, "-length=",8)){
            // printf("reached prog length \n");
             tmp+=8;
-            *size=8;
+            *size=9;
             if(isdigit(*(tmp))){
-              
+              tmp++;
+              (*size)++;
               while(isdigit(*tmp)){ (*size)++; tmp++; }
               
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                  if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
+                //  if(tmp[*size-1]!=0 )(*size)++ ; 
                  return SYNTAX_OK;
               }
             }
     }else if(!strncmp(tmp, "-scllen=", 8)){
 
-            *size=8;
+            *size=9;
             tmp+=8;
            
             if(isdigit(*(tmp))){
@@ -422,37 +422,39 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
               while(isdigit(*tmp)) { tmp++; (*size)++;}
              
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
-                  
+                 //if(tmp[*size-1]!=0 ) (*size)++ ; 
+            
                  return SYNTAX_OK;
               }
             }
     }else if(!strncmp(tmp, "-extnum=", 8) && mode=='p'){  
             tmp+=8;
-            *size=8;
+            *size=9;
             if(isdigit(*(tmp))){
-              
+              tmp++;
+               (*size)++;
               while(isdigit(*tmp)) { tmp++; (*size)++;}
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
+                // if(tmp[*size-1]!=0 )(*size)++ ; 
                  return SYNTAX_OK;
               }
             }
     }else if(!strncmp(tmp, "-extmax=", 8) && mode=='p'){  
             tmp+=8;
-            *size=8;
+            *size=9;
             if(isdigit(*(tmp))){
-              
+              tmp++;
+              (*size)++;
               while(isdigit(*tmp)) { tmp++; (*size)++;}
               
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                  if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ;
+                //  if(tmp[*size-1]!=0 )(*size)++ ; 
                  return SYNTAX_OK;
               }
             }
     }else if(!strncmp(tmp, "-scl=", 5)){      
             tmp+=5;
-            *size=5;
+            *size=9;
 
             S_SCALE scl= parse_scale(tmp); 
             if(!scl ) return SYNTAX_INVALID_SCALE;
@@ -466,8 +468,8 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
             while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
             if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
     }
-    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
-  
+    if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp)) return SYNTAX_OK;
+ 
     return SYNTAX_INVALID_ARG;
 }
 
@@ -486,9 +488,11 @@ SYNTAX_ERROR prog_triad_randcheck(char * str, char mode){
         check= prog_triad_randargcheck( tmp , size, mode);
         if(check) { free(size); return check;}
         tmp+=(*size);
+       // printf("tmp %s\n", tmp);
         while(NEUTRAL_CHAR(*tmp)){ tmp++; }
     }
     free(size);
+    // printf("tmp %s\n", tmp);
     return SYNTAX_OK;
 }
 

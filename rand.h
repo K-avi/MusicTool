@@ -14,6 +14,5 @@ extern TRIADS_IN_SCALE select_rand_triads(TRIADS_IN_SCALE triads);
 
 extern S_CHPROG* generate_chprog( char * args);
 
-extern S_TRIAD_PROG* NEWgenerate_triad_prog(char* args);
 
 #endif

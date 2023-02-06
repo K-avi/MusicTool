@@ -34,6 +34,8 @@ int main( int argc, char *argv[])
     user_data=malloc(sizeof(S_USERINFO));
     init_userinfo(user_data);
 
+    
+
     SYNTAX_ERROR err =parse_command( argv, user_data);
 
     if(err!=0){

@@ -72,10 +72,11 @@ compile MusicTool w/o syntaxchecking:
 
 
 
-make triad rand behave like prog rand
+
+
+implemented in backend; need to add it to syntaxcheck n frontend parsing 
 
 possibility to compile w/o syntaxchecking (gonna do later)
-
 
 1.3.2 : 
 

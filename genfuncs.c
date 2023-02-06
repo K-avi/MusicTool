@@ -51,11 +51,11 @@ bool generic_rand( char * str, char mode  ){
      
     if(l1==-1){
         
-        tmp_triad=generate_chord_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
+        tmp_triad=generate_triad_prog(generate_ran_scale((rand()%4+7)), rand()%10+1);//generates rand chprog from scale between 7 and 12 length
     }else if(l2==-1){
-            tmp_triad=generate_chord_prog(generate_ran_scale(l1) , rand()%10+1   );
+            tmp_triad=generate_triad_prog(generate_ran_scale(l1) , rand()%10+1   );
     }else{
-            tmp_triad=generate_chord_prog(generate_ran_scale(l1) , l2   );
+            tmp_triad=generate_triad_prog(generate_ran_scale(l1) , l2   );
     }
         
     if(!tmp_triad) printf("couldn't generate a chord prog with given parameters; please try other ones\n");

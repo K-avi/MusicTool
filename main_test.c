@@ -264,7 +264,7 @@ int main(){
   
   //free(str);
 
- // S_CHPROG* prog= generate_ext_chprog(1, "-scl={0 3 4 7}");
+ // S_CHPROG* prog= generate_chprog(1, "-scl={0 3 4 7}");
  // printf(" %p ", prog);
 
   //ext_print_chprog(prog);
@@ -275,9 +275,9 @@ int main(){
   //  free(prog); 
   //}
   //int b=1;
-  char *str ="  -length=3 -scllen=7 -extnum=1" ;
+  /*char *str ="  -length=3 -scllen=7 -extnum=1" ;
  
-  S_CHPROG *aaa= generate_ext_chprog(str);
+  S_CHPROG *aaa= generate_chprog(str);
   fprint_chord_prog(stdout,aaa);
   
  // ext_print_chprog(aaa);
@@ -287,9 +287,16 @@ int main(){
   if(aaa) {
     if(aaa->chprog)free(aaa->chprog); 
     free(aaa);
-  }
+  }*/
 
-  
+
+  S_TRIAD_PROG* t_prog= NEWgenerate_triad_prog("-scllen=2 -length=4 ");
+  SYNTAX_ERROR check = prog_triad_randcheck( "-scllen=2 -length=4", 't');
+  printf("%d is check\n", check);
+  print_triad_prog(t_prog);
+
+  free_triad_prog(t_prog);
+ 
   return 0;
 
 }

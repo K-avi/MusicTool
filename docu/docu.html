@@ -400,11 +400,13 @@
                     <p class="text-left">
                         The triad keyword is used to pass commands on triad progs. The commands currenlty available are : 
                         
-                        <br/><br/>-rand : can be passed with one two or zero integer arguments. If passed with two arguments I J
-                                will generate a triad prog of length I from a scale of length J; 
-                                if passed with one argument x will generate a random triad prog of random length from a
-                                scale of length x 
-                                if passed with none will generate a prog of rand length from a rand scale.
+                        <br/><br/>-rand : can be passed without arguments, if passed like so a fully randomised triad prog will be generated. 
+                        <br/> it can also be passed with one or more of the following args: 
+                        <ul>
+                            <li>-scl={..}</li> if the scale is valid and contains at least 1 chord,generates a prog with the scale in between brackets. Returns an error otherwise
+                            <li>-scllen=N</li> generates a prog with a random scale of length scllen if the length is >2. NB: if -scl and -scllen are passed together, scllen will be ignored.
+                            <li>-length=N</li> generates a prog of the length passed as argument.
+                        </ul>
                         <br/><br/>-save : passed with one triad prog or no arguments; if passed with a triad prog will save the prog
                                 if passed without will save the temporary saved prog if it exists.
                         <br/><br/>-print : passed with one integer argument or the env keyword prints the triad prog stored at index n if it exists or all the progs currenlty saved if passed with env. 

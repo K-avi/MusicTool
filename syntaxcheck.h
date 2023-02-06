@@ -24,6 +24,8 @@ extern SYNTAX_ERROR filename_check_var(char * str);
 
 #ifdef DEBUG
 
+extern SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode );
+extern SYNTAX_ERROR prog_triad_randcheck(char * str, char mode);
 extern SYNTAX_ERROR parsescalecheck(char *str);
 
 

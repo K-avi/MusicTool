@@ -387,6 +387,111 @@ SYNTAX_ERROR triad_toscalecheck(char* str){
 
 }
 
+SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks that a string is an argument of prog rand 
+//if mode=='t' -> triad ; mode=='p' -> prog ; returns error otherwise
+   // printf("reached prog randarg check: str is: %s\n" , str );
+    if( ! (mode =='t' || mode=='p')) return SYNTAX_GENERIC_ERROR;
+    if( (! (str && size )) )return SYNTAX_GENERIC_ERROR;
+    
+   // printf("in prog rand arg check str is %s\n ", str);
+    char * tmp=str;
+    while (NEUTRAL_CHAR(*tmp)) tmp++;
+    if(!strncmp(tmp, "-length=",8)){
+           // printf("reached prog length \n");
+            tmp+=8;
+            *size=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)){ (*size)++; tmp++; }
+              
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                 return SYNTAX_OK;
+              }
+            }
+    }else if(!strncmp(tmp, "-scllen=", 8)){
+
+      
+
+            *size=8;
+            tmp+=8;
+           
+            if(isdigit(*(tmp))){
+             
+              tmp++;
+              (*size)++;
+              while(isdigit(*tmp)) { tmp++; (*size)++;}
+             
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                
+                 return SYNTAX_OK;
+              }
+            }
+    }else if(!strncmp(tmp, "-extnum=", 8) && mode=='p'){  
+            tmp+=8;
+            *size=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)) { tmp++; (*size)++;}
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp)) (*size)++ ; 
+                 return SYNTAX_OK;
+              }
+            }
+    }else if(!strncmp(tmp, "-extmax=", 8) && mode=='p'){  
+            tmp+=8;
+            *size=8;
+            if(isdigit(*(tmp))){
+              
+              while(isdigit(*tmp)) { tmp++; (*size)++;}
+              
+              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
+                 if(NEUTRAL_CHAR(*tmp)) (*size)++ ; 
+                 return SYNTAX_OK;
+              }
+            }
+    }else if(!strncmp(tmp, "-scl=", 5)){      
+            tmp+=5;
+            *size=5;
+
+            S_SCALE scl= parse_scale(tmp); 
+            if(!scl ) return SYNTAX_INVALID_SCALE;
+            
+            while(*tmp!='}'){
+                (*size)++;
+                tmp++;
+            }
+            tmp++;
+            (*size)++;
+            while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
+            if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
+    }
+ 
+    return SYNTAX_INVALID_ARG;
+}
+
+
+SYNTAX_ERROR prog_triad_randcheck(char * str, char mode){
+    
+    char * tmp=str , *tmp1=str; 
+    //printf("in progrand check str is : %s\n" , str);
+    SYNTAX_ERROR check = SYNTAX_OK;
+
+    if(!emptycheck( tmp1)) return  SYNTAX_OK;
+    int *size= malloc(sizeof(int));
+
+    while( !END_OF_LINE_CHAR(*tmp)){
+        *size=0;
+        check= prog_triad_randargcheck( tmp , size, mode);
+        if(check) {free(size); return check;}
+        tmp+=(*size);
+        while(NEUTRAL_CHAR(*tmp)){ tmp++; }
+    }
+    free(size);
+    return SYNTAX_OK;
+}
+
 SYNTAX_ERROR triadcheck(char * str){ //checks that a string containing a triad command's syntax is correct
 
 
@@ -397,8 +502,9 @@ SYNTAX_ERROR triadcheck(char * str){ //checks that a string containing a triad c
     if( END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
 
     else if( !strncmp(tmp, "rand", 4)){
-        return zero_one_two_arg_check(tmp+4);
-        
+   
+        return prog_triad_randcheck(tmp+4, 't');
+       
     }else if(!strncmp(tmp, "remove", 6)){
         return removecheck(tmp+6);
     }else if(!strncmp(tmp, "print", 5)){
@@ -849,7 +955,7 @@ SYNTAX_ERROR progparsecheck(char * str){
     char* tmp=str,*tmp1=str; 
     LENGTH length=1;
 
-    printf("str is: %s\n", str);
+  
     CPT open_bracket_check=0, closed_bracket_check=0;
 
 
@@ -912,101 +1018,9 @@ SYNTAX_ERROR progsavecheck(char * str){
     return SYNTAX_OK;
 }
 
-SYNTAX_ERROR prograndargcheck(char * str, int* size  ){//checks that a string is an argument of prog rand 
 
-   // printf("reached prog randarg check: str is: %s\n" , str );
-    if(! (str && size) )return SYNTAX_GENERIC_ERROR;
-   // printf("in prog rand arg check str is %s\n ", str);
-    char * tmp=str;
-    while (NEUTRAL_CHAR(*tmp)) tmp++;
-    if(!strncmp(tmp, "-length=",8)){
-           // printf("reached prog length \n");
-            tmp+=8;
-            *size=8;
-            if(isdigit(*(tmp))){
-              
-              while(isdigit(*tmp)){(*size)++; tmp++; }
-              
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
-                 return SYNTAX_OK;
-              }
-            }
-    }else if(!strncmp(tmp, "-scllen=", 8)){
-            *size=8;
-            tmp+=8;
-            if(isdigit(*(tmp))){
-              
-              while(isdigit(*tmp)) { tmp++; (*size)++;}
-             
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 //if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
-                 return SYNTAX_OK;
-              }
-            }
-    }else if(!strncmp(tmp, "-extnum=", 8)){  
-            tmp+=8;
-            *size=8;
-            if(isdigit(*(tmp))){
-              
-              while(isdigit(*tmp)) { tmp++; (*size)++;}
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
-                 return SYNTAX_OK;
-              }
-            }
-    }else if(!strncmp(tmp, "-extmax=", 8)){  
-            tmp+=8;
-            *size=8;
-            if(isdigit(*(tmp))){
-              
-              while(isdigit(*tmp)) { tmp++; (*size)++;}
-              
-              if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
-                 return SYNTAX_OK;
-              }
-            }
-    }else if(!strncmp(tmp, "-scl=", 5)){      
-            tmp+=5;
-            *size=5;
 
-            S_SCALE scl= parse_scale(tmp); 
-            if(!scl ) return SYNTAX_INVALID_SCALE;
-            
-            while(*tmp!='}'){
-                (*size)++;
-                tmp++;
-            }
-            tmp++;
-            (*size)++;
-            while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
-            if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
-    }
-   
-    printf("str is %s\n tmp is %s\n", str, tmp);
-    return SYNTAX_INVALID_ARG;
-}
 
-SYNTAX_ERROR prograndcheck(char * str){
-    
-    char * tmp=str , *tmp1=str; 
-    //printf("in progrand check str is : %s\n" , str);
-    SYNTAX_ERROR check = SYNTAX_OK;
-
-    if(!emptycheck( tmp1)) return  SYNTAX_OK;
-    int *size= malloc(sizeof(int));
-
-    while( !END_OF_LINE_CHAR(*tmp)){
-        *size=0;
-        check= prograndargcheck( tmp , size);
-        if(check) {free(size); return check;}
-        tmp+=(*size);
-        while(NEUTRAL_CHAR(*tmp)){ tmp++; }
-    }
-    free(size);
-    return SYNTAX_OK;
-}
 
 SYNTAX_ERROR progcheck(char *str ){
 
@@ -1025,7 +1039,7 @@ SYNTAX_ERROR progcheck(char *str ){
        return printcheck(tmp+5);
 
     }else if(!strncmp (tmp, "rand", 4)){
-        return prograndcheck(tmp+4);// needs to be changed to custom runtime check for args
+        return prog_triad_randcheck(tmp+4, 'p');// needs to be changed to custom runtime check for args
     }else if(!strncmp (tmp, "toscale", 7)){
         return prog_toscalecheck(tmp+7);// needs to be changed to custom runtime check for args
     }
@@ -1285,7 +1299,7 @@ SYNTAX_ERROR env_dodec_check(char *str){
 }
 SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as one beeeg string.
 
-    if(!str){ printf("null string caught\n"); return SYNTAX_INVALID_ARG;}
+    if(!str){  return SYNTAX_INVALID_ARG;}
     char * tmp= str;
     SYNTAX_ERROR scheck=0;
 
@@ -1356,7 +1370,7 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                 tmp+=4;
                
                 scheck=env_prog_check(tmp);
-                printf("scheck : %d\n" ,scheck);
+              
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");
                 tmp++;

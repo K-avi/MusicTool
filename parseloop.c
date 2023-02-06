@@ -343,7 +343,27 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
     if(line[i]==10 || line[i]=='\0'){ printf("runtime triadprogparse error\n"); return;}
     
     if(!strncmp(&line[i], "rand",4)){
-        generic_rand(&line[i+4], 'c');  
+        LENGTH l =0; 
+
+        char * tmp= &line[i]+4; 
+
+        while(!END_OF_LINE_CHAR(*tmp)){
+          if(*tmp=='-') l++;
+          tmp++;
+        }
+        if(l){
+          if(tmp_triad)free_triad_prog(tmp_triad);
+          tmp_triad= generate_triad_prog(&line[i+4]);
+          if(!tmp_triad){
+            printf("couldn't generate a prog with given parameters; please try again\n");
+          }else{
+            print_triad_prog(tmp_triad);
+          }
+        }else { 
+          if(tmp_triad)free_triad_prog(tmp_triad);
+          tmp_triad= generate_triad_prog(NULL);
+          print_triad_prog(tmp_triad);
+        }
 
     }else if(!strncmp(&line[i], "save",4)) {
          
@@ -447,7 +467,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         }
         if(l){
           if(tmp_prog)free_chord_prog(tmp_prog);
-          tmp_prog= generate_ext_chprog(&line[i+4]);
+          tmp_prog= generate_chprog(&line[i+4]);
           if(!tmp_prog){
             printf("couldn't generate a prog with given parameters; please try again\n");
           }else{
@@ -455,7 +475,7 @@ void chprogparse(char * line , S_USERINFO* user_saved){
           }
         }else { 
           if(tmp_prog)free_chord_prog(tmp_prog);
-          tmp_prog= generate_ext_chprog(NULL);
+          tmp_prog= generate_chprog(NULL);
           print_chprog(tmp_prog);
         }
 

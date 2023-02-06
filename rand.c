@@ -45,92 +45,193 @@ PITCH_CLASS_SET select_rand_degree( PITCH_CLASS_SET deg){//selects ONE random de
   unsigned rand_deg= (rand()%(length))+1;
   
   return (1<<nth_bit_pos(deg, rand_deg));
-}//tested
+}//tested 
 
+S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog of length length 
 
+  if(!args){
+   
+    LENGTH proglength= rand()%10+1; //proglength between 1 and 10 
 
-
-S_TRIAD_PROG* generate_chord_prog(S_SCALE scale, LENGTH length){ //generates a random chord prog of length length 
-
-
-    print_scale(scale);
-    if (!scale || !length) return NULL;
-    PITCH_CLASS_SET deg_w_chord= get_degrees(scale);
-    //_bits(deg_w_chord);
-    
-
-    if(!deg_w_chord ) return NULL;
-
-    S_TRIAD_PROG* ret= malloc(sizeof(S_TRIAD_PROG));
-    ret->length= length;
-    ret->chord_prog= malloc(length* sizeof(TRIAD));
-
-    if(count_bits(deg_w_chord)==1){ //case if u can only generate 1 chord from a scale 
+      S_SCALE scl= 0;//scl of min length 6 to make sure a chord can be generated
+      CPT extension_num=0; 
       
-      
-      INDEX index= nth_bit_pos(deg_w_chord ,1); //retrieves the index of the relevent degree
-      S_SCALE relev_mode= rot(scale, index);//retrieves the mode of said degree
-    
-      TRIADS_IN_SCALE triads= triads_at_fund(relev_mode);
-      if(count_bits(triads)==1){
-        for(CPT i=0; i<length; i++){
+      TRIAD curtriad= 0; //chord to pop extensions from 
 
-          TRIADS_IN_SCALE triad_selected= select_rand_triads(triads);//selects a random triad on the degree 
-          ret->chord_prog[i]= generate_chord(triad_selected, deg_w_chord);
-        }
-      }else{
+      PITCH_CLASS_SET relevant_deg= 0; //gets deg of scl 
+      PITCH_CLASS_SET selected_deg= 0;
+      DEGREES selected_deg_converted= 0;
 
-        TRIADS_IN_SCALE curtriads= select_rand_triads(triads);
-        TRIADS_IN_SCALE prevtriads= curtriads;
+      S_SCALE curmode = 0;
+      TRIADS_IN_SCALE curtriads_in= 0;
+      TRIADS_IN_SCALE seltriads_in= 0;
+  
+      S_TRIAD_PROG *ret=  malloc( sizeof(S_CHPROG));
+      ret->chord_prog= malloc(proglength* sizeof( TRIAD));
+      ret->length=proglength;
 
-        for(CPT i=0; i<length; i++){
+      for(CPT i=0; i<proglength; i++){
+          
+        scl=generate_ran_scale( 8);
+       
 
-          curtriads= select_rand_triads(triads);//selects a random triad on the degree 
+        relevant_deg=get_degrees(scl); 
+        selected_deg= select_rand_degree(relevant_deg);
+        selected_deg_converted= get_deg_from_chdeg(selected_deg);
+        
+        curmode= rot( scl, nth_bit_pos(selected_deg, 1));
 
-          while(curtriads==prevtriads){
-              
-              curtriads=select_rand_triads(triads);
+        curtriads_in=triads_at_fund(curmode); 
+        seltriads_in=select_rand_triads(curtriads_in);
+
+        curtriad=selected_deg_converted | (triad_in_scl_to_triad_bits(seltriads_in) <<4);
+        
+        ret->chord_prog[i] = curtriad;
+      }
+      return ret;
+  }else { 
+
+    //retrieving arguments :
+      CPT i=0 ;
+      char* tmp=args;
+      LENGTH proglength=0, scllen=0;
+     
+      S_SCALE scl=0;
+
+      while (!END_OF_LINE_CHAR(*tmp)) {//retrieves the arguments for generation. 
+        
+        if(!strncmp(tmp, "-length=",8)){
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              proglength=atoi(tmp); 
             }
-            prevtriads=curtriads;
-
-          ret->chord_prog[i]= generate_chord(curtriads, deg_w_chord);
+        }else if(!strncmp(tmp, "-scllen=", 8)){
+            tmp+=8;
+            if(isdigit(*(tmp))){
+              scllen=atoi(tmp); 
+            } 
+       }else if(!strncmp(tmp, "-scl=", 5)){  
+            tmp+=5;    
+            scl=parse_scale(tmp);
+        }else{//default behavior for invalid args is to ignore them; might be bad dunno
+            tmp++;
         }
       }
-      
-    }else{//u can generate two or more chords
+      if(scl && scllen) scllen=0; /*scl and scllen are mutually exclusive; scl is more important I think.
+      this behavior might change idk yet*/
 
-        PITCH_CLASS_SET curdeg= select_rand_degree(deg_w_chord);
-        S_SCALE curmode = rot(scale , nth_bit_pos(curdeg, 1));//bad bc I calculate index multiple times
-        //i should change the design so that i get an index that I use to get the triads n stuff
-        TRIADS_IN_SCALE curtriads= triads_at_fund(curmode);
-        TRIADS_IN_SCALE seltriads= select_rand_triads(curtriads);
+      if(scllen){ //sets scl if scllen is set 
+        if(scllen<7){
 
-        PITCH_CLASS_SET prevdeg=curdeg;
-
-        for(CPT i=0; i<length; i++){
-
-            
-           //print_bits(deg_w_chord);
-            curdeg=select_rand_degree(deg_w_chord);
-            while(curdeg==prevdeg){
-              
-              curdeg=select_rand_degree(deg_w_chord);
-            }
-            prevdeg=curdeg;
-
-            //printf("%b", curdeg);
-            curmode=rot(scale , nth_bit_pos(curdeg, 1));
-
-           // print_scale(curmode);
-            curtriads=triads_at_fund(curmode);
-            seltriads= select_rand_triads(curtriads);
-           // print_bits(curtriads);
-            
-            ret->chord_prog[i]= generate_chord(seltriads, curdeg);     
+          if(scllen<3){ return NULL;}
+          TRIADS_IN_SCALE triad= select_rand_triads(0x3F); //selects a random triad;
+         
+          scl= triad_in_scl_to_chord(triad);    
+        
+          for(CPT i =0; i<(scllen-3); i++){
+            add_rand_note(&scl);
+          }
+        }else if (scllen<12){
+          scl=generate_ran_scale(scllen);
+        }else{ 
+          scl=0x7FF;
         }
+      }else if(!scl){ //sets scale if not the case
+        scl=generate_ran_scale(rand()%4+7);
+      }
 
-    }
-    return ret;
+      if(!proglength){
+        proglength=rand()%10+1;
+      }
+      TRIAD curtriad= 0 ,prevtriad=0;  //chord to pop extensions from 
+
+      PITCH_CLASS_SET relevant_deg= get_degrees(scl); //gets deg of scl 
+      if(!relevant_deg) return NULL; //case if scale doesnt contain any chords
+
+      PITCH_CLASS_SET selected_deg= 0;
+      DEGREES selected_deg_converted= 0;
+
+      S_SCALE curmode = 0;
+      TRIADS_IN_SCALE curtriads_in= 0;
+      TRIADS_IN_SCALE seltriads_in= 0;
+
+      CPT nb_relev_deg= count_bits(relevant_deg);
+
+       
+  
+      S_TRIAD_PROG *ret=  malloc( sizeof(S_CHPROG));
+      ret->chord_prog= malloc(proglength* sizeof( TRIAD));
+      ret->length=proglength;
+
+      if(nb_relev_deg==1){ //can only do triad @ 1 degree 
+        TRIADS_IN_SCALE tr_in_scl= triads_at_fund(rot(scl,nth_bit_pos(nb_relev_deg, 1)));
+        if(count_bits(tr_in_scl==1)){ //can only do 1 triad at this degree
+          
+          selected_deg=select_rand_degree(relevant_deg); //selects new degree
+          curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+          curtriads_in=triads_at_fund(curmode); //selects a triad
+          seltriads_in= select_rand_triads(curtriads_in);
+          curtriad=generate_chord(seltriads_in, selected_deg);
+          for(CPT i=0; i<proglength; i++){
+
+            ret->chord_prog[i]= curtriad;
+          }
+        }else {
+          for(CPT i=0; i<proglength; i++){
+          
+            selected_deg=select_rand_degree(relevant_deg); //selects new degree
+            curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+            curtriads_in=triads_at_fund(curmode); //selects a triad
+            seltriads_in= select_rand_triads(curtriads_in);
+            curtriad=generate_chord(seltriads_in, selected_deg);
+
+            if(prevtriad ==curtriad){
+              while (prevtriad==curtriad) {
+                  selected_deg=select_rand_degree(relevant_deg); //selects new degree
+                  curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+                  curtriads_in=triads_at_fund(curmode); //selects a triad
+                  seltriads_in= select_rand_triads(curtriads_in);
+                  curtriad=generate_chord(seltriads_in, selected_deg);
+              }
+            }
+             prevtriad=curtriad;
+            ret->chord_prog[i]= curtriad;
+          }
+          
+        }
+      }else {
+
+        for(CPT i=0; i<proglength; i++){
+          
+          selected_deg=select_rand_degree(relevant_deg); //selects new degree
+          curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+          curtriads_in=triads_at_fund(curmode); //selects a triad
+          seltriads_in= select_rand_triads(curtriads_in);
+          curtriad=generate_chord(seltriads_in, selected_deg);
+
+          if(prevtriad ==curtriad){
+            while (prevtriad==curtriad) {
+                selected_deg=select_rand_degree(relevant_deg); //selects new degree
+                curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+                curtriads_in=triads_at_fund(curmode); //selects a triad
+                seltriads_in= select_rand_triads(curtriads_in);
+                curtriad=generate_chord(seltriads_in, selected_deg);
+            }
+          }
+          prevtriad=curtriad;
+          ret->chord_prog[i]= curtriad;
+        }
+      }
+
+      return ret;      
+  }
+
+  return NULL; 
 }
 
 
@@ -166,7 +267,7 @@ CHORD ext_gen_chord  (CHORD chord, CPT extension_num, CPT extension_total, TRIAD
 
 
 
-S_CHPROG* generate_ext_chprog( char * args){
+S_CHPROG* generate_chprog( char * args){
    /*
    should be able to take arguments 
   -length=n | rand

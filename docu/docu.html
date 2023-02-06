@@ -517,7 +517,11 @@
                         <br/><br/>-quit keyword: must be passed without arguments. Exits MusicTool 
                         <br/><br/>-commentaries : MusicTool supports one line commentaries, everything after a '#' character in a
                                         line will be considered as a commentary and won't be interpreted.
-
+                        <br/><br/>-MusicTool currently support being called with the arguments -syntaxcheck=YES and -syntaxcheck=NO. 
+                                   this will set a global variable called _syntaxcheck. 
+                                   <br/>If disabled, any string passed to musictool
+                                   will directly be interpreted and won't go through the MusicTool syntaxchecker. 
+                                  <br/> The stability and behavior of MusicTool is not guaranteed when ran without syntax checking enabled.
                     </p>
                 </div>
             </div>

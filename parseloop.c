@@ -26,6 +26,7 @@
 #include "chordgen.h"
 #include "chordprint.h"
 
+
 void dodecparse(char* line, S_USERINFO* user_saved){
     ushort i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
@@ -1067,12 +1068,14 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     while(fgets(line, 256, f)){
 
       l=0;
-      syntax_flag=syntaxcheck(line);
-      if(syntax_flag) {     
-        printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
-        free(clean_filename);
-        fclose(f);    
-        return;
+      if(_syntaxcheck){
+        syntax_flag=syntaxcheck(line);
+        if(syntax_flag) {     
+          printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
+          free(clean_filename);
+          fclose(f);    
+          return;
+        }
       }
         
       while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ) l++;
@@ -1187,12 +1190,14 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
       while(NEUTRAL_CHAR(line[i])){
         i++;
       }
-      syntax_error= syntaxcheck(line);
-      if(syntax_error) {
-      
-        printf("syntax error : %s\n",syntax_error_flag_to_str(syntax_error));
-        printf("  >>>");
-        continue;
+      if(_syntaxcheck){
+        syntax_error= syntaxcheck(line);
+        if(syntax_error) {
+        
+          printf("syntax error : %s\n",syntax_error_flag_to_str(syntax_error));
+          printf("  >>>");
+          continue;
+        }
       }
       if(END_OF_LINE_CHAR(line[i])){
         printf("  >>>");

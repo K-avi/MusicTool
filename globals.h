@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include "types.h"
+#include <stdbool.h>
 
 
 
@@ -55,9 +56,7 @@ extern S_DODEC generated_dodec, dodec_to_save ;
 extern S_DODEC* tmp_matrix;
 
 
+//syntaxcheck global
 
-
-extern CPT nb_entries;  //nb entries currently in chord_book 
-extern CPT nb_entries_max; //maxnum of entries in chordbook
-
+extern bool _syntaxcheck;
 #endif

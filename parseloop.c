@@ -1263,6 +1263,7 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
       if(!syntaxcheck) harmoparse( command, user_info);
   }else if(!strncmp(keyword, "-triad",6 )){
       syntaxcheck=triadcheck(command);
+     
       if(!syntaxcheck) triadprogparse( command, user_info);
   }else if(!strncmp(keyword, "-prog",5 )){
       syntaxcheck=progcheck(command);

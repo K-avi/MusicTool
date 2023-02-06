@@ -68,14 +68,7 @@ frontend implementation:
 compile MusicTool w/o syntaxchecking: 
 
     not done yet 
-
-
-
-
-
-
-implemented in backend; need to add it to syntaxcheck n frontend parsing 
-
+    
 possibility to compile w/o syntaxchecking (gonna do later)
 
 1.3.2 : 

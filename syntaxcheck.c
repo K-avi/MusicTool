@@ -405,13 +405,11 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
               while(isdigit(*tmp)){ (*size)++; tmp++; }
               
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
+                  if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
                  return SYNTAX_OK;
               }
             }
     }else if(!strncmp(tmp, "-scllen=", 8)){
-
-      
 
             *size=8;
             tmp+=8;
@@ -420,11 +418,12 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
              
               tmp++;
               (*size)++;
+             
               while(isdigit(*tmp)) { tmp++; (*size)++;}
              
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp))(*size)++ ; 
-                
+                 if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
+                  
                  return SYNTAX_OK;
               }
             }
@@ -435,7 +434,7 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
               
               while(isdigit(*tmp)) { tmp++; (*size)++;}
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp)) (*size)++ ; 
+                 if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ; 
                  return SYNTAX_OK;
               }
             }
@@ -447,7 +446,7 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
               while(isdigit(*tmp)) { tmp++; (*size)++;}
               
               if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp) || *tmp=='-'){
-                 if(NEUTRAL_CHAR(*tmp)) (*size)++ ; 
+                  if(!END_OF_LINE_CHAR(tmp[*size]))(*size)++ ;
                  return SYNTAX_OK;
               }
             }
@@ -467,7 +466,8 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
             while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
             if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
     }
- 
+    if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+  
     return SYNTAX_INVALID_ARG;
 }
 
@@ -484,7 +484,7 @@ SYNTAX_ERROR prog_triad_randcheck(char * str, char mode){
     while( !END_OF_LINE_CHAR(*tmp)){
         *size=0;
         check= prog_triad_randargcheck( tmp , size, mode);
-        if(check) {free(size); return check;}
+        if(check) { free(size); return check;}
         tmp+=(*size);
         while(NEUTRAL_CHAR(*tmp)){ tmp++; }
     }
@@ -514,6 +514,7 @@ SYNTAX_ERROR triadcheck(char * str){ //checks that a string containing a triad c
     }else if(!strncmp (tmp, "toscale", 7)){
         return triad_toscalecheck(tmp+7);
     }
+
     return SYNTAX_INVALID_ARG; 
 }
 

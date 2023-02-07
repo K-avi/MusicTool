@@ -5,12 +5,31 @@
 #include "parsing.h"
 #include "scalegen.h"
 #include "types.h"
+#include "misc.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
+
+
+
+#ifdef WIN32 
+
+char * strndup( char * str, size_t chars){
+    if(!str) return NULL;
+    char * buffer; 
+    int n; 
+    buffer=(char*) malloc(chars+1); 
+
+    if(buffer){
+        for(n=0; ((n<chars) && (str[n]!=0)); n++) buffer[n]= str[n];
+        
+    }
+    return buffer;
+}
+#endif
 
 SYNTAX_ERROR emptycheck(char * str){
     char * tmp=str; 

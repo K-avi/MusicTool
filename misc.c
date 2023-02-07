@@ -5,6 +5,23 @@
 #include <sys/types.h>
 
 
+#ifdef WIN32 
+
+char * strndup( char * str, size_t chars){
+    if(!str) return NULL;
+    char * buffer; 
+    int n; 
+    buffer=(char*) malloc(chars+1); 
+
+    if(buffer){
+        for(n=0; ((n<chars) && (str[n]!=0)); n++) buffer[n]= str[n];
+        
+    }
+    return buffer;
+}
+#endif
+
+
 LENGTH count_bits( unsigned bits){ 
 //counts the number of bits set in a number
   unsigned n=0, ret=0;

@@ -8,5 +8,9 @@ extern unsigned nextprime(unsigned n);
 extern INDEX nth_bit_pos( unsigned bits, INDEX index);
 
 extern int mod(int a, int b);
+#ifdef WIN32 
+
+char * strndup( char * str, size_t chars)
+#endif
 
 #endif

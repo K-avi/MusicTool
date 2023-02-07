@@ -8,6 +8,7 @@
 #include "scalegen.h"
 #include "user_info.h"
 #include "bitop.h"
+#include "parsing.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>

@@ -56,7 +56,7 @@ S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog o
       S_SCALE scl= 0;//scl of min length 6 to make sure a chord can be generated
       CPT extension_num=0; 
       
-      TRIAD curtriad= 0; //chord to pop extensions from 
+      TRIAD curtriad= 0, prevtriad=0; //chord to pop extensions from 
 
       PITCH_CLASS_SET relevant_deg= 0; //gets deg of scl 
       PITCH_CLASS_SET selected_deg= 0;
@@ -85,7 +85,18 @@ S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog o
         seltriads_in=select_rand_triads(curtriads_in);
 
         curtriad=selected_deg_converted | (triad_in_scl_to_triad_bits(seltriads_in) <<4);
-        
+        while (prevtriad==curtriad) {
+                scl=generate_ran_scale( 8);
+                relevant_deg=get_degrees(scl); 
+
+                selected_deg=select_rand_degree(relevant_deg); //selects new degree
+                curmode= rot(scl, nth_bit_pos(selected_deg, 1)); //sets mode to new deg
+
+                curtriads_in=triads_at_fund(curmode); //selects a triad
+                seltriads_in= select_rand_triads(curtriads_in);
+                curtriad=generate_chord(seltriads_in, selected_deg);
+        }
+        prevtriad=curtriad;
         ret->chord_prog[i] = curtriad;
       }
       return ret;
@@ -283,7 +294,7 @@ S_CHPROG* generate_chprog( char * args){
       S_SCALE scl= 0;//scl of min length 6 to make sure a chord can be generated
       CPT extension_num=0; 
       
-      CHORD curchord= 0; //chord to pop extensions from 
+      CHORD curchord= 0, prevchord=0; //chord to pop extensions from 
 
       PITCH_CLASS_SET relevant_deg= 0; //gets deg of scl 
       PITCH_CLASS_SET selected_deg= 0;
@@ -318,7 +329,23 @@ S_CHPROG* generate_chprog( char * args){
         }else { 
           curchord= ext_gen_chord(curchord, 0, 0, seltriads);
         }
+        while(prevchord==curchord){
+          scl=generate_ran_scale( 8);
+          extension_num=count_bits(scl)-2;
 
+          relevant_deg=get_degrees(scl); 
+          selected_deg= select_rand_degree(relevant_deg);
+          selected_deg_converted= get_deg_from_chdeg(selected_deg);
+          
+          curmode= rot( scl, nth_bit_pos(selected_deg, 1));
+
+          curtriads=triads_at_fund(curmode); 
+          seltriads=select_rand_triads(curtriads);
+
+          curchord=selected_deg_converted | (curmode <<4);              
+        }
+        
+        prevchord=curchord;
         ret->chprog[i] = curchord;
       }
       return ret;

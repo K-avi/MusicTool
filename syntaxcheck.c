@@ -391,7 +391,7 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
    // printf("reached prog randarg check: str is: %s\n" , str );
     if( ! (mode =='t' || mode=='p')) return SYNTAX_GENERIC_ERROR;
     if( (! (str && size )) )return SYNTAX_GENERIC_ERROR;
-    
+  //  printf("str at entry prog triad randargcheck : %s\n", str);
    // printf("in prog rand arg check str is %s\n ", str);
     char * tmp=str;
     while (NEUTRAL_CHAR(*tmp)) tmp++;
@@ -454,22 +454,24 @@ SYNTAX_ERROR prog_triad_randargcheck(char * str, int* size, char mode ){//checks
             }
     }else if(!strncmp(tmp, "-scl=", 5)){      
             tmp+=5;
-            *size=9;
+            *size=6;
 
             S_SCALE scl= parse_scale(tmp); 
             if(!scl ) return SYNTAX_INVALID_SCALE;
             
             while(*tmp!='}'){
+               
                 (*size)++;
                 tmp++;
+          
             }
             tmp++;
-            (*size)++;
-            while(NEUTRAL_CHAR(*tmp)) { tmp++; (*size)++;} //checks neutral or eol or next arg
+            while(NEUTRAL_CHAR(*tmp)) {tmp++; (*size)++;} //checks neutral or eol or next arg
+            
             if(END_OF_LINE_CHAR(*tmp)  || *tmp=='-') return SYNTAX_OK;
     }
     if(END_OF_LINE_CHAR(*tmp) || NEUTRAL_CHAR(*tmp)) return SYNTAX_OK;
- 
+    
     return SYNTAX_INVALID_ARG;
 }
 
@@ -483,13 +485,16 @@ SYNTAX_ERROR prog_triad_randcheck(char * str, char mode){
     if(!emptycheck( tmp1)) return  SYNTAX_OK;
     int *size= malloc(sizeof(int));
 
-    while( !END_OF_LINE_CHAR(*tmp)){
+    while( !END_OF_LINE_CHAR(*tmp) ){
         *size=0;
         check= prog_triad_randargcheck( tmp , size, mode);
+       
         if(check) { free(size); return check;}
+       
         tmp+=(*size);
-       // printf("tmp %s\n", tmp);
-        while(NEUTRAL_CHAR(*tmp)){ tmp++; }
+      
+        while(NEUTRAL_CHAR(*tmp) ){ tmp++; }
+        
     }
     free(size);
     // printf("tmp %s\n", tmp);

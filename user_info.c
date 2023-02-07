@@ -272,9 +272,7 @@ void add_chprog( S_SAVED_PROG * saved_prog , S_CHPROG * chprog){
 	S_SAVED_PROG* tmp1= malloc(sizeof(S_SAVED_PROG));
 	tmp1->next=NULL; 
 	tmp1->chprog=  chprog_dup(chprog); //allocates new chprog ; 
-	printf("duplicate is: \n");
-	print_chprog(tmp1->chprog);
-
+	
 	tmp->next=tmp1;
 }//not tested 
 

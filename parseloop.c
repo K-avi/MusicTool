@@ -486,21 +486,21 @@ void chprogparse(char * line , S_USERINFO* user_saved){
          while(NEUTRAL_CHAR(line[i])) i++;
          if(line[i]=='['){
             S_CHPROG * ch_parsed= str_to_chprog(&line[i]);
-            printf("%s\n", &line[i]);
-            print_chprog(ch_parsed);
+           
             if(!ch_parsed){
                 printf("couldn't parse a chord prog, please pass a correct chord prog\n");
 
             }else{
               save_chprog(ch_parsed, user_saved);
-              print_chprog(ch_parsed);
+           
               free_chord_prog(ch_parsed);
-              print_saved_chprog(user_saved, 1);
+              
             }
          }else if(END_OF_LINE_CHAR(line[i])){
          
             if(tmp_prog){
               save_chprog(tmp_prog, user_saved);
+              printf("saving temporary prog : \n");
               print_chprog(tmp_prog);
               free_chord_prog(tmp_prog);
               tmp_prog=NULL;
@@ -1068,10 +1068,12 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     while(fgets(line, 256, f)){
 
       l=0;
+    
       if(_syntaxcheck){
         syntax_flag=syntaxcheck(line);
+  
         if(syntax_flag) {     
-          printf("syntax error %s at line %d\n", syntax_error_flag_to_str(syntax_flag),line_num+1); 
+         
           free(clean_filename);
           fclose(f);    
           return;
@@ -1079,7 +1081,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       }
         
       while( (line[l]==' ' || line[l]=='\t') && line[l]!=10 ) l++;
-     
+   
       if(line[l]== 10 || line[l]=='#') { ++line_num; continue;}//empty line or comment
       
       else if(!strncmp(&line[l], "scale ",6)){     
@@ -1089,10 +1091,11 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
         harmoparse(&line[l+5], user_saved);
         
       }else if(!strncmp(&line[l], "triad", 5)){
-        triadprogparse(&line[l+6], user_saved);
+      
+        triadprogparse(&line[l+5], user_saved);
         
       }else if(!strncmp(&line[l], "prog", 4)){
-     
+    
         chprogparse(&line[l+4] , user_saved);
         
       }else if(!strncmp(&line[l], "dodec", 5)){

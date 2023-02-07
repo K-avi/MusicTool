@@ -23,6 +23,6 @@ prog toscale
 
 triad rand 
 
-triad rend -length=3  -scl={0 2 3 5 7 8 10}
+triad rand -length=3  -scl={0 2 3 5 7 8 10}
 triad rand -scllen=7
 

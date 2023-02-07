@@ -1,0 +1,31 @@
+Changes to version 1.3: 
+
+The chprog type was renamed triad (short for triad progression) type. 
+
+The syntax to the "triad rand" function was upgraded. 
+You can now pass parameters to it. 
+The parameters are: 
+
+-length=N (which forces the prog to be of length N)
+-scllen=N (the prog is created using a random scale of length)
+
+-scl={...} (the prog is generated with chords from the scale passed)
+
+triad rand can still be called without arguments. 
+
+A new type was added! 
+It's the prog (short for chord progression). 
+This type consists of extended progs, an extended prog consists of a triad + extensions. 
+The type is very basic. It has the basic save/print/remove functions.
+As well as a prog rand function that has the same syntax than triad rand. 
+It supports every triad rand parameter as well as : 
+
+-extnum=N (the number of extension of each chord in the prog is N if possible or the number closest to N)
+-extmax=N (the maximum number of extension on each chord of the prog is N)
+
+the prog toscale function is also available for it. 
+
+NB: the separator in the triad and prog types aren't the same, each triad in a triad prog is separated by a comma whereas each prog 
+is separated by a semicolon. I might unify the syntax at some point but I'll keep it this way atm.
+
+Syntaxchecking can now be disabled in MusicTool by calling it with the argument -syntaxcheck=NO

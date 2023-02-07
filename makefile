@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter -std=c17
+CFLAGS = -g -Wall -Wextra -pedantic -Wno-unused-parameter -std=c11
 #CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 ALLPROGS= test MusicTool smtool

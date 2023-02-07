@@ -2,6 +2,7 @@
 #define MISC_H
 
 #include "types.h"
+#include <stdlib.h>
 extern LENGTH count_bits( unsigned bits);
 extern unsigned nextprime(unsigned n);
 

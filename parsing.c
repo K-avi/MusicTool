@@ -7,6 +7,7 @@
 #include "init.h"
 #include "scalegen.h"
 #include "user_info.h"
+#include "misc.h"
 #include "bitop.h"
 #include "parsing.h"
 #include <stdio.h>

@@ -39,17 +39,19 @@ extern S_SCALE get_complementary_scale(S_SCALE scale);
 extern S_SCALE generate_nearby_scale (S_SCALE scale);
 
 extern S_INTERVAL_VECTOR generate_intv_vect(S_SCALE scale, LENGTH length);
-extern void print_intv_vect( S_INTERVAL_VECTOR vect);
 
+extern void  print_intv_struct(S_INTERVAL_STRUCTURE intervals);
+extern void print_intv_vect( S_INTERVAL_VECTOR vect);
+extern S_INTERVAL_STRUCTURE get_interval_struct(S_SCALE scale);
+extern PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET scale, CPT n);
 #ifdef DEBUG
 extern SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2);
 extern unsigned short inverse_bit (S_SCALE scale );
 
-extern S_INTERVAL_STRUCTURE get_interval_struct(S_SCALE scale);
+
 extern int length_intv_struct(S_INTERVAL_STRUCTURE intervals);
 
-extern void  print_intv_struct(S_INTERVAL_STRUCTURE intervals);
-extern PITCH_CLASS_SET rot_pcs( PITCH_CLASS_SET scale, CPT n);
+
 
 extern S_SCALE move_note(S_SCALE scale, LENGTH length);
 

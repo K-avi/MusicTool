@@ -41,9 +41,10 @@ extern S_CHPROG* get_chord_prog( S_USERINFO *user_data, INDEX index);
 extern void remove_chprog(  S_USERINFO * user_info, CPT index );
 extern void save_chprog( S_CHPROG* chprog , S_USERINFO * user_info);
 extern void print_saved_chprog( S_USERINFO * user_data, INDEX index);
+extern S_TRIAD_PROG * duplicate_triadprog( S_TRIAD_PROG * chprog);
 
 #ifdef DEBUG
-extern S_TRIAD_PROG * duplicate_triadprog( S_TRIAD_PROG * chprog);
+
 extern CPT modes_in_saved (S_MODES mode, S_SAVED_MODES * saved_modes);
 #endif
 

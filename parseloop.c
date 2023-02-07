@@ -1246,12 +1246,10 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
   if(!argv[1] || !argv[2]) return 0;
   char * keyword= argv[1] ; 
   LENGTH len= strlen(argv[2]);
-  char* command = malloc( (len+2));
+  char* command = malloc( (len+2)*sizeof(char));
   memcpy(command, argv[2], len+1);
   command[len]=' ';
   command[len+1]='\0';
-  
-  printf("%s\n", command);
 
   if(! (keyword &&  command)){
       printf("invalid arguments\n");

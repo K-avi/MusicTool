@@ -34,7 +34,7 @@ int main(int argc , char * argv[]){
           return 2;
         }else{
           _syntaxcheck=0;
-                    printf("warning: you are currently running MusicTool without syntaxcheck.\nStability and behavior is not guaranteed.\nDo not run MusicTool without syntaxcheck unless you have a very good reason to.\n  >>>");
+          printf("warning: you are currently running MusicTool without syntaxcheck.\nStability and behavior is not guaranteed.\nDo not run MusicTool without syntaxcheck unless you have a very good reason to.\n  >>>");
         }
         
       }else if(!strncmp(command+13, "YES", 3)){

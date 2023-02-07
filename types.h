@@ -3,7 +3,7 @@
 
 
 #include <sys/types.h>
-#define DEBUG
+//#define DEBUG
 #include <stdbool.h>
 
 #ifdef WIN32 

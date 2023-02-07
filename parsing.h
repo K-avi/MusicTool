@@ -18,14 +18,16 @@ extern char* syntax_error_flag_to_str(SYNTAX_ERROR flag );
 
 extern S_CHPROG* str_to_chprog( char* str);
 
+extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator);
+
+extern void free_str_tab(char ** str_tab, LENGTH length);
+
 
 #ifdef DEBUG
 extern TRIAD word_bits_to_chord (WORD_BITS word);
 extern WORD_BITS str_to_wordbits( char * str, unsigned char mode);
 
-extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separator);
 
-extern void free_str_tab(char ** str_tab, LENGTH length);
 
 extern CHORD str_to_chord( char * str);
 #endif

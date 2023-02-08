@@ -85,7 +85,7 @@ S_DODEC shuffle_once( S_DODEC seed, INDEX i1, INDEX i2){//shuffles a serie passe
 
     return seed ^ shuffler;
 }
-S_DODEC shuffle_serie(S_DODEC seed, u_long num){//randomly shuffles a serie passed as seed num times
+S_DODEC shuffle_serie(S_DODEC seed, unsigned long long num){//randomly shuffles a serie passed as seed num times
 
     INDEX i1=rand()%12, i2=rand()%12;
     while(i1==i2) i2=rand()%12;

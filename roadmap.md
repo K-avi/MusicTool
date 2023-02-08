@@ -31,48 +31,46 @@ Features for MusicTool 1.3:
 
 Features for MusicTool 1.4: 
     
+    PCS type? 
     writing stuff to midi files maybe ? 
 
-MusicTool 1.3: 
 
-
-rewrite structure : 
-
-    from 8 bits to 16 bits -> stored as scale + degree
-
-printing: 
-    
-    done!
-
-generating extended chords:  
-    
-    YES YES YES 
-
-parsing:
-
-    YES YES YES 
-
-syntaxchecking: 
-
-    YES YES YES
-
-saving: 
-
-    need to repurpose chord to store extended chords 
-    current chords will be renamed as "triads" 
-
-frontend implementation: 
-
-    done 
-
-compile MusicTool w/o syntaxchecking: 
-
-    not done yet 
-    
-possibility to compile w/o syntaxchecking (gonna do later)
 
 1.3.2 : 
 
 Chordbook: 
 
-not there yet 
+How to implement chordbook? 
+
+-> candidates: 
+
+-Linked List where each element is a block: 
+
+    pros: none
+    cons: trash 
+
+-BST where LEFT node is next degree n right node is other choices for current degree: 
+
+    pros: really fucking compact 
+    cons: confusing + awful to search 
+
+-Table of degree + next ???
+    
+    pros: really fucking compact ; possibility to do bitwise shit maybe ?
+    cons: not sure how to do it YET
+
+big problem of non-trivial rep is: if I make representation compact HOW can I minimise 
+number of checks to retrieve a prog of length N????
+
+really tricky tbh 
+
+maybe do it in multiple steps 
+
+-retrieve deg przt 
+
+-filter from beeg tree /array 
+
+
+MAKE THE STRUCT REPEAT ITSELF IF ITS A TREE 
+
+1 alloc FOR EACH NODE BUT BUT BUT MULTIPLE NODES POINTING TO THIS ONE !!!!!!!!!!!

@@ -8,6 +8,7 @@
 #include "harmo.h"
 #include "parseloop.h"
 #include "parsing.h"
+#include "progbook.h"
 #include "scalegen.h"
 #include "types.h"
 #include "bitop.h"
@@ -24,6 +25,7 @@
 
 #include "chordprint.h"
 #include "rand.h"
+#include "progbook.h"
 
 #include <string.h>
 
@@ -290,13 +292,43 @@ int main(){
   }*/
 
 
-  S_TRIAD_PROG* t_prog= generate_triad_prog("-scllen=2 -length=4 ");
+ /*S_TRIAD_PROG* t_prog= generate_triad_prog("-scllen=2 -length=4 ");
   SYNTAX_ERROR check = prog_triad_randcheck( "-scllen=2 -length=4", 't');
   printf("%d is check\n", check);
   print_triad_prog(t_prog);
 
-  free_triad_prog(t_prog);
+  free_triad_prog(t_prog);*/
+
+  PROGBOOK *pbook= malloc(sizeof(PROGBOOK));
  
+  unsigned char error_catch= init_book(pbook);
+ /* printf("error is : %d\n", error_catch);
+  pbook->nbentries=40;
+
+  for (CPT i=0; i<40; i++){
+    pbook->book[i]=i;
+   
+  }
+
+  int a= realloc_book(pbook);
+  printf("a is %d\n", a);
+
+  
+  for (CPT i=0; i<20; i++){
+    pbook->book[40+i]=40+i; 
+    pbook->nbentries++;
+  }
+  printf("max entry is: %d\n", pbook->maxentries);
+   for(CPT i=0; i<pbook->nbentries; i++){
+    printf("%llu\n", pbook->book[i]);
+  }*/
+
+  S_CHPROG* prog= str_to_chprog(" [ I; IV; V; bII; II; bVII; VII ; I ; bIII ; III; II; IV; I]");
+  BOOKENTRY entry= chprog_to_bookentry(prog);
+
+  print_book_entry(entry);
+  free_chord_prog(prog);
+  free_book(pbook);
   return 0;
 
 }

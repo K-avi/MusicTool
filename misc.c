@@ -46,7 +46,7 @@ unsigned nextprime( unsigned n){
   else return(nextprime(n+1));
 }
 
-INDEX nth_bit_pos( unsigned bits, INDEX index){
+INDEX nth_bit_pos( unsigned  long long bits, INDEX index){
   //returns the shift of the nth bits in bits
   if( (!bits)|| (!index)) return 0;
 

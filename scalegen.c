@@ -253,9 +253,12 @@ S_INTERVAL_STRUCTURE get_interval_struct(S_SCALE scale){
     INDEX shift=0; 
 
     for(CPT i=0; i<l; i++ ){
+        
         curbits= nth_bit_pos(scale_deg, i+1); 
-        ret|=(curbits-prevbits)<<(4*(shift));
+        ret|=(unsigned long long)((unsigned long long) (curbits-prevbits)<< (unsigned long long)(4*(shift)));
+ 
         shift++;
+     
         prevbits=curbits;
     }
     
@@ -282,7 +285,7 @@ int length_intv_struct(S_INTERVAL_STRUCTURE intervals){
 
 void  print_intv_struct(S_INTERVAL_STRUCTURE intervals){//prints an interval struct
     if(intervals & INTERVAL_STRUCT_ERRFLAG) return; 
-    if(!intervals) {printf("[12\n]"); return;}
+    if(!intervals) {printf("[12]\n"); return;}
     printf("[ ");
     for (CPT i=0; i<length_intv_struct(intervals); i++){
       

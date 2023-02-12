@@ -121,13 +121,9 @@ typedef unsigned int WORD_BITS; //bits representing the characters parsed from a
 
 
 
-#ifndef WIN32
-typedef unsigned long long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bits so this makes me kinda sad
-#endif
 
-#ifdef WIN32 
-typedef unsigned long long S_INTERVAL_STRUCTURE;
-#endif 
+typedef unsigned long long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 bits so this makes me kinda sad
+
 //the interval structure is divided into 4 bits sections containing numbers from 1 to 11 .
 //from bit 48 onward bits are flags. 
 //special case : a scale containing only 1 note is translated into an empty interval structure which 
@@ -228,6 +224,48 @@ typedef struct{
     CPT modes_num;
     CPT dodec_num;
     CPT prog_num;
+
 }S_USERINFO;
 
+
+/////////////////////////PROG BOOK PART
+
+typedef unsigned long long BOOKENTRY;
+ /*
+ formated ull; first 12 bits r PCS to check if degree passed contains the prog; 
+ bit 13 to 16 contain the length of the prog. 
+
+ bits 17 to MSB are the prog in itself stored as a compact array w each degree stored on 4 bits
+ the compact array contains values from 1 to 12 representing the degrees. 0 is used to know when the last value is.
+ */
+
+
+typedef struct{ 
+  BOOKENTRY* book; 
+  unsigned short nbentries, maxentries; 
+}PROGBOOK;
+
+
+typedef struct{ 
+  unsigned short* indexes; 
+  LENGTH length; 
+}S_BOOK_INDEX_ARRAY; 
+/*
+stores the relevant degrees in a book when trying to know which bookentry u can generate with a given PCS. 
+This struct might be unnessecary. But I'm too dumb not to use it tbh.
+*/
+
+typedef struct{ 
+  unsigned char* degree_prog; 
+  LENGTH length; 
+}S_DEGREE_PROG;
+
+#define BOOK_REALLOC_SUCCES 0
+#define BOOK_REALLOC_NULLBOOK_ERR 1 
+#define BOOK_REALLOC_INVALID_CALL 2 
+#define BOOK_REALLOC_FAILURE 3
+#define BOOK_REALLOC_GENERIC_ERR 4
+#define BOOK_INIT_INVALID_CALL 5
+
+////////////////////////////////////
 #endif

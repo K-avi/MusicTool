@@ -1,0 +1,190 @@
+<!DOCTYPE html >
+
+<html lang="en">
+    <head>
+      
+        <title>mtool structures docu</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css" >
+        
+
+        <!--custom css-->
+
+        <link rel="stylesheet" href="css/styles_var.css">
+
+    </head>
+
+    <body>
+
+        <h1 class="text-center">
+            MusicTool data structures : documentation
+        </h1>
+        <div class="card text-white bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <h2 class="text-left blue" >
+                    summary: 
+                </h2>
+                <br/>
+            </div>
+            <div class="card-body">
+                
+                    
+                        <ul>
+                            <li>
+                                <a href="#p1" class="text-justify">
+                                I: Bitwise representation
+                                </a>
+                                <ul>
+                                <li>
+                                    <a href="#p11">
+                                    1: bitwise rep of MusicTool external types
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#p12">
+                                    2: bitwise rep of MusicTool internal types
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#p13">
+                                    3: 
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#p14">
+                                    4:
+                                    </a>
+                                </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#p2">
+                                    II: other objects representation
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="#p21">
+                                        1: "saved" objects
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p22">
+                                        2: 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p23">
+                                        3:  
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p24">
+                                        4:
+                                        </a>
+                                    </li>
+                                   
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#p3">
+                                    III: MusicTool lists / sets
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="#p31">
+                                        1: lists of saved objects
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p32">
+                                        2: the prog book array 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p33">
+                                        3: 
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p34">
+                                        4:
+                                        </a>
+                                    </li>
+                                   
+                                </ul>
+                            </li>
+                        
+                        </ul>
+                    
+            </div>
+        </div>
+
+        <div id="p1">
+            <h2>
+            <u>
+                I: Bitwise Representation in MusicTool :
+            </u>
+            </h2>
+            <br/>
+
+            <div id="p11">
+                <h4>
+                <em>
+                    I.1: Bitwise Representation of MusicTool external types : 
+                </em>
+                </h4>
+                <p class="text-left">
+                    NB: external types are the types that users can interract with while using the MusicTool 
+                    interpreter or an smtool command
+                    <ul>
+                        <li>S_SCALE: </li> size: 2bytes; relevant bits: 11 first bits. 
+                                            <br/>1-hot representation of a scale where presence of the fundamental is assumed.
+                        <li>S_DODEC :</li> size: 8 bytes; relevant bits: 48 first bits. 
+                                            <br/>compacted array of number between 1 and 12. each number is stored on 4bits w the first being stored from lsb to bit 4.
+                        <li>S_INTERVAL_STRUCTURE :</li> size: 8 bytes ; relevant bits: min 4 bits; 
+                                                        <br/> max 4*12 bits compacted array of number between 1 and 12. each number is stored on 4bits w the first being stored from lsb to bit 4.
+                        <li>S_INTERVAL_VECTOR</li> size: 4 bytes ; relevant bits: 24 first bits ;
+                                                <br/>compacted array of 6 numbers between 1 and 12. each number stored on 4 bits
+                    </ul>
+                </p>
+            </div>
+            <div id="p12">
+                <h4>
+                <em>
+                    I.2: Bitwise Representation of MusicTool internal types : 
+                </em>
+                </h4>
+                <p class="text-left">
+                    NB: external types are the types used inside MusicTool as intermediate representation or the constituant of the external types.
+                    <ul>
+                        <h4>These are the internal types that are contained inside external types:</h4>
+                        <li>TRIADS_BITS: </li>
+                        <li>DEGREES_BITS :</li>
+                        <li>TRIAD:</li>
+                        <li>CHORD :</li>
+                        <li>PITCH_CLASS_SET: </li> size: 2 bytes; relevant bits : lsb to 13 
+                        <br/>1-hot representation of a pitch class set. Very similar to scale except each 
+                        degree is stored on a bit which means that lsb is wether 0 is in the PCS so on.
+                        bit 13 is an error flag.
+                        <li>BOOKENTRY: </li> size: 8 bytes: relevant bits: all 64 bits.;
+                                            <br/> first 12 bits store the PCS of the prog. ; then the next 52 bits contain the prog itself. The PCS is stored in a 1-hot format. The prog is a compacted array. Each number is stored 
+                                             on 4 bits; it's length thus goes from 1 to 13. 
+                    </ul>
+                    <ul>
+                        <h4>These are the internal types that are only used as intermediate representation :</h4>
+                       
+                        <li>S_EXTENSIONS :</li>
+                        <li>TRIADS_IN_SCALE :</li>
+                        
+                    </ul>
+                    
+                </p>
+            </div>
+    </body>
+</html>

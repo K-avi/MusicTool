@@ -165,6 +165,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
             if(line[i]=='{'){
               //printf("%s\n", &line[i]);
               generated_scale=parse_scale(&line[i]);
+             // print_scale(generated_scale);
             
               if( ! (generated_scale&ERROR_FLAG)){
                 generated_intv_struct= get_interval_struct(generated_scale);

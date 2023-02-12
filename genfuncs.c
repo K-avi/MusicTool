@@ -29,10 +29,10 @@ bool generic_rand( char * str, char mode  ){
   */
   
   if(mode == 's' || mode== 'h'){
-    length= parse_scale_length(str);
-    if(length==13) length=rand()%12;
+    scl_length= parse_scale_length(str);
+    if(scl_length==13) scl_length=rand()%12;
       
-    tmp_saved_scale=generate_ran_scale(length);
+    tmp_saved_scale=generate_ran_scale(scl_length);
 
     if(mode=='h'){
       if(tmp_saved_mode) free(tmp_saved_mode);
@@ -123,6 +123,12 @@ u_char generic_scl_scl( S_SCALE (*operation)(S_SCALE scl),char* str, S_USERINFO*
               printf("runtime error while doing scale operation\n");
             }
           }
+    }else{
+      if(tmp_saved_scale){
+        tmp_saved_scale=operation(tmp_saved_scale); 
+        print_scale(tmp_saved_scale); 
+        return 3;
+      }
     }
     return 0;
 }

@@ -17,7 +17,7 @@ bool succes=0;
 S_SCALE tmp_saved_scale;
 S_SCALE scale_to_save=0;
 S_SCALE generated_scale=0;
-LENGTH length=0;
+LENGTH scl_length=0;
 SIGNED_LENGTH indexx=-1 ,index2=-1; //there's an index function in string.h so I had to rename the global n could not think of a better name
 S_INTERVAL_STRUCTURE generated_intv_struct=0;
 S_INTERVAL_VECTOR generated_intv_vect=0;
@@ -44,3 +44,9 @@ S_DODEC * tmp_matrix=NULL;
 //syntaxcheck global :
 
 bool _syntaxcheck=1;
+
+//progbook globals: 
+
+PROGBOOK * progbook=NULL;
+unsigned int _book_realloc= 20;
+unsigned int _booksize_default=40;

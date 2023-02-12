@@ -6,7 +6,7 @@
 extern LENGTH count_bits( unsigned bits);
 extern unsigned nextprime(unsigned n);
 
-extern INDEX nth_bit_pos( unsigned bits, INDEX index);
+extern INDEX nth_bit_pos( unsigned long long bits, INDEX index);
 
 extern int mod(int a, int b);
 #ifdef WIN32 

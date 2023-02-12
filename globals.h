@@ -30,7 +30,7 @@ extern bool succes;
 extern S_SCALE tmp_saved_scale ;
 extern S_SCALE scale_to_save ;
 extern S_SCALE generated_scale;
-extern LENGTH length;
+extern LENGTH scl_length;
 extern SIGNED_LENGTH indexx, index2; //there's an index function in string.h so I had to rename the global n could not think of a better name
 extern S_INTERVAL_STRUCTURE generated_intv_struct;
 extern S_INTERVAL_VECTOR generated_intv_vect;
@@ -59,4 +59,11 @@ extern S_DODEC* tmp_matrix;
 //syntaxcheck global
 
 extern bool _syntaxcheck;
+
+//progbook globals 
+
+extern PROGBOOK * progbook;
+extern unsigned int _book_realloc;
+extern unsigned int _booksize_default;
+
 #endif

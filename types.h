@@ -258,8 +258,22 @@ This struct might be unnessecary. But I'm too dumb not to use it tbh.
 typedef struct{ 
   unsigned char* degree_prog; 
   LENGTH length; 
-}S_DEGREE_PROG;
+}S_DEGREE_PROG;  
+/*
+generic degree prog struct to use before converting to triad prog/ chord prog
+*/
 
+
+typedef struct { 
+  PROGBOOK ** book_arrays;
+  unsigned short nbentries;
+}BOOK_LENGTH_TABLE;
+
+/*
+array of smaller book tables sorted by length; 
+index 0 contains bookentries of length 1; 
+index 1 entries of length 2 n so on. 
+*/
 #define BOOK_REALLOC_SUCCES 0
 #define BOOK_REALLOC_NULLBOOK_ERR 1 
 #define BOOK_REALLOC_INVALID_CALL 2 

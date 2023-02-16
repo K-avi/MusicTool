@@ -29,7 +29,6 @@
 
 #include <string.h>
 
-
 int main(){
 
   time_t t;
@@ -299,9 +298,6 @@ int main(){
 
   free_triad_prog(t_prog);*/
 
-  PROGBOOK *pbook= malloc(sizeof(PROGBOOK));
- 
-  unsigned char error_catch= init_book(pbook);
  /* printf("error is : %d\n", error_catch);
   pbook->nbentries=40;
 
@@ -323,12 +319,78 @@ int main(){
     printf("%llu\n", pbook->book[i]);
   }*/
 
-  S_CHPROG* prog= str_to_chprog(" [ I; IV; V; bII; II; bVII; VII ; I ; bIII ; III; II; IV; I]");
-  BOOKENTRY entry= chprog_to_bookentry(prog);
 
-  print_book_entry(entry);
-  free_chord_prog(prog);
+  PROGBOOK *pbook= malloc(sizeof(PROGBOOK));
+ 
+  init_book(pbook, _book_init_small);
+  
+
+  S_CHPROG* prog= str_to_chprog(" [ I; IV; V; bII; II; bVII; VII ; I ; bIII ; III; II; IV; I]");
+  S_CHPROG* prog1 = str_to_chprog( "[ I; IV; V ]");
+  S_CHPROG* prog2 = str_to_chprog( "[ I ]");
+
+  S_CHPROG* prog3 = str_to_chprog( "[ IV ]");
+  S_CHPROG* prog4 = str_to_chprog( "[ V ]");
+   S_CHPROG* prog5 = str_to_chprog( "[ I ;V ]");
+    S_CHPROG* prog6 = str_to_chprog( "[ I ; IV ]");
+     S_CHPROG* prog7 = str_to_chprog( "[ I; II; V ]");
+
+  BOOKENTRY entry= chprog_to_bookentry(prog);
+  BOOKENTRY entry1= chprog_to_bookentry(prog1);
+  BOOKENTRY entry2= chprog_to_bookentry(prog2);
+
+   BOOKENTRY entry3= chprog_to_bookentry(prog3);
+  BOOKENTRY entry4= chprog_to_bookentry(prog4);
+
+   BOOKENTRY entry5= chprog_to_bookentry(prog5);
+    BOOKENTRY entry6= chprog_to_bookentry(prog6);
+     BOOKENTRY entry7= chprog_to_bookentry(prog7);
+
+  
+  add_entry(pbook, entry);
+ 
+  add_entry(pbook, entry1);
+  add_entry(pbook, entry2);
+ add_entry(pbook, entry2);
+ add_entry(pbook, entry3);
+  add_entry(pbook, entry4);
+  add_entry(pbook, entry5);
+  add_entry(pbook, entry6);
+  add_entry(pbook, entry7);
+   
+  
+
+  print_progbook(pbook);
+ 
+
+
+  BOOK_LENGTH_TABLE *table= progbook_constrained_to_book_length(pbook, 2741);
+
+  S_DEGREE_PROG* deg_pr= build_deg_prog_from_deg_array(table, 5);
+ /* for(int i=0;i<12;i++){
+    printf("%p\n", table->book_arrays[i]);
+  }*/
+  //printf(" %d\n",  pbook->nbentries);
+  //print_book_entry( pbook->book[0]);
+  //print_book_entry( pbook->book[1]);
+  //print_progbook(pbook);
+ // print_book_lengthtable(table);
+
+  print_degree_prog(deg_pr);
+
+  free(deg_pr->degree_prog); 
+  free(deg_pr);
+
   free_book(pbook);
+  free_chord_prog(prog);
+  free_chord_prog(prog1);
+  free_chord_prog(prog2);
+  free_chord_prog(prog3);
+  free_chord_prog(prog4);
+  free_chord_prog(prog5);
+  free_chord_prog(prog6);
+  free_chord_prog(prog7);
+  free_book_table(table);
   return 0;
 
 }

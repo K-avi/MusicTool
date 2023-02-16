@@ -116,3 +116,64 @@ I guess I need to know which length I can generate.
 
 
 -> awful; painfull; annoying 
+
+
+Gonna test 2 implems for progbook. First one is juste a regular array where I put progs 
+
+Other one is kinda like a Hash Table; where each index is associated Pitch Class Set 
+n an array every prog that needs this Pitch Class set is stored in the array of said degree . 
+Might be a better rep idk . 
+
+The structure would be smtg like: 
+
+typedef struct {
+    BOOKENTRIES * entries ; 
+    PITCH_CLASS_SET key; 
+    CPT nb_entries, max_entries;
+}ARRAY_ENTRIES 
+
+typedef struct{ 
+    ARRAY_ENTRIES* indexes;
+    CPT nb_entries, max_entries; 
+}BOOK_TABLE
+
+
+Also I'm prolly gonna generate a table where entries r sorted by length in an array to generate random stuff cuz it makes my life wayyyyyy easier.
+
+
+STATUS OF SMTOOL 1.3.2:
+
+done for progbook: 
+
+    -make the generation of arrays better ( customize the dynamic allocation so that they don't take a lot of space)   done 
+
+    -make the generation function take edge cases (can only generate 1 prog ) into account
+
+
+pending for progbook: 
+
+    -do the functions that turn a degreee prog into a triad / chprog
+
+    -make the progbook file clean (MACROS + split into 2/3 files)
+
+    -implement the parsing 
+
+    -implement the checking 
+
+    -implement in the frontend 
+
+        -generate 
+        -add 
+        -save book 
+        -load book 
+        -print book
+        
+    -implement the IO
+
+
+IF I HAVE THE TIME AND WILL; REDO THE IMPLEMENTATION TO MAKE IT ACTUALLY DECENT: 
+
+create a table indexed by proglength  
+
+in each table save bookentries in a table indexed by PCS 
+

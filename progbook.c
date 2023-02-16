@@ -1,6 +1,8 @@
-#include <stdlib.h>
+#include <stddef.h>
 #include "chordgen.h"
+#include "misc.h"
 #include "progbook.h"
+#include "rand.h"
 #include "types.h"
 #include "globals.h"
 #include "triadgen.h"
@@ -10,8 +12,12 @@
 #include <string.h>
 
 
+/*
+PROGBOOK operations 
+*/
 
-unsigned char init_book( PROGBOOK *pbook){
+
+unsigned char init_book( PROGBOOK *pbook, size_t init_size ){
 
     //need to define error messages of init; 
     /*
@@ -24,28 +30,30 @@ unsigned char init_book( PROGBOOK *pbook){
     if(!pbook) return BOOK_INIT_INVALID_CALL;
 
     pbook->nbentries=0;
-    pbook->maxentries=_booksize_default;
+    pbook->maxentries= init_size;
 
-    pbook->book=malloc(_booksize_default* sizeof(BOOKENTRY));
+    pbook->book=malloc( init_size* sizeof(BOOKENTRY));
     if(!pbook->book ) return 1;
     return 0;
 }//tested; works
-unsigned char realloc_book( PROGBOOK* pbook){
-    //modify return type to handle errors
 
+
+unsigned char realloc_book( PROGBOOK* pbook, size_t realloc_size){
+    //modify return type to handle errors
+    //need to be able to customize realloc size
     if(!pbook) return BOOK_REALLOC_NULLBOOK_ERR;
     if(! (pbook->maxentries== pbook->nbentries))  return BOOK_REALLOC_INVALID_CALL;
     
     BOOKENTRY* tmpbook= pbook->book;
 
-    pbook->book=realloc(pbook->book, (pbook->maxentries+_book_realloc) * sizeof(unsigned long long));
+    pbook->book=realloc(pbook->book, (pbook->maxentries+realloc_size) * sizeof(unsigned long long));
     if(! pbook->book) { //handles realloc problem
         pbook->book=tmpbook; 
         printf("couldn't allocate more memory; please try again");
         return BOOK_REALLOC_FAILURE ;
     }else {
       //  memcpy(pbook->book, tmpbook, pbook->maxentries*sizeof( BOOKENTRY));
-        pbook->maxentries+=_book_realloc;
+        pbook->maxentries+=realloc_size;
         //free(tmpbook);
         return BOOK_REALLOC_SUCCES ;
     }
@@ -75,11 +83,11 @@ unsigned char add_entry (PROGBOOK * pbook, BOOKENTRY entry){
     //error handling; error values r temporary n will be redefined later
     if(!pbook) return 1;
     if(!pbook->book) return 1;
-    if(entry_in_book(pbook, entry)) return 2;
+    if(!entry_in_book(pbook, entry)) return 2;
 
-    if(pbook->maxentries==pbook->nbentries) realloc_book(pbook); //handles realloc
-    pbook->book[pbook->nbentries+1]=entry;
-    pbook->nbentries++;
+    if(pbook->maxentries==pbook->nbentries) realloc_book(pbook, _book_realloc); //handles realloc
+    pbook->book[pbook->nbentries++]=entry;
+   // pbook->nbentries++;
     return 0;
 }//tested; works
 
@@ -89,40 +97,6 @@ void free_book(PROGBOOK* pbook){
     free(pbook);
 }//tested 
 
-
-
-PITCH_CLASS_SET chprog_degs_to_pcs_relev_deg(S_CHPROG *prog){
-    /*
-    returns the PCS containing the degrees of a chord. This isn't the same as 
-    returning the pcs containing the PCS containing every note of the prog. 
-    What this does is that it only includes the degrees w/o caring about which triad
-    /extensions the chord has.
-    */
-    if(!prog) return 0;
-    if(!prog->chprog) return 0;
-    PITCH_CLASS_SET ret=0;
-    for (CPT i=0; i<prog->length; i++){
-        ret|= 1<<(prog->chprog[i]& 0xF); //retrieves degree n turns it into a PCS element.
-    }
-    return ret;
-}//usefull when checking if a prog is in the saved book; not tested  
-
-
-PITCH_CLASS_SET triad_degs_to_pcs_relev_deg(S_TRIAD_PROG *prog){
-    /*
-    returns the PCS containing the degrees of a chord. This isn't the same as 
-    returning the pcs containing the PCS containing every note of the prog. 
-    What this does is that it only includes the degrees w/o caring about which triad
-    /extensions the chord has.
-    */
-    if(!prog) return 0;
-    if(!prog->chord_prog) return 0;
-    PITCH_CLASS_SET ret=0;
-    for (CPT i=0; i<prog->length; i++){
-        ret|= 1<<(prog->chord_prog[i]& 0xF); //retrieves degree n turns it into a PCS element.
-    }
-    return ret;
-}//usefull when checking if a prog is in the saved book; not tested  
 
 BOOKENTRY chprog_to_bookentry (S_CHPROG* prog){
     //turns a bookentry into a chord prog. Does so by assigning the first 12 bits of the prog to 
@@ -202,6 +176,16 @@ void print_book_entry(BOOKENTRY entry){
 }//tested ; works 
 
 
+
+void print_progbook( PROGBOOK* book){
+    if(!book) return; 
+    if(! (book->book && book->nbentries)) return;
+
+    for(CPT i=0; i<book->nbentries; i++){
+        print_book_entry(book->book[i]);
+    }
+}
+
 S_BOOK_INDEX_ARRAY * generation_indexes( PROGBOOK* progbook, PITCH_CLASS_SET pcs){
     /*
     returns the array of indexes of the progs in a book that a pcs passed as argument contains. 
@@ -241,9 +225,167 @@ S_BOOK_INDEX_ARRAY * generation_indexes( PROGBOOK* progbook, PITCH_CLASS_SET pcs
     ret->length=ret_length; 
     return ret;
 }//not tested
+//Might be useless bc book_length_table is way cooler tbh
 
 
-S_DEGREE_PROG* build_deg_prog_from_deg_array( S_BOOK_INDEX_ARRAY* relevant_indexes, PROGBOOK* progbook, LENGTH length ){
+
+/*
+book length table functions
+*/
+
+BOOK_LENGTH_TABLE* init_length_table(){
+    /*
+    creates a book length table ; by allocating 
+    */
+
+    BOOK_LENGTH_TABLE * ret= malloc(sizeof( BOOK_LENGTH_TABLE));
+    ret->nbentries=0;
+    ret->book_arrays= calloc( sizeof(PROGBOOK*), 12);
+
+    return ret;
+}
+
+
+BOOK_LENGTH_TABLE* progbook_constrained_to_book_length( PROGBOOK* progbook, PITCH_CLASS_SET pcs){
+    /*
+    creates a BOOK_LENGTH_TABLE containing every progbook BOOKENTRY that u can generate 
+    w the pcs passed as argument
+    */
+    if(! (progbook && pcs)) return NULL;
+    if(!progbook->book) return init_length_table();
+
+    BOOKENTRY * bookentries= progbook->book;
+
+    BOOK_LENGTH_TABLE* ret= init_length_table();
+    LENGTH length=0;
+
+    for(unsigned short i=0; i<progbook->nbentries; i++){
+
+         if( (pcs & progbook->book[i] & 0xFFF) == (progbook->book[i] & 0xFFF)){
+            
+            length= (bookentries[i]>>12) & 0xF; //retrieves length from bookentry
+
+            if(! ret->book_arrays[length-1]){
+                printf("length is %d\n", length);
+                ret->book_arrays[length-1]= malloc(sizeof(PROGBOOK));
+                init_book(ret->book_arrays[length-1], _booksize_default);
+            
+            }else if( ret->book_arrays[length-1]->nbentries==ret->book_arrays[length-1]->maxentries){
+                realloc_book(ret->book_arrays[length-1], _book_realloc_small); //i do not trust this tbh 
+            }
+
+            ret->book_arrays[length-1]->book[ret->book_arrays[length-1]->nbentries++]=bookentries[i];      
+            ret->nbentries++;
+        }
+    }
+    return ret;
+}//not tested ; 
+//return a sorted table length containing the progs u can generate w a given pcs. 
+//makes some functions kinda useless.
+//should customize dynamic array size allocation
+
+BOOK_LENGTH_TABLE * proggbook_to_length_table( PROGBOOK* progbook){
+    /* 
+    converts a valid progbook to a valid length table; return NULL otherwise .
+    */
+
+    if(!progbook) return NULL;
+    if(!progbook->book) return init_length_table();
+
+    BOOK_LENGTH_TABLE * ret= init_length_table();
+    BOOKENTRY * bookentries= progbook->book;
+    LENGTH length=0;
+    for (INDEX i=0; i<progbook->nbentries; i++){
+
+        length= (bookentries[i]>>12) & 0xF;
+
+        if(! ret->book_arrays[length-1]){
+            printf("length is %d\n", length);
+            ret->book_arrays[length-1]= malloc(sizeof(PROGBOOK));
+            init_book(ret->book_arrays[length-1], _book_init_small);
+           
+        }else if( ret->book_arrays[length-1]->nbentries==ret->book_arrays[length-1]->maxentries){
+            realloc_book(ret->book_arrays[length-1], _book_realloc_small); //i do not trust this tbh 
+        }
+
+        ret->book_arrays[length-1]->book[ret->book_arrays[length-1]->nbentries++]=bookentries[i];      
+        ret->nbentries++;
+    }
+    return ret;
+}// tested; should customise dynamic array size. 
+
+void print_book_lengthtable (BOOK_LENGTH_TABLE* table){
+    if(!table) return;
+    if(!(table->book_arrays && table->nbentries)) return;
+    
+    for(CPT i=0; i<12; i++){
+        //printf("%p\n", table->book_arrays[i]);
+        if(table->book_arrays[i]){
+            printf("prog of length %d are:\n", i+1 );
+            print_progbook(table->book_arrays[i]);
+        }
+    }
+}
+
+
+void free_book_table( BOOK_LENGTH_TABLE* table){
+    /* 
+    yes.
+    */
+    if(!table){
+        return ;
+    }
+    for ( CPT i=0; i<12; i++){
+        free_book(table->book_arrays[i]);
+    }
+    free(table->book_arrays);
+    free(table);
+}//not tested; seems ok ?
+
+
+
+
+/*
+
+PART : transformations from book to prog / prog to prog n so on
+
+*/
+
+PITCH_CLASS_SET chprog_degs_to_pcs_relev_deg(S_CHPROG *prog){
+    /*
+    returns the PCS containing the degrees of a chord. This isn't the same as 
+    returning the pcs containing the PCS containing every note of the prog. 
+    What this does is that it only includes the degrees w/o caring about which triad
+    /extensions the chord has.
+    */
+    if(!prog) return 0;
+    if(!prog->chprog) return 0;
+    PITCH_CLASS_SET ret=0;
+    for (CPT i=0; i<prog->length; i++){
+        ret|= 1<<(prog->chprog[i]& 0xF); //retrieves degree n turns it into a PCS element.
+    }
+    return ret;
+}//usefull when checking if a prog is in the saved book; not tested  
+
+
+PITCH_CLASS_SET triad_degs_to_pcs_relev_deg(S_TRIAD_PROG *prog){
+    /*
+    returns the PCS containing the degrees of a chord. This isn't the same as 
+    returning the pcs containing the PCS containing every note of the prog. 
+    What this does is that it only includes the degrees w/o caring about which triad
+    /extensions the chord has.
+    */
+    if(!prog) return 0;
+    if(!prog->chord_prog) return 0;
+    PITCH_CLASS_SET ret=0;
+    for (CPT i=0; i<prog->length; i++){
+        ret|= 1<<(prog->chord_prog[i]& 0xF); //retrieves degree n turns it into a PCS element.
+    }
+    return ret;
+}//usefull when checking if a prog is in the saved book; not tested  
+
+
+S_DEGREE_PROG* build_deg_prog_from_deg_array( BOOK_LENGTH_TABLE * table, LENGTH proglength ){
     /*
     builds a degree prog of the length passed as argument usinf the relevant indexes in a progbook. 
 
@@ -251,8 +393,100 @@ S_DEGREE_PROG* build_deg_prog_from_deg_array( S_BOOK_INDEX_ARRAY* relevant_index
     returns NULL if error/ problem 
     */
 
-    if(!(relevant_indexes && progbook && length)) return NULL;
-    if(!(relevant_indexes->indexes && progbook->book)) return NULL;
+    if(!(table&& proglength)) return NULL;
+    if(!(table->book_arrays && table->nbentries)) return NULL;
 
-    return NULL; 
+
+    S_DEGREE_PROG* ret_prog=NULL;
+    
+
+    PITCH_CLASS_SET length_availables=0;  //which deg can I generate ? 
+    CPT nb_length_availables=0;
+
+    for(CPT i=0; i<12; i++){
+        if( table->book_arrays[i]){ 
+            length_availables|=(1<<i);
+            nb_length_availables++;
+        }
+    }
+
+    /*
+    should be really carefull of the generation loop cuz I don't want to fuck things up. 
+    I think I'll make it so if there is no 1 degree that u can generate u just exit 
+    */
+    if(!( length_availables & 1) ) return NULL; //makes SURE that u can generate a prog of length 1 to be able to generate
+    //a prog from any entry
+
+    ret_prog=malloc(sizeof(S_DEGREE_PROG));
+    ret_prog->degree_prog=calloc(proglength, sizeof(unsigned char));
+
+    ret_prog->length=proglength;
+
+    LENGTH curlength=0, sumlength=0;
+    BOOKENTRY cur_sel=0, prev_sel=0; 
+    INDEX ret_index=0; //to keep track of ret's indexes 
+
+    curlength= nth_bit_pos(length_availables, (rand()%nb_length_availables)+1);
+    if(length_availables==1 && table->book_arrays[0]->nbentries==1){
+
+        cur_sel= table->book_arrays[0]->book[0];
+        cur_sel= ( (cur_sel >> 16) & 0xF) -1;
+        while(curlength<proglength){
+            
+            ret_prog->degree_prog[ret_index++]= cur_sel;
+            curlength++;
+        }
+    
+        
+    }else while(curlength<proglength){
+
+        if(ret_index > ret_prog->length-1) break;
+
+        curlength= nth_bit_pos(length_availables, ((rand()%nb_length_availables)+1)%proglength);
+
+        if(sumlength+proglength> ret_prog->length) continue;
+
+        cur_sel=table->book_arrays[curlength]->book[rand()%table->book_arrays[curlength]->nbentries]; //ugly af
+        
+        
+        if(ret_index){ //makes sure that stuff doesnt repeat. 
+            if( (ret_prog->degree_prog[ret_index-1] & 0xF )== ( ((cur_sel >>16 )& 0xF)-1)) continue;
+        }
+
+        for(CPT i=0; i<curlength+1 ; i++){
+            if(ret_index > ret_prog->length-1) break;
+            ret_prog->degree_prog[ret_index]= (((cur_sel) >> (16+(4*i)) ) & 0xF) -1; //stores each degree in ret_prog
+            ++ret_index;
+        }   
+
+        proglength-=curlength;
+        sumlength+=curlength;
+    }
+    return ret_prog; 
 }
+
+//function doesnt account a scenario where u can only generate 1 and only one prog. 
+
+void print_degree_prog( S_DEGREE_PROG* degprog){
+
+    if(!degprog) return;
+    if(!degprog->degree_prog) return;
+    printf("[ ");
+    for(CPT i=0; i<degprog->length; i++){
+        printf("%s ", bits_deg_to_str(degprog->degree_prog[i]));
+    }
+    printf(" ]\n");
+}
+
+
+S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
+   
+    return NULL;
+}
+
+S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale){
+
+    return NULL;
+}
+
+//should check that the deg 1 r there n return error otherwise as a safety measure.

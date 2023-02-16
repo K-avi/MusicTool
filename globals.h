@@ -65,5 +65,7 @@ extern bool _syntaxcheck;
 extern PROGBOOK * progbook;
 extern unsigned int _book_realloc;
 extern unsigned int _booksize_default;
+extern unsigned int _book_realloc_small;
+extern unsigned int _book_init_small;
 
 #endif

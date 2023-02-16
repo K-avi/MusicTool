@@ -50,3 +50,7 @@ bool _syntaxcheck=1;
 PROGBOOK * progbook=NULL;
 unsigned int _book_realloc= 20;
 unsigned int _booksize_default=40;
+
+unsigned int _book_realloc_small=5;
+
+unsigned int _book_init_small=10;

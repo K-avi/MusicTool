@@ -149,12 +149,14 @@ done for progbook:
 
     -make the generation function take edge cases (can only generate 1 prog ) into account
 
+    -do the functions that turn a degreee prog into a triad / chprog
+
 
 pending for progbook: 
 
-    -do the functions that turn a degreee prog into a triad / chprog
-
     -make the progbook file clean (MACROS + split into 2/3 files)
+
+    -be able to pop extensions from a prog
 
     -implement the parsing 
 
@@ -173,7 +175,7 @@ pending for progbook:
 
 IF I HAVE THE TIME AND WILL; REDO THE IMPLEMENTATION TO MAKE IT ACTUALLY DECENT: 
 
-create a table indexed by proglength  
+create a table of tables indexed by proglength  
 
 in each table save bookentries in a table indexed by PCS 
 

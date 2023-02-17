@@ -8,7 +8,9 @@
 #include "triadgen.h"
 #include "triadprint.h"
 #include "scalegen.h"
+#include "harmo.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -266,7 +268,7 @@ BOOK_LENGTH_TABLE* progbook_constrained_to_book_length( PROGBOOK* progbook, PITC
             length= (bookentries[i]>>12) & 0xF; //retrieves length from bookentry
 
             if(! ret->book_arrays[length-1]){
-                printf("length is %d\n", length);
+               // printf("length is %d\n", length);
                 ret->book_arrays[length-1]= malloc(sizeof(PROGBOOK));
                 init_book(ret->book_arrays[length-1], _booksize_default);
             
@@ -480,13 +482,90 @@ void print_degree_prog( S_DEGREE_PROG* degprog){
 
 
 S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
-   
-    return NULL;
+    /*
+    turns a generic degree prog into a triad prog. Selects a random triad from scale at each deg of relev 
+    degs.
+    */
+    if(! (prog && scale )) return  NULL;
+    if( (!prog->degree_prog) || (!scale) || (!prog->length) ) return NULL;
+
+
+    S_TRIAD_PROG * ret = malloc(sizeof(S_TRIAD_PROG));
+    ret->chord_prog = malloc(prog->length* sizeof(unsigned char) );
+    ret->length=prog->length;
+
+    DEGREES_BITS curdeg= 0;
+    TRIADS_BITS triad_sel=0;
+
+    TRIADS_IN_SCALE all_triads=0;
+
+    S_SCALE curmode=0;
+
+    
+    for (CPT i=0; i<prog->length; i++){
+
+        ret->chord_prog[i]= prog->degree_prog[i];
+        
+        curmode= rot(scale , prog->degree_prog[i]);
+        all_triads=triads_at_fund(curmode);
+
+        ret->chord_prog[i]|= triad_in_scl_to_triad_bits( select_rand_triads(all_triads))<<4;
+        
+    }
+
+    return ret;
 }
+
+/*
+how to convert : 
+
+-> retrieve current degree; 
+-> add to ret; 
+-> get mode associated w degree ; 
+-> retrieve triads associated w degree; 
+-> add it to ret. 
+*/
 
 S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale){
+    /*
+    turns a generic degree prog into a triad prog. Selects a random triad from scale at each deg of relev 
+    degs.
+    */
+    if(! (prog && scale )) return  NULL;
+    if( (!prog->degree_prog) || (!scale) || (!prog->length) ) return NULL;
 
-    return NULL;
-}
 
-//should check that the deg 1 r there n return error otherwise as a safety measure.
+    S_CHPROG * ret = malloc(sizeof(S_CHPROG));
+    ret->chprog = malloc(prog->length* sizeof(CHORD) );
+    ret->length=prog->length;
+
+
+    S_SCALE curmode=0;
+
+    print_scale(scale);
+
+    for (CPT i=0; i<prog->length; i++){
+        
+        ret->chprog[i]= prog->degree_prog[i];
+        
+        curmode= rot(scale , prog->degree_prog[i]);
+        printf("i is %d, progdeg is %d \n", i, prog->degree_prog[i]);
+        print_scale(curmode);
+
+        ret->chprog[i]|=  (curmode )<<4;
+    }
+
+    return ret;
+}//tested; kinda works; doesnt pop extensions though
+
+/*
+how to convert : 
+
+-> retrieve current degree; 
+-> add to ret; 
+-> get mode associated w degree ; 
+-> retrieve triad/ ext associated w degree; 
+-> add it to ret. 
+
+->maybe u should be able to pass generation parameters like nb extensions n so on
+*/

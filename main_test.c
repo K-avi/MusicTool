@@ -360,13 +360,25 @@ int main(){
    
   
 
-  print_progbook(pbook);
+//  print_progbook(pbook);
  
 
 
   BOOK_LENGTH_TABLE *table= progbook_constrained_to_book_length(pbook, 2741);
 
   S_DEGREE_PROG* deg_pr= build_deg_prog_from_deg_array(table, 5);
+
+  S_TRIAD_PROG* t_prog= degree_prog_to_triad_prog(deg_pr, 2741>>1 );
+  printf("%d\n", parse_scale("{0 2 4 5 7 9 11}"));
+  S_CHPROG* ch_prog = degree_prog_to_chprog( deg_pr, 1370);
+
+  
+
+  print_triad_prog(t_prog);
+  free_triad_prog(t_prog);
+
+  print_chprog(ch_prog);
+  free_chord_prog(ch_prog);
  /* for(int i=0;i<12;i++){
     printf("%p\n", table->book_arrays[i]);
   }*/

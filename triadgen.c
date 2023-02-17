@@ -147,14 +147,14 @@ void free_triad_prog(S_TRIAD_PROG* source){
 
 //from rand.c cuz makes more sense here
 
- DEGREES get_deg_from_chdeg( PITCH_CLASS_SET deg){//converts a degree stored in chord_degrees format to degrees format; 
+DEGREES get_deg_from_chdeg( PITCH_CLASS_SET deg){//converts a degree stored in chord_degrees format to degrees format; 
 //in order to use it to generate the first 4 bits of a CHORD.
 
     DEGREES ret= nth_bit_pos(deg, 1);
     return ret;
 }//tested
 
-TRIAD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a chord from a triad and a degree 
+TRIAD generate_chord(TRIADS_IN_SCALE triads, PITCH_CLASS_SET deg){//generates a triad from a triad and a degree 
   
   if(!triads || !deg) return 0;
   TRIAD ret=0;

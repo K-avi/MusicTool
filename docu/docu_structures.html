@@ -148,9 +148,9 @@
                         <li>S_DODEC :</li> size: 8 bytes; relevant bits: 48 first bits. 
                                             <br/>compacted array of number between 1 and 12. each number is stored on 4bits w the first being stored from lsb to bit 4.
                         <li>S_INTERVAL_STRUCTURE :</li> size: 8 bytes ; relevant bits: min 4 bits; 
-                                                        <br/> max 4*12 bits compacted array of number between 1 and 12. each number is stored on 4bits w the first being stored from lsb to bit 4.
+                                            <br/> max 4*12 bits compacted array of number between 1 and 12. each number is stored on 4bits w the first being stored from lsb to bit 4.
                         <li>S_INTERVAL_VECTOR</li> size: 4 bytes ; relevant bits: 24 first bits ;
-                                                <br/>compacted array of 6 numbers between 1 and 12. each number stored on 4 bits
+                                            <br/>compacted array of 6 numbers between 1 and 12. each number stored on 4 bits
                     </ul>
                 </p>
             </div>
@@ -164,11 +164,11 @@
                     NB: external types are the types used inside MusicTool as intermediate representation or the constituant of the external types.
                     <ul>
                         <h4>These are the internal types that are contained inside external types:</h4>
-                        <li>TRIADS_BITS: </li>
-                        <li>DEGREES_BITS :</li>
-                        <li>TRIAD:</li>
-                        <li>CHORD :</li>
-                        <li>PITCH_CLASS_SET: </li> size: 2 bytes; relevant bits : lsb to 13 
+                        <li>TRIADS_BITS: </li> size: 1 byte; relevant bits: lsb to 4 ; in the triad format, used to represent the triad. minor triad is 1 , major 2, dim 3, aug 4, sus2 5 , sus4 6
+                        <li>DEGREES_BITS :</li>size: 1 byte; relevant bits : lsb to 4 ; in the different chords formats, uses number from 0 to 11 to represent a degree. DEG_I is 0, DEG_bII is 1,...,DEG_VII is 11
+                        <li>TRIAD:</li> size: 1 byte; relevant bits: all of them. Internal representation of a triad in a triad prog. lsb to bit 3 stores the degree in DEGREE_BITS format ; bit 4 to msb store the triad in the TRIAD_BIT format 
+                        <li>CHORD :</li> size: 2 bytes; relevant bits: all of them. Internal representation of a chord in a chprog. lsb to bit 3 stores the degree in DEGREE_BITS format. ; bit 4 to msb (bit 15) store the chord in the PITCH_CLASS_SET/S_EXTENSIONS format
+                        <li>PITCH_CLASS_SET: </li> size: 2 bytes; relevant bits : lsb to 11. Represents a set of notes in a 1-HOT format. Presence of the note {0} is wether lsb is set presence of {1} is wether second bit set ,...
                         <br/>1-hot representation of a pitch class set. Very similar to scale except each 
                         degree is stored on a bit which means that lsb is wether 0 is in the PCS so on.
                         bit 13 is an error flag.
@@ -179,8 +179,13 @@
                     <ul>
                         <h4>These are the internal types that are only used as intermediate representation :</h4>
                        
-                        <li>S_EXTENSIONS :</li>
-                        <li>TRIADS_IN_SCALE :</li>
+                        <li>S_EXTENSIONS :</li> other name fro PITCH_CLASS_SET size: 2 bytes; relevant bits : lsb to 11. Represents a set of notes in a 1-HOT format. Presence of the note {0} is wether lsb is set presence of {1} is wether second bit set ,...
+                        <br/>1-hot representation of a pitch class set. Very similar to scale except each 
+                        degree is stored on a bit which means that lsb is wether 0 is in the PCS so on.
+                        bit 13 is an error flag.
+                        <li>TRIADS_IN_SCALE :</li> size: 1 byte ; relevant bits: lsb to bit 6. 1-HOT representation of triads present in a given scale. 
+                        lsb is set if minor triad is present; second bit is set if major triad, 
+                        
                         
                     </ul>
                     

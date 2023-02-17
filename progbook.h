@@ -31,6 +31,8 @@ extern S_DEGREE_PROG* build_deg_prog_from_deg_array( BOOK_LENGTH_TABLE * table, 
 
 extern void print_degree_prog( S_DEGREE_PROG* degprog);
 
+extern S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale);
+extern S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale); 
 #ifdef DEBUG 
 #endif
 

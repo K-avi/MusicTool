@@ -1,5 +1,6 @@
 #include "parseloop.h"
 #include "bitop.h"
+#include "progbook.h"
 #include "triadgen.h"
 #include "triadprint.h"
 #include "dodecseries.h"
@@ -1021,7 +1022,65 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
     printf("environment loaded succesfully!\n");
 }
 
-void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse MusicTool command from file; file must begin with "MusicTool:commands"   
+void writeparse(char * str , S_USERINFO* user_info, PROGBOOK * pbook){
+  ushort i=0; 
+ 
+  while(str[i]==' '){i++ ;}
+
+  if(str[i]=='\n' || str[i]=='\0'){
+      printf("please give the part of the environment and the name of the file you want to write in\n");
+      return;
+  }
+
+  if(!strncmp(&str[i], "env", 3)){
+    i+=3; 
+    while(str[i]==' ') i++; 
+    if(str[i]=='\n' || str[i]=='\0'){
+      printf("please give the the name of the file you want to save the current environment in\n");
+      return;
+    }else write_env(&str[i], user_info);
+  }else{
+    printf("runtime writeparse error\n");
+     return;
+  }
+}
+
+void bookparse(char * str, PROGBOOK * pbook){
+  ushort i=0; 
+ 
+  while(str[i]==' '){i++ ;}
+
+  if(str[i]=='\n' || str[i]=='\0'){
+      printf("runtime invalid pbook call : missing parameter\n");
+      return;
+  }
+
+  if(!strncmp(&str[i], "print", 5)){
+    i+=6; 
+    while(str[i]==' ') i++; 
+    if(str[i]!='\n' || str[i]!='\0'){
+      printf("runtime pbook print error: too many args\n");
+      return;
+    }else print_progbook(pbook);
+  }else if(!strncmp(&str[i], "add", 3)){
+    i+=3;
+
+    while(str[i]==' ') i++; 
+    if(str[i]=='\n' || str[i]=='\0'){
+      printf("runtime pbook add error: missing args\n");
+      return;
+    }else{
+
+      printf("parsing / saving degree prog not implemented yet; my bad\n");
+    }
+
+  }else{
+    printf("runtime pbook error\n");
+     return;
+  }
+}
+
+void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK * pbook){//parse MusicTool command from file; file must begin with "MusicTool:commands"   
 
     if(!filename){
         printf("filename incorrect\n");
@@ -1105,17 +1164,23 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
       }else if(!strncmp(&line[l], "help",4)){
         helpparse(&line[l+4]);
       
+      }else if(!strncmp(&line[l], "write",5)){
+        writeparse(&line[l+5],user_saved, pbook);
+      
       }else if(!strncmp(&line[l], "read",4)){
     
         l+=4;
         while(NEUTRAL_CHAR(line[l])) l++;
         if(!strncmp(&line[l], "command", 7)){  
-          file_command_parseloop(&line[l+7], user_saved);
+          file_command_parseloop(&line[l+7], user_saved, pbook);
 
         }else if(!strncmp(&line[l], "env",3)){
          
           file_environment_parseloop(&line[l+3],user_saved);
         }
+        
+      }else if(!strncmp( &line[l] , "book", 4)){
+        bookparse(&line[l+4], pbook );
         
       }else {
         printf("runtime file reading error at line %d\n", line_num+1);
@@ -1131,7 +1196,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved){//parse Mu
     return;
 }
 
-void readparse(char * str ,S_USERINFO* user_saved){
+void readparse(char * str ,S_USERINFO* user_saved , PROGBOOK * pbook){
   if(! str ) return; 
 
   ushort i=0;
@@ -1139,37 +1204,15 @@ void readparse(char * str ,S_USERINFO* user_saved){
   if(str[i] =='\n' || str[i]=='\0') return;
 
   if(!strncmp( str, "command ", 8)){
-    file_command_parseloop(&str[i+8], user_saved);
+    file_command_parseloop(&str[i+8], user_saved, pbook);
   }else if(!strncmp(&str[i], "env", 3)){
     if(!user_saved) return;
     file_environment_parseloop(&str[i+3], user_saved);
   }
 }
 
-void writeparse(char * str , S_USERINFO* user_info){
-  ushort i=0; 
-  bool ret;
-  while(str[i]==' '){i++ ;}
 
-  if(str[i]=='\n' || str[i]=='\0'){
-      printf("please give the part of the environment and the name of the file you want to write in\n");
-      return;
-  }
-
-  if(!strncmp(&str[i], "env", 3)){
-    i+=3; 
-    while(str[i]==' ') i++; 
-    if(str[i]=='\n' || str[i]=='\0'){
-      printf("please give the the name of the file you want to save the current environment in\n");
-      return;
-    }else write_env(&str[i], user_info);
-  }else{
-    printf("runtime writeparse error\n");
-     return;
-  }
-}
-
-void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
+void cmdline_parseloop( S_USERINFO* user_saved, PROGBOOK* pbook){ //the main frontend loop function ; relies heavily on the scale n chord loop interpreter function
 
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
@@ -1207,9 +1250,9 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
         printf("  >>>");
         continue;
       }
-      if(!strncmp(&line[i], "scale ",6)){
+      if(!strncmp(&line[i], "scale",5)){
         
-        scaleparse(&line[i+6], user_saved);
+        scaleparse(&line[i+5], user_saved);
         printf("  >>>");
       }else if(!strncmp(&line[i], "harmo",5)){
         
@@ -1228,14 +1271,21 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
         helpparse(&line[i+4]);
         printf("  >>>");
       }else if(!strncmp(&line[i],"quit",4)){
+        
         printf("\nYou have exited MusicTool\n");
         clearglobals();
         break;
       }else if(!strncmp(&line[i],"read ",5)){
-        readparse(&line[i+5], user_saved);
+
+        readparse(&line[i+5], user_saved, pbook);
         printf("  >>>");
-      }else if(!strncmp(&line[i],"write ",6)){
-        writeparse(&line[i+6], user_saved);
+      }else if(!strncmp(&line[i],"write",5)){
+
+        writeparse(&line[i+5], user_saved, pbook);
+        printf("  >>>");
+      }else if(!strncmp( &line[i] , "book", 4)){
+
+        bookparse(&line[i+4], pbook );
         printf("  >>>");
       }else if (line[0]=='\n'){
         printf("  >>>");
@@ -1245,7 +1295,7 @@ void cmdline_parseloop( S_USERINFO* user_saved){ //the main frontend loop functi
     }
 }
 
-RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
+RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info, PROGBOOK * pbook){
 
   if(!argv[1] || !argv[2]) return 0;
   char * keyword= argv[1] ; 
@@ -1265,7 +1315,7 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info){
         syntaxcheck=filename_check_var(command);
         if(!syntaxcheck){
           
-          file_command_parseloop(command, user_info);
+          file_command_parseloop(command, user_info, pbook);
         }
   }else if(!strncmp(keyword, "-scale",5 )){
 

@@ -151,16 +151,29 @@ done for progbook:
 
     -do the functions that turn a degreee prog into a triad / chprog
 
+    -make the progbook file clean (MACROS + split into 2/3 files) never!!!! (kinda)
+
+    -customise generation (nb extensions etc)
+
+
+
+IF I HAVE THE TIME AND WILL; REDO THE IMPLEMENTATION TO MAKE IT ACTUALLY DECENT: 
+
+create a table of tables indexed by proglength  
+
+in each table save bookentries in a table indexed by PCS 
+
+
+
+
 
 pending for progbook: 
 
-    -make the progbook file clean (MACROS + split into 2/3 files)
-
-    -be able to pop extensions from a prog
+   
 
     -implement the parsing 
 
-    -implement the checking 
+     -implement syntaxchecking 
 
     -implement in the frontend 
 
@@ -170,12 +183,20 @@ pending for progbook:
         -load book 
         -print book
         
-    -implement the IO
 
 
-IF I HAVE THE TIME AND WILL; REDO THE IMPLEMENTATION TO MAKE IT ACTUALLY DECENT: 
 
-create a table of tables indexed by proglength  
 
-in each table save bookentries in a table indexed by PCS 
+parsing/io -> 
+
+book print  done 
+book add    not done 
+
+read book  not done 
+write book not done 
+
+triad coherand -length=N -scl={...} -scllen=N
+
+prog coherand -extnum=N -extmax=N -scl={....} -scllen=N
+
 

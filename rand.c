@@ -579,4 +579,4 @@ S_CHPROG* generate_chprog( char * args){
       return ret;
   }
   return NULL;
-}//needs to prevent it from generating the same chord twice bc it's kinda dumb
+}//really fucking ugly

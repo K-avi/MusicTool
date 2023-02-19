@@ -75,7 +75,7 @@ int main(int argc , char * argv[]){
   printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
-  cmdline_parseloop(user_data);
+  cmdline_parseloop(user_data, NULL);
 
   free_userinfo(user_data);
   return 0;

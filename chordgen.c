@@ -147,7 +147,7 @@ TRIADS_IN_SCALE select_triad( CHORD chord){
     ret= SUS2_CHORD;
 
   }else {
-    print_scale(scl);
+   // print_scale(scl);
     ret=0;
   }
   return ret;

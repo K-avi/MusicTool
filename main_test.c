@@ -27,6 +27,8 @@
 #include "rand.h"
 #include "progbook.h"
 
+#include "coherand.h"
+
 #include <string.h>
 
 int main(){
@@ -364,17 +366,21 @@ int main(){
  
 
 
-  BOOK_LENGTH_TABLE *table= progbook_constrained_to_book_length(pbook, 2741);
+  BOOK_LENGTH_TABLE *table= progbook_constrained_to_book_length(pbook, 2741 );
 
   S_DEGREE_PROG* deg_pr= build_deg_prog_from_deg_array(table, 5);
 
-  S_TRIAD_PROG* t_prog= degree_prog_to_triad_prog(deg_pr, 2741>>1 );
-  printf("%d\n", parse_scale("{0 2 4 5 7 9 11}"));
-  S_CHPROG* ch_prog = degree_prog_to_chprog( deg_pr, 1370);
+  S_TRIAD_PROG* t_prog= degree_prog_to_triad_prog(deg_pr, 1370 );
+  //printf("%d\n", parse_scale("{0 4  7 }"));
+  S_CHPROG* ch_prog = degree_prog_to_chprog( deg_pr,  1370);
+
+ // print_chprog(ch_prog);
+ // ch_prog->chprog[0]=pop_extensions(ch_prog->chprog[0], 2);
 
   
-
-  print_triad_prog(t_prog);
+  pop_prog_extensions(ch_prog, 2);
+  //pop_prog_extensions_rand(ch_prog);
+  //print_triad_prog(t_prog);
   free_triad_prog(t_prog);
 
   print_chprog(ch_prog);
@@ -388,7 +394,7 @@ int main(){
   //print_progbook(pbook);
  // print_book_lengthtable(table);
 
-  print_degree_prog(deg_pr);
+ // print_degree_prog(deg_pr);
 
   free(deg_pr->degree_prog); 
   free(deg_pr);

@@ -9,7 +9,7 @@ PROGRAMS= MusicTool smtool
 all: $(ALLPROGS)
 progs: $(PROGRAMS)
 
-test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o triadgen.o rand.o misc.o triadprint.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o chordgen.o chordprint.o progbook.o main_test.o 
+test: scalegen.o harmo.o parsing.o  user_info.o globals.o init.o triadgen.o rand.o misc.o triadprint.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o chordgen.o chordprint.o progbook.o coherand.o main_test.o 
 	$(CC) -o $@ $(CFLAGS) $^
 
 MusicTool: scalegen.o init.o harmo.o parsing.o user_info.o globals.o triadgen.o triadprint.o rand.o misc.o parseloop.o writeenv.o syntaxcheck.o dodecseries.o genfuncs.o chordgen.o chordprint.o main_interpreter.o

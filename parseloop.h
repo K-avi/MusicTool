@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-extern void cmdline_parseloop(S_USERINFO* user_saved);
-extern RUNTIME_ERROR parse_command( char * argv[],  S_USERINFO * user_info);
+extern void cmdline_parseloop(S_USERINFO* user_saved, PROGBOOK * pbook);
+extern RUNTIME_ERROR parse_command( char * argv[],  S_USERINFO * user_info, PROGBOOK * pbook);
 
 #ifdef DEBUG
 extern void file_command_parseloop(char * filename, S_USERINFO* user_saved);

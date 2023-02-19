@@ -36,7 +36,7 @@ int main( int argc, char *argv[])
 
     
 
-    SYNTAX_ERROR err =parse_command( argv, user_data);
+    SYNTAX_ERROR err =parse_command( argv, user_data, NULL);
 
     if(err!=0){
       char * err_msg= syntax_error_flag_to_str(err);

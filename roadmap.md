@@ -221,3 +221,6 @@ syntaxcheking problem w degree progs
 
 
 documentation update : far from finished
+
+coherand options dont work ; have to fix ; then update docu n then 
+ig we good for 1.3.2

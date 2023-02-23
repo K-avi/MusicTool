@@ -204,7 +204,7 @@ S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale){
         
         curmode= rot(scale , prog->degree_prog[i]);
         //printf("i is %d, progdeg is %d \n", i, prog->degree_prog[i]);
-        print_scale(curmode);
+       // print_scale(curmode);
 
         ret->chprog[i]|=  (curmode )<<4;
     }
@@ -307,7 +307,8 @@ mode 'p' is for prog n allows acces to extnum, extmax
     if(mode=='p'){
         tmp= strstr(str, "-extnum=");
         if(tmp){
-            *extnum= atoi(tmp+9);
+            printf("in set otpions extnum %s\n", tmp);
+            *extnum= atoi(tmp+8);
         }else{
             tmp=strstr(str, "-extmax=");
             if(tmp){
@@ -329,21 +330,23 @@ S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum,
     S_CHPROG* ret= NULL;
     BOOK_LENGTH_TABLE * table = progbook_constrained_to_book_length(pbook, get_degrees(gen_scl));
     S_DEGREE_PROG * prog= build_deg_prog_from_deg_array(table , gen_length);
-
+    printf("in coherand degprog is: \n"); 
+    print_degree_prog(prog);
     free_book_table(table); 
 
     ret= degree_prog_to_chprog(prog , gen_scl);
 
     free_degree_prog(prog);
 
-    if(extnum){
-
+    if(extnum!=-1){
+        printf("in extnum %d\n", extnum);
         pop_prog_extensions(ret, extnum);        
-    }else if(extmax){
-        
+    }else if(extmax!=-1){
+          printf("in extnmax\n");
         pop_prog_extensions(ret , rand()%extmax);
 
     }else{
+          printf("in default\n");
         pop_prog_extensions_rand(ret);
 
     }   
@@ -357,7 +360,7 @@ S_TRIAD_PROG* coherand_tri(PROGBOOK* pbook , S_SCALE scl, LENGTH length, LENGTH 
 
     LENGTH gen_scllen= scl ? 0 : scllen ? scllen : rand()%3 +7;
    
-    S_SCALE gen_scl= scl ? scl : generate_ran_scale(gen_scllen);
+    S_SCALE gen_scl= scl ? scl : 0x7FF;
 
     LENGTH gen_length= length ? length : rand()%10+1;
 

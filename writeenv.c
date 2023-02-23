@@ -237,7 +237,7 @@ bool write_env(char* filename , S_USERINFO* user_info, PROGBOOK* pbook){
     if(!user_info) return 0; 
     if(!filename) return 0;
 
-    ushort k=0; 
+    unsigned short k=0; 
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
     if(filename[k]=='\n' || filename[k]=='\0'){
@@ -252,7 +252,7 @@ bool write_env(char* filename , S_USERINFO* user_info, PROGBOOK* pbook){
     
     char* clean_filename;
     if(i!=j){
-        clean_filename = malloc(( j) * sizeof(char));
+        clean_filename = (char*) malloc(( j) * sizeof(char));
         memcpy(clean_filename, name_start,  j);
         clean_filename[i]='\0'; 
 

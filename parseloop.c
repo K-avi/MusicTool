@@ -30,7 +30,7 @@
 
 
 void dodecparse(char* line, S_USERINFO* user_saved){
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
     if(line[i]==10 || line[i]=='\0'){ printf("dodec parse error\n"); return;}
  
@@ -114,7 +114,7 @@ void dodecparse(char* line, S_USERINFO* user_saved){
 
 void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsing
     
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
     if(line[i]==10 || line[i]=='\0'){ printf("scale parse error\n"); return;}
 
@@ -247,7 +247,7 @@ void scaleparse(char * line , S_USERINFO* user_saved){//handles the scale parsin
 
 void harmoparse (char * line , S_USERINFO* user_saved ){
 
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
     if(line[i]==10 || line[i]=='\0'){ printf("runtime harmoparse error\n"); return;}
@@ -339,9 +339,9 @@ void harmoparse (char * line , S_USERINFO* user_saved ){
 }
 
 
-void triadprogparse(char * line , S_USERINFO* user_saved){
+void triadprogparse(char * line , S_USERINFO* user_saved, PROGBOOK* pbook){
     
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
     if(line[i]==10 || line[i]=='\0'){ printf("runtime triadprogparse error\n"); return;}
@@ -447,12 +447,29 @@ void triadprogparse(char * line , S_USERINFO* user_saved){
               print_scale(tmp_saved_scale);
             }else printf("no temporary saved scale to retrieve\n");
           }else printf("runtime error in scale inverse\n");
+      }else if(!strncmp(&line[i], "coherand", 8)){
+        
+        i+=8;
+
+        char * tmp= &line[i]; 
+
+        S_SCALE opt_scl=0;
+        LENGTH opt_length=0, opt_scllen=0;
+        char opt_extnum=-1, opt_extmax=-1;
+
+        set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
+        free_triad_prog(tmp_triad);
+        printf( "extnum %d extmac %d, length %d , scllen %d \n", opt_extnum ,opt_extmax , opt_length, opt_scllen);
+        tmp_triad=coherand_tri(pbook, opt_scl, opt_length, opt_scllen);
+        printf("prog generated is:\n");
+        print_chprog(tmp_prog);
+        
       }
 }
 
-void chprogparse(char * line , S_USERINFO* user_saved){
+void chprogparse(char * line , S_USERINFO* user_saved, PROGBOOK * pbook){
     
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
     if(line[i]==10 || line[i]=='\0'){ printf("runtime chprogparse error\n"); return;}
@@ -573,12 +590,16 @@ void chprogparse(char * line , S_USERINFO* user_saved){
         char opt_extnum=-1, opt_extmax=-1;
 
         set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
+        free_chord_prog(tmp_prog);
+        tmp_prog=coherand_prog(pbook, opt_scl, opt_extmax, opt_extnum, opt_length, opt_scllen);
+        printf("prog generated is:\n");
+        print_chprog(tmp_prog);
         
       }else printf("runtime error in prog\n");
 }
 
 void helpparse(char * line ){ //prints the informations corresponding to a string starting by help passed from command line
-    ushort i=0; 
+    unsigned short  i=0; 
     while(line[i]==' ' && line[i]!=10 && line[i]!='\0'){ i++;}
 
     if(line[i]==10 || line[i]=='\0'){ 
@@ -632,7 +653,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
         printf("null pointer as filename\n");
         return;
     }
-    ushort k=0;
+    unsigned short  k=0;
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
     if(filename[k]=='\n' || filename[k]=='\0'){
@@ -681,7 +702,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
     CPT line_num=1;
 
     while(fgets(line, 256, f)){
-      ushort i=0;
+      unsigned short  i=0;
       while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
         i++;
       }
@@ -690,8 +711,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env scale", 9)){
         //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
 
         if(nxt_chr==1){
          while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
@@ -757,8 +778,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env harmo", 9)){
         //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
         S_MODES tmp_modes= NULL;
 
         if(nxt_chr==1){
@@ -825,8 +846,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env dodec", 9)){
         //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
         S_DODEC tmp_dodec= 0;
 
         if(nxt_chr==1){
@@ -892,8 +913,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env prog", 8)){
           //check that '(' is the next not space \t \n character
         char* tmp= &line[i+8];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
         S_CHPROG *prog_to_parse=NULL;
 
         if(nxt_chr==1){
@@ -959,8 +980,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env triad", 9)){
           //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
         S_TRIAD_PROG *tmp_triad=NULL;
 
         if(nxt_chr==1){
@@ -1026,8 +1047,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env book", 8)){
           //check that '(' is the next not space \t \n character
         char* tmp= &line[i+8];
-        ushort line_env= line_num+1;
-        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        unsigned short  line_env= line_num+1;
+        unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
         S_DEGREE_PROG *tmp_deg=NULL;
 
         if(nxt_chr==1){
@@ -1104,7 +1125,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
 }
 
 void writeparse(char * str , S_USERINFO* user_info, PROGBOOK * pbook){
-  ushort i=0; 
+  unsigned short  i=0; 
  
   while(str[i]==' '){i++ ;}
 
@@ -1127,7 +1148,7 @@ void writeparse(char * str , S_USERINFO* user_info, PROGBOOK * pbook){
 }
 
 void bookparse(char * str, PROGBOOK * pbook){
-  ushort i=0; 
+  unsigned short  i=0; 
  
   while(str[i]==' '){i++ ;}
 
@@ -1159,13 +1180,14 @@ void bookparse(char * str, PROGBOOK * pbook){
         printf("runtime : failed to retrieve the entry please pass a valid entry\n");
       }
       else {
-        printf("reached add\n");
+        printf("reached add degprog is: \n");
         print_degree_prog(parsed_prog_deg);
         BOOKENTRY entry= degprog_to_bookentry(parsed_prog_deg);
-        printf("%llu\n", entry);
+      
+        printf("entry is %llu\n", entry);
         printf("%p\n", pbook);
         add_entry(pbook, entry);
-        print_progbook(pbook);
+        //print_progbook(pbook);
       }
       
     }
@@ -1182,7 +1204,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
         printf("filename incorrect\n");
         return;
     }
-    ushort k=0; 
+    unsigned short  k=0; 
     while(filename[k]==' ' && filename[k]!=10 && filename[k]!='\0'){ k++;}
 
     if(filename[k]=='\n' || filename[k]=='\0'){
@@ -1218,7 +1240,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
     }
 
     CPT line_num=1;
-    ushort l=0;
+    unsigned short  l=0;
     SYNTAX_ERROR syntax_flag= SYNTAX_OK;
 
     while(fgets(line, 256, f)){
@@ -1248,11 +1270,11 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
         
       }else if(!strncmp(&line[l], "triad", 5)){
       
-        triadprogparse(&line[l+5], user_saved);
+        triadprogparse(&line[l+5], user_saved, pbook);
         
       }else if(!strncmp(&line[l], "prog", 4)){
     
-        chprogparse(&line[l+4] , user_saved);
+        chprogparse(&line[l+4] , user_saved, pbook);
         
       }else if(!strncmp(&line[l], "dodec", 5)){
         dodecparse(&line[l+6], user_saved);
@@ -1295,7 +1317,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
 void readparse(char * str ,S_USERINFO* user_saved , PROGBOOK * pbook){
   if(! str ) return; 
 
-  ushort i=0;
+  unsigned short  i=0;
   while(str[i]==' ') i++; 
   if(str[i] =='\n' || str[i]=='\0') return;
 
@@ -1313,7 +1335,7 @@ void cmdline_parseloop( S_USERINFO* user_saved, PROGBOOK* pbook){ //the main fro
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
     char line[256];
-    ushort i=0;
+    unsigned short  i=0;
     SYNTAX_ERROR syntax_error= SYNTAX_OK;
 
     while (true){
@@ -1355,10 +1377,10 @@ void cmdline_parseloop( S_USERINFO* user_saved, PROGBOOK* pbook){ //the main fro
         harmoparse(&line[i]+5, user_saved);
         printf("  >>>");
       }else if(!strncmp(&line[i], "triad", 5)){
-        triadprogparse(&line[i+5] , user_saved);
+        triadprogparse(&line[i+5] , user_saved, pbook);
         printf("  >>>");
       }else if(!strncmp(&line[i], "prog", 4)){
-        chprogparse(&line[i+4] , user_saved);
+        chprogparse(&line[i+4] , user_saved, pbook);
         printf("  >>>");
       }else if(!strncmp(&line[i], "dodec", 5)){
         dodecparse(&line[i+5] , user_saved);
@@ -1423,10 +1445,10 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info, PROGBOOK * p
   }else if(!strncmp(keyword, "-triad",6 )){
       syntaxcheck=triadcheck(command);
      
-      if(!syntaxcheck) triadprogparse( command, user_info);
+      if(!syntaxcheck) triadprogparse( command, user_info , pbook);
   }else if(!strncmp(keyword, "-prog",5 )){
       syntaxcheck=progcheck(command);
-      if(!syntaxcheck) chprogparse( command, user_info);
+      if(!syntaxcheck) chprogparse( command, user_info, pbook);
   }else if(!strncmp(keyword, "-dodec",5 )){
       syntaxcheck=dodeccheck(command);
       if(!syntaxcheck) dodecparse( command, user_info);

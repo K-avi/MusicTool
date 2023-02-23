@@ -213,9 +213,11 @@ write book done ; tested
 
 
 
-triad coherand -length=N -scl={...} -scllen=N   -> not done 
+triad coherand -length=N -scl={...} -scllen=N   -> done ; doesnt work lol
 
-prog coherand -extnum=N -extmax=N -scl={....} -scllen=N -> not done
+prog coherand -extnum=N -extmax=N -scl={....} -scllen=N -> done ; doesnt work lol 
+
+syntaxcheking problem w degree progs 
 
 
 documentation update : far from finished

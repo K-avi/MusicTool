@@ -792,4 +792,4 @@ S_CHPROG* str_to_chprog( char* str){//turns the string containing a chord prog t
     }
     free_str_tab(chord_tab, num_of_chord);
     return ch_prog;
-}//incorrect ; smtg is defo wrong 
+}

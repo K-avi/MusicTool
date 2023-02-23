@@ -187,9 +187,8 @@ BOOKENTRY degprog_to_bookentry( S_DEGREE_PROG* prog){
 
 
 void print_book_entry(BOOKENTRY entry){
-    printf("PCS of the entry is: ");
-    print_scale( ENTRY_GETPCS(entry)>>1);
-    printf("and the prog is:\n");
+   
+  
     printf("[ ");
     DEGREES_BITS curdeg=0;
     LENGTH length= ENTRY_GETLENGTH(entry);

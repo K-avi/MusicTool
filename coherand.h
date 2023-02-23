@@ -19,4 +19,7 @@ extern void pop_prog_extensions_rand( S_CHPROG* chprog);
 
 extern void set_options( char * str, unsigned char mode , char* extnum, char* extmax, S_SCALE *scl, LENGTH *length , LENGTH * scllen);
 
+extern S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum, LENGTH length, LENGTH scllen);
+extern S_TRIAD_PROG* coherand_tri(PROGBOOK* pbook , S_SCALE scl, LENGTH length, LENGTH scllen);
+
 #endif

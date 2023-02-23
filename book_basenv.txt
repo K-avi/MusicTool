@@ -1,0 +1,31 @@
+MusicTool:environment 
+#default MusicTool environment; don't touch if you don't have a good reason to!
+env book (
+
+[I]
+[bII]
+[II]
+[bIII]
+[III]
+[IV]
+[bV]
+[V]
+[bVI]
+[VI]
+[bVII]
+[VII]
+
+[I, IV]
+[I, V]
+[I, II, V]
+[I, IV, V]
+[I, bVII, bVI, V]
+[I, II, bII]
+
+[I, bIII, IV]
+
+[I, VI, IV, V]
+
+
+
+)

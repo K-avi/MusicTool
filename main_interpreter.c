@@ -73,7 +73,9 @@ int main(int argc , char * argv[]){
   init_userinfo(user_data);
 
   progbook=malloc(sizeof(PROGBOOK));
-  init_book(progbook, 20);
+  init_book(progbook, 30);
+
+  file_environment_parseloop( "book_basenv.txt", user_data, progbook);
 
 
   printf("Welcome to MusicTool! Type 'help' for more informations\n");

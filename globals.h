@@ -62,6 +62,8 @@ extern bool _syntaxcheck;
 
 //progbook globals 
 
+extern S_DEGREE_PROG * parsed_prog_deg;
+
 extern PROGBOOK * progbook;
 extern unsigned int _book_realloc;
 extern unsigned int _booksize_default;

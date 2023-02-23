@@ -2,13 +2,16 @@
 #include "chordgen.h"
 #include "harmo.h"
 #include "misc.h"
+#include "parsing.h"
 #include "rand.h"
 #include "scalegen.h"
 #include "triadgen.h"
 #include "triadprint.h"
 #include "bitop.h"
+#include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 /*
@@ -61,7 +64,7 @@ S_DEGREE_PROG* build_deg_prog_from_deg_array( BOOK_LENGTH_TABLE * table, LENGTH 
 
     if(!(table&& proglength)) return NULL;
     if(!(table->book_arrays && table->nbentries)) return NULL;
-
+  
 
     S_DEGREE_PROG* ret_prog=NULL;
     
@@ -131,8 +134,6 @@ S_DEGREE_PROG* build_deg_prog_from_deg_array( BOOK_LENGTH_TABLE * table, LENGTH 
     return ret_prog; 
 }
 
-//function doesnt account a scenario where u can only generate 1 and only one prog. 
-
 void print_degree_prog( S_DEGREE_PROG* degprog){
 
     if(!degprog) return;
@@ -183,7 +184,7 @@ S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
 
 S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale){
     /*
-    turns a generic degree prog into a triad prog. Selects a random triad from scale at each deg of relev 
+    turns a generic degree prog into a chord prog. Selects a random triad from scale at each deg of relev 
     degs.
     */
     if(! (prog && scale )) return  NULL;
@@ -273,4 +274,84 @@ void pop_prog_extensions_rand( S_CHPROG* chprog){
     for (CPT i=0 ; i<chprog->length; i++){
         chprog->chprog[i]= pop_extensions(chprog->chprog[i], rand()%count_bits(chprog->chprog[i]>>4)-2);
     }
+}
+
+
+void set_options( char * str, unsigned char mode , char* extnum, char* extmax, S_SCALE *scl, LENGTH *length , LENGTH * scllen){
+/*
+sets the options passed as arguments to options in a string. 
+implementation is : awful but I just want to get 1.3.2 done. 
+I'll make it ok at some point n I apologize for the shitty code.
+mode 'p' is for prog n allows acces to extnum, extmax
+*/  
+    if( ! (str && extnum && extmax && scl && length && scllen)) return ;
+
+    char *tmp=NULL; 
+
+    tmp=strstr(str, "-scl=");
+
+    if(tmp){
+        *scl=parse_scale(tmp);
+    }else{
+        tmp=strstr(str, "-scllen=");
+        if(tmp){
+            tmp+=9;
+            *scllen=atoi(tmp);
+        }
+    }
+
+    tmp=strstr(str, "-length=");
+
+    if(tmp){
+        *length=atoi(tmp+9);
+    }
+
+    if(mode=='p'){
+        tmp= strstr(str, "-extnum=");
+        if(tmp){
+            *extnum= atoi(tmp+9);
+        }else{
+            tmp=strstr(str, "-extmax=");
+            if(tmp){
+                *extmax= atoi(tmp+9);
+            }
+        }
+    }
+}
+
+
+S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum, LENGTH length, LENGTH scllen){
+    if(!pbook ) return NULL;
+
+    LENGTH gen_scllen= scl ? 0 : scllen ? scllen : rand()%3 +7;
+    S_SCALE gen_scl= scl ? scl : generate_ran_scale(scllen);
+
+    LENGTH gen_length= length ? length : rand()%10+1;
+
+    S_CHPROG* ret= malloc(sizeof(S_CHPROG));
+    
+    if(extnum){
+
+        
+    }else if(extmax){
+        
+    }else{
+
+    }
+   
+    return ret; 
+}
+
+S_TRIAD_PROG* coherand_tri(PROGBOOK* pbook , S_SCALE scl, LENGTH length, LENGTH scllen){
+    if(!pbook) return NULL;
+    
+
+    LENGTH gen_scllen= scl ? 0 : scllen ? scllen : rand()%3 +7;
+    S_SCALE gen_scl= scl ? scl : generate_ran_scale(scllen);
+
+    LENGTH gen_length= length ? length : rand()%10+1;
+
+    S_TRIAD_PROG* ret= malloc(sizeof(S_TRIAD_PROG));
+
+    return ret; 
 }

@@ -377,6 +377,11 @@ int main(){
  // print_chprog(ch_prog);
  // ch_prog->chprog[0]=pop_extensions(ch_prog->chprog[0], 2);
 
+
+  S_DEGREE_PROG* degprogtest =str_to_deg_prog("[I]");
+  printf("degprogtest is\n");
+  print_degree_prog(degprogtest); 
+  free_degree_prog(degprogtest);
   
   pop_prog_extensions(ch_prog, 2);
   //pop_prog_extensions_rand(ch_prog);

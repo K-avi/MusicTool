@@ -155,6 +155,10 @@ done for progbook:
 
     -customise generation (nb extensions etc)
 
+     -implement syntaxchecking 
+
+    -implement the parsing 
+
 
 
 IF I HAVE THE TIME AND WILL; REDO THE IMPLEMENTATION TO MAKE IT ACTUALLY DECENT: 
@@ -169,11 +173,8 @@ in each table save bookentries in a table indexed by PCS
 
 pending for progbook: 
 
-   
 
-    -implement the parsing 
-
-     -implement syntaxchecking 
+    
 
     -implement in the frontend 
 
@@ -185,18 +186,36 @@ pending for progbook:
         
 
 
+parsing -> done 
 
+
+syntaxchecking -> done 
+
+env / read dont need to be updated 
+
+book print -> done tested 
+book add -> done tested
+
+triad coherand -> done  
+prog coherand -> done  
+
+
+CMD LINE / FRONTEND : 
 
 parsing/io -> 
 
-book print  done 
-book add    not done 
+book print  done tested
+book add    done  tested
 
-read book  not done 
-write book not done 
-
-triad coherand -length=N -scl={...} -scllen=N
-
-prog coherand -extnum=N -extmax=N -scl={....} -scllen=N
+read book works
+write book done ; tested
 
 
+
+
+triad coherand -length=N -scl={...} -scllen=N   -> not done 
+
+prog coherand -extnum=N -extmax=N -scl={....} -scllen=N -> not done
+
+
+documentation update : far from finished

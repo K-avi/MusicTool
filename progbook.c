@@ -10,7 +10,6 @@
 #include "scalegen.h"
 #include "harmo.h"
 #include "bitop.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -161,6 +160,31 @@ BOOKENTRY triad_to_bookentry( S_TRIAD_PROG* prog){
     return ret; 
 }//not tested but is the same as chprog_to_bookentry so it should be ok
 
+BOOKENTRY degprog_to_bookentry( S_DEGREE_PROG* prog){
+    //works exactly the same as chprog_to_bookentry.
+
+
+   if(!prog) return 0;
+    if(!prog->degree_prog) return 0;
+    BOOKENTRY ret= 0;
+    LENGTH length= prog->length<=12 ? prog->length : 12; //maxlength of progs in books is 13.
+    PITCH_CLASS_SET ret_pcs=0;
+    unsigned long long ret_prog=0;
+    DEGREES_BITS degree=0;
+    for(CPT i=0; i<length; i++){
+
+        degree=GETDEGREES(prog->degree_prog[i]);
+        
+        ret_pcs|= 1<<(degree); //retrieves degree n turns it into a PCS element.
+
+        ret_prog|= ( (unsigned long long ) ( degree+1)<<(4*i)); //sets element in the compacted array
+        
+    }
+    ret= ret_pcs | (length<<12) | (ret_prog<<16);
+   
+    return ret; 
+}//not tested but is the same as chprog_to_bookentry so it should be ok
+
 
 void print_book_entry(BOOKENTRY entry){
     printf("PCS of the entry is: ");
@@ -187,6 +211,31 @@ void print_book_entry(BOOKENTRY entry){
     printf("]\n");
 }//tested ; works 
 
+void fprint_book_entry(FILE * f, BOOKENTRY entry){
+   // fprintf(f,"PCS of the entry is: ");
+   // fprint_scale( f,ENTRY_GETPCS(entry)>>1);
+   // fprintf(f,"and the prog is:\n");
+    fprintf(f,"[ ");
+    DEGREES_BITS curdeg=0;
+    LENGTH length= ENTRY_GETLENGTH(entry);
+    for(CPT i=0; i<length; i++){
+        
+        curdeg=(entry>>(4*i+16)) & 0xF ;
+        
+       
+        if(curdeg==0){
+             break;
+        }
+       
+       if(i!=length-1){
+        fprintf(f,"%s, ", bits_deg_to_str(curdeg-1) );
+       }else{
+        fprintf(f,"%s ", bits_deg_to_str(curdeg-1) );
+       }
+    }
+    fprintf(f,"]\n");
+}//tested ; works 
+
 
 
 void print_progbook( PROGBOOK* book){
@@ -195,6 +244,15 @@ void print_progbook( PROGBOOK* book){
 
     for(CPT i=0; i<book->nbentries; i++){
         print_book_entry(book->book[i]);
+    }
+}
+
+void fprint_progbook( FILE * f, PROGBOOK* book){
+    if(!book) return; 
+    if(! (book->book && book->nbentries)) return;
+
+    for(CPT i=0; i<book->nbentries; i++){
+        fprint_book_entry(f, book->book[i]);
     }
 }
 
@@ -356,3 +414,10 @@ void free_book_table( BOOK_LENGTH_TABLE* table){
     free(table->book_arrays);
     free(table);
 }//works
+
+void free_degree_prog(S_DEGREE_PROG* degprog){
+    if(!degprog) return;
+    
+    if(degprog->degree_prog) free(degprog->degree_prog); 
+    free(degprog);
+}

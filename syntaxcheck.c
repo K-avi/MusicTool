@@ -6,6 +6,7 @@
 #include "scalegen.h"
 #include "types.h"
 #include "misc.h"
+#include "progbook.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,7 +211,6 @@ SYNTAX_ERROR saved_one_arg_check (char * str){//checks that a string is of the f
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS;
         else return SYNTAX_INVALID_ARG;
     }
-
 }
 
 SYNTAX_ERROR intvcheck(char * str){//checks that an intv command is of the form 
@@ -233,7 +233,6 @@ SYNTAX_ERROR intvcheck(char * str){//checks that an intv command is of the form
         if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_TOO_FEW_ARGS; 
         else return SYNTAX_INVALID_ARG;
     }
-
 }
 
 SYNTAX_ERROR scalecheck(char* str){//return SYNTAX_OK || 
@@ -516,6 +515,10 @@ SYNTAX_ERROR triadcheck(char * str){ //checks that a string containing a triad c
    
         return prog_triad_randcheck(tmp+4, 't');
        
+    }else if( !strncmp(tmp, "coherand", 8)){
+   
+        return prog_triad_randcheck(tmp+8, 't');
+       
     }else if(!strncmp(tmp, "remove", 6)){
         return removecheck(tmp+6);
     }else if(!strncmp(tmp, "print", 5)){
@@ -740,9 +743,10 @@ SYNTAX_ERROR dodeccheck(char*str){
 
 
 SYNTAX_ERROR prog_degree_check( char * str , u_char * size){
-    //doesnt work bc i'm stoopid; have to put the longest strings first lmao 
+    //
     char * tmp=str ; 
-
+    if(!str) return SYNTAX_GENERIC_ERROR;
+    //printf("str is %s\n", str);
     while(NEUTRAL_CHAR(*tmp)) tmp++;
 
     if (!strncmp(tmp, "bVII", 4)){
@@ -1030,8 +1034,87 @@ SYNTAX_ERROR progsavecheck(char * str){
     return SYNTAX_OK;
 }
 
+SYNTAX_ERROR bookaddcheck(char * str, char mode){/* 
+checks that a bookentry is correct ; if mode is 'e' (for env) doesnt return error 
+if something comes after the entry; 
+however if mode is 'c' for command line will return an error if something after entry.*/
+    
+    char *tmp=str; 
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
+
+    if(*tmp!='[') return SYNTAX_MISSING_PAR;
+    
+    tmp++;
+
+    SYNTAX_ERROR check=0;
+
+    char * tmp1=tmp; 
+    CPT cpt=1;
+    while(*tmp1) { 
+        if(*tmp1==',') ++cpt;
+        ++tmp1;
+    }
+    LENGTH l= strcspn( str, "]");
+    if(!l){
+        return SYNTAX_INVALID_PROG;
+    }
+
+    char * curstr= strndup( tmp, l);
+
+    char ** strtab=chprog_str_to_tab_chord_str(curstr, cpt, ',');
+   
+
+ 
+    for (INDEX i=0 ; i<cpt; i++){
+
+        if(mode=='e' && !strtab[i]) continue;
+        check= prog_degree_check( strtab[i], &check); //bad practice 
+        if(check ) { 
+        // printf("thrown by check\n");
+            free_str_tab(strtab, cpt) ;
+            free(curstr);
+            return check; 
+        }
+    }
+    free(curstr);
+    free_str_tab(strtab, cpt) ;
+
+    tmp=strstr(tmp, "]"); 
+    //printf("tmp is %s\n", tmp);
+    if(!tmp) return SYNTAX_INVALID_ARG;
+    
+    if(mode=='e') return SYNTAX_OK;
+
+    else if (mode=='c'){
+    
+        ++tmp;
+        while(NEUTRAL_CHAR(*tmp)) ++tmp; 
+
+        if(END_OF_LINE_CHAR(*tmp)) return SYNTAX_OK;
+
+        return SYNTAX_INVALID_ARG;
+    }
+
+    return SYNTAX_GENERIC_ERROR;
+}
 
 
+SYNTAX_ERROR bookcheck(char * str){
+    char * tmp=str; 
+
+    while(NEUTRAL_CHAR(*tmp)) tmp++;
+    if(END_OF_LINE_CHAR( *tmp)) return SYNTAX_TOO_FEW_ARGS;
+    
+    else if(!strncmp(tmp, "add", 3)){
+       return bookaddcheck(tmp+3, 'c');
+
+    }else if (!strncmp(tmp, "print",5)){
+       return emptycheck(tmp+5);
+
+    }
+
+    return SYNTAX_INVALID_CHAR;
+}
 
 
 SYNTAX_ERROR progcheck(char *str ){
@@ -1051,7 +1134,11 @@ SYNTAX_ERROR progcheck(char *str ){
        return printcheck(tmp+5);
 
     }else if(!strncmp (tmp, "rand", 4)){
+
         return prog_triad_randcheck(tmp+4, 'p');// needs to be changed to custom runtime check for args
+    }else if(!strncmp (tmp, "coherand", 8)){
+
+        return prog_triad_randcheck(tmp+8, 'p');// needs to be changed to custom runtime check for args
     }else if(!strncmp (tmp, "toscale", 7)){
         return prog_toscalecheck(tmp+7);// needs to be changed to custom runtime check for args
     }
@@ -1085,6 +1172,8 @@ SYNTAX_ERROR syntaxcheck(char *str){
         ret =dodeccheck(tmp+5);
     }else if (!strncmp(tmp, "prog",4)){
         ret =progcheck(tmp+4);
+    }else if (!strncmp(tmp, "book",4)){
+        ret =bookcheck(tmp+4);
     }else if (!strncmp(tmp, "quit",4)){
         ret=emptycheck(tmp+4);
         if(ret) ret= SYNTAX_INVALID_CHAR;
@@ -1204,6 +1293,62 @@ SYNTAX_ERROR env_triad_check ( char *str) {//checks the syntax of the substring 
     str++;
     return SYNTAX_OK;
 }
+
+SYNTAX_ERROR env_book_check ( char *str) {//checks the syntax of the substring containing an env scale in 
+//in an env file string.
+    //return SYNTAX_OK;
+   
+    SYNTAX_ERROR check=SYNTAX_OK;
+
+    while( *str!='('){ //found open parenthesis
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+            str=skip_line(str) ;
+             continue;
+        }else if(*str=='('){ 
+            str++;
+            break;
+        }else{
+           // printf("in seeking ( inval\n");
+            return SYNTAX_INVALID_CHAR;
+        }
+    }
+     if(*str=='(') str++;
+    while( *str!=')'){
+        while( NEUTRAL_CHAR_ENV(*str) || EOL_ENV(*str)) str++;
+
+      
+        if(EOF_ENV(*str)) return SYNTAX_MISSING_PAR;
+        else if( COMMENT_ENV(*str)) {  //skips the comment line
+
+           // printf("skipping line\n");
+            str=skip_line(str) ;
+          
+           
+            continue;
+        }else if (*str=='['){
+            
+            check=bookaddcheck(str, 'e');
+            if(check ) {    
+                return check;
+
+            }else {
+                str= strstr(str, "]");
+            }
+            str++; 
+            continue;
+
+        }else if(*str==')'){ 
+            break;
+        }else{
+            //printf("%c in seeking ) inval\n", *str);
+            return SYNTAX_INVALID_CHAR;
+        }
+    }
+    str++;
+    return SYNTAX_OK;
+}
 SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring containing an env scale in 
 //in an env file string.
 
@@ -1264,6 +1409,8 @@ SYNTAX_ERROR env_prog_check ( char *str) {//checks the syntax of the substring c
     if(cur_strchord) free(cur_strchord);
     return SYNTAX_OK;
 }
+
+
 SYNTAX_ERROR env_dodec_check(char *str){
     S_DODEC dodec_check=DODEC_ERRFLAG;
 
@@ -1382,6 +1529,17 @@ SYNTAX_ERROR env_check(char * str){//checks the syntax of an env file passed as 
                 tmp+=4;
                
                 scheck=env_prog_check(tmp);
+              
+                if(scheck) return scheck;
+                tmp=strstr(tmp, ")");
+                tmp++;
+              // printf("%s\n", tmp); 
+               continue;
+            }else if(!strncmp(tmp, "book", 4)){
+          
+                tmp+=4;
+               
+                scheck=env_book_check(tmp);
               
                 if(scheck) return scheck;
                 tmp=strstr(tmp, ")");

@@ -22,6 +22,7 @@ extern char ** chprog_str_to_tab_chord_str( char* str, LENGTH length, char separ
 
 extern void free_str_tab(char ** str_tab, LENGTH length);
 
+extern S_DEGREE_PROG* str_to_deg_prog( char* str);
 
 #ifdef DEBUG
 extern TRIAD word_bits_to_chord (WORD_BITS word);

@@ -11,6 +11,7 @@
 #include "user_info.h"
 #include "scalegen.h"
 #include "chordprint.h"
+#include "progbook.h"
 
 #ifndef WIN32
 #include <unistd.h>
@@ -118,17 +119,42 @@ void print_dodec_env (S_USERINFO*uinfo){
     printf(")\n");
 }
 
-void print_env(S_USERINFO* user_info){
+void print_book_env( PROGBOOK * pbook){
+    if(!pbook) return;
+
+   
+    if( (!pbook->book) || (pbook->nbentries> pbook->maxentries)) return;
+    printf("env book (\n");
+    print_progbook(pbook);
+
+    printf(")\n");
+}
+
+void fprint_book_env( FILE * f, PROGBOOK* pbook){
+
+    if(!pbook) return;
+    if( (!pbook->book) || (pbook->nbentries> pbook->maxentries)) return;
+    fprintf(f,"env book (\n");
+    if( (!pbook->book) || (pbook->nbentries> pbook->maxentries)) return;
+    
+    fprintf(f,"env book (\n");
+    fprint_progbook(f,pbook);
+
+    printf(")\n");
+}
+
+void print_env(S_USERINFO* user_info, PROGBOOK* pbook){
     if(!user_info) return;
 
     print_scl_env(user_info);
     print_modes_env(user_info); 
     print_triad_env(user_info);
     print_dodec_env(user_info);
+    print_book_env(pbook);
 }
 
 
-bool fprint_env(FILE *f, S_USERINFO* user_info){
+bool fprint_env(FILE *f, S_USERINFO* user_info, PROGBOOK* pbook){
     
     if(!user_info) return 0;
     if(f==NULL) return 0;
@@ -187,11 +213,19 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     if(tmp4){
         while(tmp4){
             if(tmp4->chprog){
-                printf("len is: %d\n", tmp4->chprog->length);
+                //printf("len is: %d\n", tmp4->chprog->length);
                 fprint_chord_prog(f,tmp4->chprog); 
             }
             tmp4=tmp4->next;
         }
+    }
+
+    BOOKENTRY * tmp5= pbook->book;
+     fprintf(f,")\nenv book (\n");
+    if(tmp5){
+      for(CPT cpt=0; cpt< pbook->nbentries; cpt++){
+            fprint_book_entry(f,tmp5[cpt]);
+      } 
     }
 
     
@@ -199,7 +233,7 @@ bool fprint_env(FILE *f, S_USERINFO* user_info){
     return 1;
 }
 
-bool write_env(char* filename , S_USERINFO* user_info){
+bool write_env(char* filename , S_USERINFO* user_info, PROGBOOK* pbook){
     if(!user_info) return 0; 
     if(!filename) return 0;
 
@@ -234,7 +268,7 @@ bool write_env(char* filename , S_USERINFO* user_info){
             printf("error invalid file please pass a non existing file or a MusicTool:environment file as argument");
             return 0;
         }else{
-            fprint_env(f, user_info);
+            fprint_env(f, user_info, pbook);
             fclose(f);
         }
 
@@ -246,7 +280,7 @@ bool write_env(char* filename , S_USERINFO* user_info){
             return 0;
         }
         fprintf(f,"MusicTool:environment\n");
-        fprint_env(f, user_info);
+        fprint_env(f, user_info, pbook);
         fclose(f);
     }
     free(clean_filename);

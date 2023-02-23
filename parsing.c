@@ -103,6 +103,7 @@ S_SCALE parse_scale(char *string){ //parses a scale; returns ERROR_FLAG scale if
 WORD_BITS str_to_wordbits( char * str, unsigned char mode){ //turns a string into WORD_BITS so that it can then be analyzed 
 //word bits is an intermediate format for chord prog parsing between a chord written as a string and a chord 
 //written as a short 
+//mode t is for triad ; c is for chord ; d is for degree
     if(!str) return 0;
     char * tmp= str; 
 
@@ -124,25 +125,25 @@ WORD_BITS str_to_wordbits( char * str, unsigned char mode){ //turns a string int
         else if(*tmp=='V' )
             word |= (WORD_BITS_V<<(4*cpt));
 
-        else if(*tmp=='b' )
+        else if(*tmp=='b'  )
             word |= (WORD_BITS_b<<(4*cpt));
-        else if(*tmp=='m' )
+        else if(*tmp=='m' && mode!='d' )
             word |= (WORD_BITS_m<<(4*cpt));
         
-        else if(*tmp=='+' )
+        else if(*tmp=='+' && mode!='d' )
             word |= (WORD_BITS_aug<<(4*cpt));
-        else if(*tmp=='-' )
+        else if(*tmp=='-' && mode!='m' )
             word |= (WORD_BITS_dim<<(4*cpt));
-        else if(!strncmp(tmp, "sus2", 4)){
+        else if(!strncmp(tmp, "sus2", 4) && mode!='d' ){
             word|= (WORD_BITS_sus2<<(4*cpt));
             tmp+=3;
-        }else if(!strncmp(tmp, "sus4", 4)){
+        }else if(!strncmp(tmp, "sus4", 4) && mode!='d' ){
             word|= (WORD_BITS_sus4<<(4*cpt));
             tmp+=3;
         }
         
         else { 
-            if (mode=='t')return 0; //case if the word contains a non valid character
+            if (mode=='t' || mode=='d')return 0; //case if the word contains a non valid character
             else if(mode=='c'){ 
                 if(!strncmp(tmp, "add", 3) )
                 return word;
@@ -366,6 +367,7 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
         }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//Isus4
             return DEG_I|(SUS4 <<4);
         }else if( !(word & (mask<<shift) )){//I maj
+            //printf("here\n");
             return DEG_I|(MAJ <<4);
         }else return 0; //error case      
 
@@ -434,6 +436,11 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
 TRIAD str_to_triad( char* str, unsigned char mode ){
     if(!str) return 0;
     return word_bits_to_chord(str_to_wordbits(str, mode));
+}
+
+DEGREES_BITS str_to_degree( char* str, unsigned char mode ){
+    if(!str) return 0;
+    return word_bits_to_chord(str_to_wordbits(str, mode))&0xF;
 }
 
 CHORD str_to_chord_ext( char* str){
@@ -551,6 +558,41 @@ S_TRIAD_PROG* str_to_triad_prog( char* str){//turns the string containing a chor
     free_str_tab(chord_tab, num_of_chord);
     return ch_prog;
 }
+
+S_DEGREE_PROG* str_to_deg_prog( char* str){//turns the string containing a chord prog to a S_CHORD_PROG* .
+    //first step is to divide the chord in substrings. To do so , we begin at '[' n then count the number of ',' to allocate an 
+    //array of string (char** ) that will contain each word. then fill each string of the array w what is between the ',' then analyze each string to create the chord prog. 
+    //at the end check if every chord is not null and return zero if so
+    if(!str) return NULL;
+    char * tmp= strstr(str , "["), *tmp1=tmp;
+    
+    if(!tmp) return NULL; //checks that str contains [
+    if(!strstr(str, "]")) return NULL; //checks that the string contains a closing bracket
+
+    if(*(++tmp)=='\0') return NULL; //checks that [ isnt the last character of the string
+
+    CPT num_of_chord=1;
+
+    while( *tmp!=']' ){
+        if(*tmp==',') num_of_chord++;
+        tmp++;
+    }
+
+    tmp1++;
+    char ** chord_tab= chprog_str_to_tab_chord_str(tmp1, num_of_chord, ',');
+    
+    S_DEGREE_PROG * deg_prog= malloc(sizeof(S_TRIAD_PROG));
+
+    deg_prog->length=num_of_chord; 
+    deg_prog->degree_prog=malloc(num_of_chord* sizeof(unsigned char));
+
+    for(CPT i=0; i<num_of_chord; i++){
+        //printf("%s\n", chord_tab[i]);
+        deg_prog->degree_prog[i]= str_to_degree(chord_tab[i] , 'd'); 
+    }
+    free_str_tab(chord_tab, num_of_chord);
+    return deg_prog;
+}//not tested 
 
 
 

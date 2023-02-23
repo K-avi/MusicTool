@@ -1,5 +1,6 @@
 #include "parseloop.h"
 #include "bitop.h"
+#include "coherand.h"
 #include "progbook.h"
 #include "triadgen.h"
 #include "triadprint.h"
@@ -561,7 +562,19 @@ void chprogparse(char * line , S_USERINFO* user_saved){
               print_scale(tmp_saved_scale);
             }else printf("no temporary saved scale to retrieve\n");
           }else printf("runtime error in prg toscale\n");
-      }
+      }else if(!strncmp(&line[i], "coherand", 8)){
+        
+        i+=8;
+
+        char * tmp= &line[i]; 
+
+        S_SCALE opt_scl=0;
+        LENGTH opt_length=0, opt_scllen=0;
+        char opt_extnum=-1, opt_extmax=-1;
+
+        set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
+        
+      }else printf("runtime error in prog\n");
 }
 
 void helpparse(char * line ){ //prints the informations corresponding to a string starting by help passed from command line
@@ -609,10 +622,11 @@ void clearglobals(){
     free_chord_prog(tmp_prog);
     free_triad_prog(generated_triad);
     free_triad_prog(tmp_triad);
+    free_degree_prog(parsed_prog_deg);
   
 }
 
-void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might change behavior of env command to make it also work in command line
+void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOOK* pbook){//might change behavior of env command to make it also work in command line
 
    if(!filename){
         printf("null pointer as filename\n");
@@ -1009,6 +1023,73 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info){//might
           fclose(f);
           return;
         }
+      }else if(!strncmp(&line[i], "env book", 8)){
+          //check that '(' is the next not space \t \n character
+        char* tmp= &line[i+8];
+        ushort line_env= line_num+1;
+        u_char nxt_chr= next_not_blank_comment( tmp, '(');
+        S_DEGREE_PROG *tmp_deg=NULL;
+
+        if(nxt_chr==1){
+         while(fgets(line, 256,f) && !(next_not_blank_comment(line, ')')==1) ){
+            i=0;
+            while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
+               i++;
+            }
+            if(line[i]== '\n' || line[i]=='#' || line[i]=='\0') { 
+              ++line_num; continue;//empty line or comment
+            }else{      
+              tmp_deg=str_to_deg_prog(&line[i]);
+
+              add_entry(pbook, degprog_to_bookentry(tmp_deg));
+              free_degree_prog(tmp_deg);      
+            }
+          }
+          if(!f){
+            free(clean_filename);
+            fclose(f);
+            return;
+          }
+        }else if(nxt_chr==2) {
+          while(fgets(line, 256, f)){
+            nxt_chr= next_not_blank_comment(line, '(');
+           
+            if(nxt_chr==1){
+              while(fgets(line, 256,f) && (next_not_blank_comment(line, ')')!=1)){            
+                i=0;
+                while( (line[i]==' ' || line[i]=='\t') && line[i]!='\n' ){
+                  i++;
+                }
+                if(line[i]== '\n' || line[i]=='#') { 
+                  ++line_num; continue;//empty line or comment
+                }else{
+                  tmp_deg=str_to_deg_prog(&line[i]);
+
+                 add_entry(pbook, degprog_to_bookentry(tmp_deg));
+                 free_degree_prog(tmp_deg); 
+                }
+              }
+              if(!f){
+                free(clean_filename);
+                fclose(f);
+                return;
+              }
+            }else if( nxt_chr==2){
+              continue;
+            }else{
+               printf("runtime error at line: %d no open parentheses after triad env\n", line_env);
+               free(clean_filename);
+               fclose(f);
+               return;
+            }
+            line_num++;
+          }
+        }else{
+           printf("runtime error at line %d\n", line_num+1);
+          free(clean_filename);
+          fclose(f);
+          return;
+        }
       }else {
         printf("runtime error at line %d\n", line_num+1);
         free(clean_filename);
@@ -1038,7 +1119,7 @@ void writeparse(char * str , S_USERINFO* user_info, PROGBOOK * pbook){
     if(str[i]=='\n' || str[i]=='\0'){
       printf("please give the the name of the file you want to save the current environment in\n");
       return;
-    }else write_env(&str[i], user_info);
+    }else write_env(&str[i], user_info, pbook);
   }else{
     printf("runtime writeparse error\n");
      return;
@@ -1056,9 +1137,10 @@ void bookparse(char * str, PROGBOOK * pbook){
   }
 
   if(!strncmp(&str[i], "print", 5)){
-    i+=6; 
+    i+=5; 
+    printf("%s\n", &str[i]);
     while(str[i]==' ') i++; 
-    if(str[i]!='\n' || str[i]!='\0'){
+    if(str[i]!='\n' && str[i]!='\0'){
       printf("runtime pbook print error: too many args\n");
       return;
     }else print_progbook(pbook);
@@ -1070,8 +1152,22 @@ void bookparse(char * str, PROGBOOK * pbook){
       printf("runtime pbook add error: missing args\n");
       return;
     }else{
-
-      printf("parsing / saving degree prog not implemented yet; my bad\n");
+      printf("str is : %s\n", &str[i]);
+      free_degree_prog(parsed_prog_deg);
+      parsed_prog_deg= str_to_deg_prog(&str[i]);
+      if(!parsed_prog_deg){
+        printf("runtime : failed to retrieve the entry please pass a valid entry\n");
+      }
+      else {
+        printf("reached add\n");
+        print_degree_prog(parsed_prog_deg);
+        BOOKENTRY entry= degprog_to_bookentry(parsed_prog_deg);
+        printf("%llu\n", entry);
+        printf("%p\n", pbook);
+        add_entry(pbook, entry);
+        print_progbook(pbook);
+      }
+      
     }
 
   }else{
@@ -1176,7 +1272,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
 
         }else if(!strncmp(&line[l], "env",3)){
          
-          file_environment_parseloop(&line[l+3],user_saved);
+          file_environment_parseloop(&line[l+3],user_saved, pbook);
         }
         
       }else if(!strncmp( &line[l] , "book", 4)){
@@ -1207,7 +1303,7 @@ void readparse(char * str ,S_USERINFO* user_saved , PROGBOOK * pbook){
     file_command_parseloop(&str[i+8], user_saved, pbook);
   }else if(!strncmp(&str[i], "env", 3)){
     if(!user_saved) return;
-    file_environment_parseloop(&str[i+3], user_saved);
+    file_environment_parseloop(&str[i+3], user_saved, pbook);
   }
 }
 

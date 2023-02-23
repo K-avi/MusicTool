@@ -17,4 +17,6 @@ extern S_CHPROG * degree_prog_to_chprog( S_DEGREE_PROG * prog, S_SCALE scale);
 extern void pop_prog_extensions( S_CHPROG* chprog, CPT num_ext);
 extern void pop_prog_extensions_rand( S_CHPROG* chprog);
 
+extern void set_options( char * str, unsigned char mode , char* extnum, char* extmax, S_SCALE *scl, LENGTH *length , LENGTH * scllen);
+
 #endif

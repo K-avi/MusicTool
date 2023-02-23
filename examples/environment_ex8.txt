@@ -1,0 +1,11 @@
+MusicTool:environment
+
+
+env book (
+[ bIII, VII, I, VII, I, bIII, V, I, V ]
+[ V, I, V ]
+)
+env book (
+[ I; IV; V]
+[ I; IV; bVII ]
+)

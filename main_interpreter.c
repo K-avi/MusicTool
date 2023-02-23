@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+#include "progbook.h"
 #include "scalegen.h"
 #include "types.h"
 #include "init.h"
@@ -71,12 +72,16 @@ int main(int argc , char * argv[]){
   user_data=malloc(sizeof(S_USERINFO));
   init_userinfo(user_data);
 
+  progbook=malloc(sizeof(PROGBOOK));
+  init_book(progbook, 20);
+
 
   printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
-  cmdline_parseloop(user_data, NULL);
+  cmdline_parseloop(user_data, progbook);
 
   free_userinfo(user_data);
+  free_book(progbook);
   return 0;
 }

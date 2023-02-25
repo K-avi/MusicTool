@@ -50,21 +50,11 @@
                                     2: bitwise rep of MusicTool internal types
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#p13">
-                                    3: 
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#p14">
-                                    4:
-                                    </a>
-                                </li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="#p2">
-                                    II: other objects representation
+                                    II: MusicTool "complex" external types 
                                 </a>
                                 <ul>
                                     <li>
@@ -74,20 +64,14 @@
                                     </li>
                                     <li>
                                         <a href="#p22">
-                                        2: 
+                                        2: S_MODES
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#p23">
-                                        3:  
+                                        3: S_TRIAD_PROG  / S_CHPROG
                                         </a>
-                                    </li>
-                                    <li>
-                                        <a href="#p24">
-                                        4:
-                                        </a>
-                                    </li>
-                                   
+                                    </li>                                   
                                 </ul>
                             </li>
 
@@ -98,7 +82,7 @@
                                 <ul>
                                     <li>
                                         <a href="#p31">
-                                        1: lists of saved objects
+                                        1: the S_USERINFO structure
                                         </a>
                                     </li>
                                     <li>
@@ -107,15 +91,6 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#p33">
-                                        3: 
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#p34">
-                                        4:
-                                        </a>
-                                    </li>
                                    
                                 </ul>
                             </li>
@@ -173,23 +148,148 @@
                         degree is stored on a bit which means that lsb is wether 0 is in the PCS so on.
                         bit 13 is an error flag.
                         <li>BOOKENTRY: </li> size: 8 bytes: relevant bits: all 64 bits.;
-                                            <br/> first 12 bits store the PCS of the prog. ; then the next 52 bits contain the prog itself. The PCS is stored in a 1-hot format. The prog is a compacted array. Each number is stored 
+                                            <br/> first 12 bits store the S_SCALE of the prog. ; then the next 52 bits contain the prog itself. The PCS is stored in a 1-hot format. The prog is a compacted array. Each number is stored 
                                              on 4 bits; it's length thus goes from 1 to 13. 
+                        <li>INTERVAL_STRUCTURE :</li> size : 8 bytes ; relevant bits: lsb to 48. 
+                        <br/>the interval structure is divided into 4 bits sections containing numbers from 1 to 11 .
+                        <br/>from bit 48 onward bits are flags. 
+                        <br/>special case : a scale containing only 1 note is translated into an empty interval structure which 
+                        is printed as [12]
+                        <br/> interval structures can't be saved but are the result of a call to "scale intv struct"
+                        
+                        <br/> example: S_INTERVAL_STRUCTURE of { 0 2 4 5 7 9 11} (maj scale)
+                        (40x0)  0001 0010 0010 0001 0010 0010 
+
+                        <li>INTERVAL_VECTOR: </li> size: 4 bytes ; relevant bits: lsb to bit 24. 
+                        <br/>the interval vecotr is divided in 6  4bits sections containing numbers from 0 to 12.
+                        <br/> if u take the intv vector < 2, 5, 4, 3, 6, 1> (intv vector of the major scale) 
+                        <br/>ur bitwise rep would be: 0001 0110 0011 0100 0101 0010 (or 0x163452)
+                        <br/>the edge cases are the intv vect of the chromatic scale : <12 , 12, 12, 12 ,12,6>
+                        <br/>its rep is :  0110 1100 1100 1100 1100 1100 (0x6CCCCC)
+                        
+                        <br>>and the unisson {0} scale : <0 ,0 ,0,0,0,0>
+                        <br/>its rep is: 0000 0000 0000 0000 0000 0000
+
+                        
                     </ul>
                     <ul>
                         <h4>These are the internal types that are only used as intermediate representation :</h4>
                        
-                        <li>S_EXTENSIONS :</li> other name fro PITCH_CLASS_SET size: 2 bytes; relevant bits : lsb to 11. Represents a set of notes in a 1-HOT format. Presence of the note {0} is wether lsb is set presence of {1} is wether second bit set ,...
+                        <li>S_EXTENSIONS :</li> other name for S_SCALE size: 2 bytes; relevant bits : lsb to 11. Represents a set of notes in a 1-HOT format. Presence of the note {0} is assumed,  presence of {1} is wether lsb is set ,...
                         <br/>1-hot representation of a pitch class set. Very similar to scale except each 
                         degree is stored on a bit which means that lsb is wether 0 is in the PCS so on.
                         bit 13 is an error flag.
                         <li>TRIADS_IN_SCALE :</li> size: 1 byte ; relevant bits: lsb to bit 6. 1-HOT representation of triads present in a given scale. 
                         lsb is set if minor triad is present; second bit is set if major triad, 
+                        <li>WORD_BITS : </li>size : 1 byte ; used to tokenize I,V,b,sus2,m,+,- when syntaxchecking chord / triad progs.
                         
                         
                     </ul>
                     
                 </p>
             </div>
+        </div>
+        <div id="p3">
+                <h2>
+                <u>
+                    II: Other MusicTool objects :
+                </u>
+                </h2>
+                <br/>
+                <p> 
+                    NB: "complex" types is used to denote that these structures aren't just 
+                    integers / don't use bitwise representation.
+                </p>
+    
+                <div id="p21">
+                    <h4>
+                    <em>
+                        II.1: the "SAVED_" objects: 
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        MusicTool uses singly linked lists to save objects in an environments. 
+                        These objects can be scales, chord progs, harmonised scale, Pitch class sets or triad 
+                        progressions. They are thus called S_SAVED_SCALES S_SAVED_MODES, S_SAVED_PROG, S_SAVED_DODEC,
+                        S_SAVED_TRIAD.
+                    </p>
+                </div>
+
+                <div id="p22">
+                    <h4>
+                    <em>
+                        II.2: S_MODES: 
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        S_MODES is simply an array of S_SCALES. It is not wrapped inside a structure 
+                        where the length of it is stored because it's length is ALWAYS the length of the scale
+                        it contains.
+                    </p>
+                </div>
+
+                <div id="p22">
+                    <h4>
+                    <em>
+                        II.3: S_TRIAD_PROG / S_CHPROG: 
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        S_TRIAD_PROG is a simple structure containing an array of TRIADS and the length of
+                        the array. S_CHPROG is the same thing except it CHORD elements in it's array.
+                    </p>
+                </div>
+        </div>
+        <div id="p3">
+            <h2>
+            <u>
+                III: structure used for storage :
+            </u>
+            </h2>
+            <br/>
+            <p> 
+            </p>
+
+            <div id="p31">
+                <h4>
+                <em>
+                    III.1: S_USERINFO: 
+                </em>
+                </h4>
+                <p class="text-left">
+                    S_USERINFO is a structure containing a reference to one of each S_SAVED_... structure 
+                    in MusicTool as well as the number of elements in each of these structures.
+                    <br/>At start, MusicTool initialises an S_USERINFO structure to store elements saved 
+                    during the session.
+                    when a "save" function is called.
+               
+                </p>
+            </div>
+
+            <div id="p32">
+                <h4>
+                <em>
+                    III.2: the prog book : 
+                </em>
+                </h4>
+                <p class="text-left">
+                    <b>NB: THE PROG BOOK' CURRENT IMPLEMENTATION IS AWFUL. IT SHOULD BE 
+                        <br/>A TABLE WHERE INDEXES CORRESPOND TO THE LENGTH OF THE ENTRIES AT 
+                       EACH INDEX (progs of length 1 stored at index 0, 2 index 1...)
+                        <br/>AT EACH INDEX, PROGS WOULD BE STORED IN SMALLER TABLES WHERE THE KEYS 
+                        WOULD BE THE PITCH_CLASS_SET ASSOCIATED WITH THE PROG
+                        
+                    </b>
+                    <br/>
+                    The prog book is a dynamic array used to stored BOOKENTRY elements. 
+                    It is initialised with 30 slots when MusicTool is launched and can be edited 
+                    by reading an environment containing an env book() section or by using 
+                    the command "book add"
+                </p>
+            </div>
+
+            
+    </div>
+            
     </body>
 </html>

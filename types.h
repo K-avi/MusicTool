@@ -135,7 +135,7 @@ typedef unsigned long long S_INTERVAL_STRUCTURE; //only uses up to 48 of the 64 
 #define INTERVAL_STRUCT_ERRFLAG 0x1000000000000
 
 typedef unsigned int S_INTERVAL_VECTOR; //needs 24 bits ; 
-//the interval struct is divided in 6  4bits sections containing numbers from 0 to 12.
+//the interval vecotr is divided in 6  4bits sections containing numbers from 0 to 12.
 // if u take the intv vector < 2, 5, 4, 3, 6, 1> (intv vector of the major scale) 
 //ur bitwise rep would be: 0001 0110 0011 0100 0101 0010 (or 0x163452)
 //                          1     6    3    4    5    2 

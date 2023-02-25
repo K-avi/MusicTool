@@ -241,6 +241,7 @@ void print_progbook( PROGBOOK* book){
     if(!book) return; 
     if(! (book->book && book->nbentries)) return;
 
+    printf("progbook is: \n");
     for(CPT i=0; i<book->nbentries; i++){
         print_book_entry(book->book[i]);
     }

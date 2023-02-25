@@ -1,0 +1,16 @@
+MusicTool:commands
+
+#this file showcases the new commands in 
+#MusicTool 1.3.2
+
+book add [ VII, I , IV , V] 
+book print 
+
+
+prog coherand -scllen=8 -extmax=3 
+prog coherand -scl={0 2 4 5 7 9 11} -extnum=2 -length=4
+prog coherand 
+
+triad coherand -scllen=8 -length=4
+triad coherand -scl={0 2 3 5 7 8 10}
+triad coherand

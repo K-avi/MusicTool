@@ -155,7 +155,6 @@ S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
     if(! (prog && scale )) return  NULL;
     if( (!prog->degree_prog) || (!scale) || (!prog->length) ) return NULL;
 
-printf("reahced");
     S_TRIAD_PROG * ret = (S_TRIAD_PROG *) malloc(sizeof(S_TRIAD_PROG));
     ret->chord_prog = (unsigned char *) malloc(prog->length* sizeof(unsigned char) );
     ret->length=prog->length;
@@ -175,7 +174,7 @@ printf("reahced");
         ret->chord_prog[i]|= triad_in_scl_to_triad_bits( select_rand_triads(all_triads))<<4;
         
     }
-print_triad_prog(ret);
+//print_triad_prog(ret);
     return ret;
 }
 
@@ -269,7 +268,6 @@ void pop_prog_extensions_max( S_CHPROG* chprog, CPT num_max){
     */
     if( ! chprog) return; 
     if( !chprog->chprog) return;
-printf("num max is %d\n", num_max);
     for (CPT i=0 ; i<chprog->length; i++){
         
         chprog->chprog[i]= pop_extensions(chprog->chprog[i], (num_max)+rand()%(num_max+1) );
@@ -387,7 +385,7 @@ S_TRIAD_PROG* coherand_tri(PROGBOOK* pbook , S_SCALE scl, LENGTH length, LENGTH 
     BOOK_LENGTH_TABLE * table = progbook_constrained_to_book_length(pbook, get_degrees(gen_scl));
     
     S_DEGREE_PROG * prog= build_deg_prog_from_deg_array(table , gen_length);
-    print_degree_prog(prog);
+   // print_degree_prog(prog);
     free_book_table(table); 
 
     ret= degree_prog_to_triad_prog(prog , gen_scl);

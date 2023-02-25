@@ -462,7 +462,7 @@ void triadprogparse(char * line , S_USERINFO* user_saved, PROGBOOK* pbook){
         free_triad_prog(tmp_triad);
         tmp_triad=coherand_tri(pbook, opt_scl, opt_length, opt_scllen);
        
-        printf("triad prog generated is:\n");
+        printf("\ntriad prog generated is:\n");
         print_triad_prog(tmp_triad);
         
       }
@@ -593,7 +593,10 @@ void chprogparse(char * line , S_USERINFO* user_saved, PROGBOOK * pbook){
         set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
        
         free_chord_prog(tmp_prog);
+
         tmp_prog=coherand_prog(pbook, opt_scl, opt_extmax, opt_extnum, opt_length, opt_scllen);
+        printf("\nprog generated is: \n");
+        print_chprog(tmp_prog);
         
       }else printf("runtime error in prog\n");
 }
@@ -666,7 +669,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
     char* clean_filename;
 
     if(i!=j){
-        clean_filename = malloc(( j) * sizeof(char));
+        clean_filename =  (char*) malloc(( j) * sizeof(char));
         memcpy(clean_filename, name_start,  j);
         clean_filename[i]='\0'; 
 
@@ -711,7 +714,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
       }else if(!strncmp(&line[i], "env scale", 9)){
         //check that '(' is the next not space \t \n character
         char* tmp= &line[i+9];
-        unsigned short  line_env= line_num+1;
+       
         unsigned char nxt_chr= next_not_blank_comment( tmp, '(');
 
         if(nxt_chr==1){
@@ -727,11 +730,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
             }
 
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+        
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -798,11 +797,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
             }
 
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+          
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -822,11 +817,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
                   free(tmp_modes);
                 }
               }
-              if(!f){
-                free(clean_filename);
-                fclose(f);
-                return;
-              }
+             
             }else if( nxt_chr==2){
               continue;
             }else{
@@ -865,11 +856,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
             }
 
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+        
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -889,11 +876,8 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
                 
                 }
               }
-              if(!f){
-                free(clean_filename);
-                fclose(f);
-                return;
-              }
+            
+              
             }else if( nxt_chr==2){
               continue;
             }else{
@@ -931,11 +915,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
               free_chord_prog(prog_to_parse);      
             }
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+          
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -956,11 +936,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
                   free_chord_prog(prog_to_parse);
                 }
               }
-              if(!f){
-                free(clean_filename);
-                fclose(f);
-                return;
-              }
+              
             }else if( nxt_chr==2){
               continue;
             }else{
@@ -998,11 +974,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
               free_triad_prog(tmp_triad);      
             }
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+          
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -1023,11 +995,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
                   free_triad_prog(tmp_triad);
                 }
               }
-              if(!f){
-                free(clean_filename);
-                fclose(f);
-                return;
-              }
+             
             }else if( nxt_chr==2){
               continue;
             }else{
@@ -1066,11 +1034,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
               free_degree_prog(tmp_deg);      
             }
           }
-          if(!f){
-            free(clean_filename);
-            fclose(f);
-            return;
-          }
+          
         }else if(nxt_chr==2) {
           while(fgets(line, 256, f)){
             nxt_chr= next_not_blank_comment(line, '(');
@@ -1090,11 +1054,7 @@ void file_environment_parseloop(char * filename, S_USERINFO * user_info, PROGBOO
                  free_degree_prog(tmp_deg); 
                 }
               }
-              if(!f){
-                free(clean_filename);
-                fclose(f);
-                return;
-              }
+             
             }else if( nxt_chr==2){
               continue;
             }else{
@@ -1173,19 +1133,17 @@ void bookparse(char * str, PROGBOOK * pbook){
       printf("runtime pbook add error: missing args\n");
       return;
     }else{
-      printf("str is : %s\n", &str[i]);
+     
       free_degree_prog(parsed_prog_deg);
       parsed_prog_deg= str_to_deg_prog(&str[i]);
       if(!parsed_prog_deg){
         printf("runtime : failed to retrieve the entry please pass a valid entry\n");
       }
       else {
-        printf("reached add degprog is: \n");
-        print_degree_prog(parsed_prog_deg);
+     
+       
         BOOKENTRY entry= degprog_to_bookentry(parsed_prog_deg);
-      
-        printf("entry is %llu\n", entry);
-        printf("%p\n", pbook);
+    
         add_entry(pbook, entry);
         //print_progbook(pbook);
       }
@@ -1216,7 +1174,7 @@ void file_command_parseloop(char * filename , S_USERINFO* user_saved, PROGBOOK *
     int i= strcspn(name_start, "\n#\t "), j=strlen(name_start);
     char* clean_filename;
     if(i!=j){
-        clean_filename = malloc(( j) * sizeof(char));
+        clean_filename =(char*) malloc(( j) * sizeof(char));
         memcpy(clean_filename, name_start,  j);
         clean_filename[i]='\0'; 
 
@@ -1417,46 +1375,50 @@ RUNTIME_ERROR parse_command( char * argv[], S_USERINFO * user_info, PROGBOOK * p
 
   if(!argv[1] || !argv[2]) return 0;
   char * keyword= argv[1] ; 
+
   LENGTH len= strlen(argv[2]);
-  char* command = malloc( (len+2)*sizeof(char));
+
+  char* command = (char*) malloc( (len+2)*sizeof(char));
+
   memcpy(command, argv[2], len+1);
   command[len]=' ';
   command[len+1]='\0';
 
   if(! (keyword &&  command)){
       printf("invalid arguments\n");
+      free(command);
       return 1;
   }
-  SYNTAX_ERROR syntaxcheck=0;
+  SYNTAX_ERROR check=0;
 
   if(!strncmp(keyword, "-read",5 )){
-        syntaxcheck=filename_check_var(command);
-        if(!syntaxcheck){
+        check=filename_check_var(command);
+        if(!check){
           
           file_command_parseloop(command, user_info, pbook);
         }
   }else if(!strncmp(keyword, "-scale",5 )){
 
-      syntaxcheck=scalecheck(command);
-      if(!syntaxcheck) scaleparse( command, user_info);
+      check=scalecheck(command);
+      if(!check) scaleparse( command, user_info);
   }else if(!strncmp(keyword, "-harmo",6 )){
-      syntaxcheck=harmocheck(command);
-      if(!syntaxcheck) harmoparse( command, user_info);
+      check=harmocheck(command);
+      if(!check) harmoparse( command, user_info);
   }else if(!strncmp(keyword, "-triad",6 )){
-      syntaxcheck=triadcheck(command);
+      check=triadcheck(command);
      
-      if(!syntaxcheck) triadprogparse( command, user_info , pbook);
+      if(!check) triadprogparse( command, user_info , pbook);
   }else if(!strncmp(keyword, "-prog",5 )){
-      syntaxcheck=progcheck(command);
-      if(!syntaxcheck) chprogparse( command, user_info, pbook);
+      check=progcheck(command);
+      if(!check) chprogparse( command, user_info, pbook);
   }else if(!strncmp(keyword, "-dodec",5 )){
-      syntaxcheck=dodeccheck(command);
-      if(!syntaxcheck) dodecparse( command, user_info);
+      check=dodeccheck(command);
+      if(!check) dodecparse( command, user_info);
   }else if(!strncmp(keyword, "-help",5 )){
-       syntaxcheck=helpcheck(command);
-       if(!syntaxcheck) helpparse( command);
+       check=helpcheck(command);
+       if(!check) helpparse( command);
   }
   clearglobals();
   free(command);
-  return syntaxcheck;
+  return check;
 }

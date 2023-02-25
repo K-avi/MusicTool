@@ -222,8 +222,12 @@ syntaxcheking problem w degree progs  fixed.
 fix triad coherand . DONE 
 
 
-test smtool n read book command  ; update example files to do so . 
+test smtool coherand -> done 
 
-cast every malloc to look nicer :) 
+smtool wont support book read / print
+
+ update example files . -> done
+
+cast mallocs to look nicer :)  ; fix some flaws/issues (usage of memcpy() , strlen() n so on)
 
 documentation update : far from finished

@@ -70,6 +70,11 @@
                                         5: dodecaphonic series/tone rows
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="#p26">
+                                        6: the progbook
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         
@@ -111,6 +116,11 @@
                                     </li>
                                     <li>
                                         <a href="#p37">
+                                        7: the book keyword
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#p38">
                                         7: additionnal keywords/commands/syntax elements
                                         </a>
                                     </li>
@@ -295,6 +305,24 @@
                     MusicTool implements the common serie operations such as inversion, retrograde, prime and 12 tone matrix calculation
                 </p>
             </div>
+            <div id="p26">
+                <h4>
+                <em>
+                    II.6: what is the MusicTool progbook :
+                </em>
+                </h4>
+                <p class="text-left">
+                    The progbook is an array containing abstract chord progressions that only consists of their degrees. 
+                    It is used to generate chord/triad progressions by stacking entries to create a longer prog.
+                    <br/>The progbook thus allows to create progressions that can be more "coherent" than if they were generated
+                    with the standart rand functions. 
+                    <br/>At the start of a session, a default progbook is loaded from the file called book_basenv.txt . 
+                    <br/>Morever, a progbook can be saved by writing the current environment to a file and can then be loaded. during a session.
+                    <br/>It is important to notice than when a progbook is active in a session and another one is loaded, they will "fuse" and won't replace one another
+                    <br/> <b>DISCLAIMER: the progbook's implementation is absolutely awful. It should be some sort of hashtable but it's not. 
+                    I will have to fix it at some point.</b>
+                </p>
+            </div>
             <br/>
             <hr/>
             <br/>
@@ -403,10 +431,16 @@
                         <br/><br/>-rand : can be passed without arguments, if passed like so a fully randomised triad prog will be generated. 
                         <br/> it can also be passed with one or more of the following args: 
                         <ul>
+
                             <li>-scl={..}</li> if the scale is valid and contains at least 1 chord,generates a prog with the scale in between brackets. Returns an error otherwise
                             <li>-scllen=N</li> generates a prog with a random scale of length scllen if the length is >2. NB: if -scl and -scllen are passed together, scllen will be ignored.
                             <li>-length=N</li> generates a prog of the length passed as argument.
                         </ul>
+                        
+                        <br/><br/>-coherand : same as rand except that it generates the prog from the current environment's progbook and not 
+                                  in a full random way. The way a prog of length N is generated is by "stacking" smaller progs from the book.
+                                  coherand accepts the same optionnal arguments than rand.
+
                         <br/><br/>-save : passed with one triad prog or no arguments; if passed with a triad prog will save the prog
                                 if passed without will save the temporary saved prog if it exists.
                         <br/><br/>-print : passed with one integer argument or the env keyword prints the triad prog stored at index n if it exists or all the progs currenlty saved if passed with env. 
@@ -435,6 +469,10 @@
                                         <li>-extnum=N</li> generates a prog with exactly extnum extensions per chord when possible or the biggest amount of extensions inferior to extnum. 
                                         <li>-extmax=N</li> generates a prog with maximum extmax extensions per chord. If passed with extnum, it will be ignored.
                                     </ul>
+
+                        <br/><br/>-coherand : same as rand except that it generates the prog from the current environment's progbook and not 
+                                  in a full random way. The way a prog of length N is generated is by "stacking" smaller progs from the book.
+                                  coherand accepts the same optionnal arguments than rand.
 
                                 
                         <br/><br/>-save : passed with one chord prog or no arguments; if passed with a chord prog will save the prog
@@ -506,7 +544,19 @@
                 <div id="p37">
                     <h4>
                     <em>
-                        III.7: Other keywords/syntax elements
+                        III.7: The book keyword
+                    </em>
+                    </h4>
+                    <p class="text-left">
+                        <br/><br/>-book print: passed without argument ; prints the current progbook
+                        <br/><br/>-book add : passed with a degree prog argument (a chord prog containing only degrees and no triads/extensions) 
+                                    <br/>adds an entry to the current session's progbook.
+                    </p>
+                </div>
+                <div id="p38">
+                    <h4>
+                    <em>
+                        III.8: Other keywords/syntax elements
                     </em>
                     </h4>
                     <p class="text-left">

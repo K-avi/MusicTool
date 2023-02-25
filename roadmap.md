@@ -230,4 +230,7 @@ smtool wont support book read / print
 
 cast mallocs to look nicer :)  ; fix some flaws/issues (usage of memcpy() , strlen() n so on)
 
+I don't intend to make the code perfect at this point I think it's too late to fix everything. 
+Some static analysis tool will yell at it (rightfully so). 
+
 documentation update : far from finished

@@ -155,7 +155,7 @@ S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
     if(! (prog && scale )) return  NULL;
     if( (!prog->degree_prog) || (!scale) || (!prog->length) ) return NULL;
 
-
+printf("reahced");
     S_TRIAD_PROG * ret = (S_TRIAD_PROG *) malloc(sizeof(S_TRIAD_PROG));
     ret->chord_prog = (unsigned char *) malloc(prog->length* sizeof(unsigned char) );
     ret->length=prog->length;
@@ -175,7 +175,7 @@ S_TRIAD_PROG * degree_prog_to_triad_prog( S_DEGREE_PROG * prog, S_SCALE scale){
         ret->chord_prog[i]|= triad_in_scl_to_triad_bits( select_rand_triads(all_triads))<<4;
         
     }
-
+print_triad_prog(ret);
     return ret;
 }
 
@@ -262,6 +262,20 @@ void pop_prog_extensions( S_CHPROG* chprog, CPT num_ext){
     }
 }
 
+void pop_prog_extensions_max( S_CHPROG* chprog, CPT num_max){
+    /*
+    pops precisely num_ext extensions at each degree of 
+    chprog.
+    */
+    if( ! chprog) return; 
+    if( !chprog->chprog) return;
+printf("num max is %d\n", num_max);
+    for (CPT i=0 ; i<chprog->length; i++){
+        
+        chprog->chprog[i]= pop_extensions(chprog->chprog[i], (num_max)+rand()%(num_max+1) );
+    }
+}
+
 void pop_prog_extensions_rand( S_CHPROG* chprog){
     /*
     pops a random num of extensions at each degree of chprog passed as arg.
@@ -301,18 +315,18 @@ mode 'p' is for prog n allows acces to extnum, extmax
     tmp=strstr(str, "-length=");
 
     if(tmp){
-        *length=atoi(tmp+9);
+        *length=atoi(tmp+8);
     }
 
     if(mode=='p'){
         tmp= strstr(str, "-extnum=");
         if(tmp){
-            printf("in set otpions extnum %s\n", tmp);
+            //printf("in set otpions extnum %s\n", tmp);
             *extnum= atoi(tmp+8);
         }else{
             tmp=strstr(str, "-extmax=");
             if(tmp){
-                *extmax= atoi(tmp+9);
+                *extmax= atoi(tmp+8);
             }
         }
     }
@@ -324,14 +338,14 @@ S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum,
 
     LENGTH gen_scllen= scl ? 0 : scllen ? scllen : rand()%3 +7;
     S_SCALE gen_scl= scl ? scl : generate_ran_scale(gen_scllen);
-
+    
     LENGTH gen_length= length ? length : rand()%10+1;
 
     S_CHPROG* ret= NULL;
     BOOK_LENGTH_TABLE * table = progbook_constrained_to_book_length(pbook, get_degrees(gen_scl));
+    
     S_DEGREE_PROG * prog= build_deg_prog_from_deg_array(table , gen_length);
-    printf("in coherand degprog is: \n"); 
-    print_degree_prog(prog);
+    
     free_book_table(table); 
 
     ret= degree_prog_to_chprog(prog , gen_scl);
@@ -339,14 +353,20 @@ S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum,
     free_degree_prog(prog);
 
     if(extnum!=-1){
-        printf("in extnum %d\n", extnum);
-        pop_prog_extensions(ret, extnum);        
+      //  printf("in extnum extnum is %d length is %d \n", extnum, gen_length);
+        pop_prog_extensions(ret, count_bits(gen_scl)-2-extnum);        
     }else if(extmax!=-1){
-          printf("in extnmax\n");
-        pop_prog_extensions(ret , rand()%extmax);
+        
+        //unsigned char div_extmax= (count_bits(gen_scl)-2-extmax>0) ?   count_bits(gen_scl)-2-extmax : 1;
+        //printf("extmax is %d\n", extmax);
+        if(extmax!=0){
+            pop_prog_extensions_max(ret , count_bits(gen_scl) -2- extmax);
+        }else{
+             pop_prog_extensions(ret , count_bits(gen_scl)-2);
+        }
 
     }else{
-          printf("in default\n");
+          
         pop_prog_extensions_rand(ret);
 
     }   
@@ -355,25 +375,19 @@ S_CHPROG* coherand_prog(PROGBOOK* pbook , S_SCALE scl, char extmax, char extnum,
 }
 
 S_TRIAD_PROG* coherand_tri(PROGBOOK* pbook , S_SCALE scl, LENGTH length, LENGTH scllen){
-    if(!pbook) return NULL;
     
+    if(!pbook ) return NULL;
 
     LENGTH gen_scllen= scl ? 0 : scllen ? scllen : rand()%3 +7;
-   
-    S_SCALE gen_scl= scl ? scl : 0x7FF;
-
+    S_SCALE gen_scl= scl ? scl : generate_ran_scale(gen_scllen);
+    
     LENGTH gen_length= length ? length : rand()%10+1;
 
     S_TRIAD_PROG* ret= NULL;
-    
-     printf("in coherand triad genscl is %d, gen scllen is %d gen length is %d\n", gen_scl, gen_scllen, gen_length);
     BOOK_LENGTH_TABLE * table = progbook_constrained_to_book_length(pbook, get_degrees(gen_scl));
-    S_DEGREE_PROG * prog= build_deg_prog_from_deg_array(table , gen_length);
     
-
-    printf("prog is:\n");
+    S_DEGREE_PROG * prog= build_deg_prog_from_deg_array(table , gen_length);
     print_degree_prog(prog);
-
     free_book_table(table); 
 
     ret= degree_prog_to_triad_prog(prog , gen_scl);

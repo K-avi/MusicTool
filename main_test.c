@@ -368,7 +368,7 @@ int main(){
 
   BOOK_LENGTH_TABLE *table= progbook_constrained_to_book_length(pbook, 2741 );
 
-  S_DEGREE_PROG* deg_pr= build_deg_prog_from_deg_array(table, 5);
+ /* S_DEGREE_PROG* deg_pr= build_deg_prog_from_deg_array(table, 5);
 
   S_TRIAD_PROG* t_prog= degree_prog_to_triad_prog(deg_pr, 1370 );
   //printf("%d\n", parse_scale("{0 4  7 }"));
@@ -390,9 +390,9 @@ int main(){
 
   print_chprog(ch_prog);
   free_chord_prog(ch_prog);
- /* for(int i=0;i<12;i++){
+  for(int i=0;i<12;i++){
     printf("%p\n", table->book_arrays[i]);
-  }*/
+  }
   //printf(" %d\n",  pbook->nbentries);
   //print_book_entry( pbook->book[0]);
   //print_book_entry( pbook->book[1]);
@@ -402,7 +402,7 @@ int main(){
  // print_degree_prog(deg_pr);
 
   free(deg_pr->degree_prog); 
-  free(deg_pr);
+  free(deg_pr);*/
 
   free_book(pbook);
   free_chord_prog(prog);
@@ -413,7 +413,19 @@ int main(){
   free_chord_prog(prog5);
   free_chord_prog(prog6);
   free_chord_prog(prog7);
+  
+
+  S_DEGREE_PROG * degpro= build_deg_prog_from_deg_array(table, 6);
+
+  S_CHPROG * chpro = degree_prog_to_chprog(degpro, 0x7FF);
+
+  print_chprog(chpro); 
+
+  print_degree_prog(degpro);
+  free_chord_prog(chpro);
+  free_degree_prog(degpro);
   free_book_table(table);
+
   return 0;
 
 }

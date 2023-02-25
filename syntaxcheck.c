@@ -1048,6 +1048,8 @@ however if mode is 'c' for command line will return an error if something after 
 
     SYNTAX_ERROR check=0;
 
+    unsigned char size=0;
+
     char * tmp1=tmp; 
     CPT cpt=1;
     while(*tmp1) { 
@@ -1064,17 +1066,32 @@ however if mode is 'c' for command line will return an error if something after 
     char ** strtab=chprog_str_to_tab_chord_str(curstr, cpt, ',');
    
 
- 
+    char * tmp_tab=NULL;
     for (INDEX i=0 ; i<cpt; i++){
 
         if(mode=='e' && !strtab[i]) continue;
-        check= prog_degree_check( strtab[i], &check); //bad practice 
+        size=0;
+        check= prog_degree_check( strtab[i], &size); 
+       // printf("at i=%d strtab i is %s\n", i, strtab[i]);
         if(check ) { 
         // printf("thrown by check\n");
             free_str_tab(strtab, cpt) ;
             free(curstr);
             return check; 
         }
+        
+
+        tmp_tab= strtab[i];
+        while(NEUTRAL_CHAR(*tmp_tab)) tmp_tab++;
+        tmp_tab+=size;
+       
+        while(NEUTRAL_CHAR(*tmp_tab)) tmp_tab++;
+        if(!END_OF_LINE_CHAR(*tmp_tab)){
+            free(curstr);
+            free_str_tab(strtab, cpt) ;
+            return SYNTAX_INVALID_PROG;
+        }
+        
     }
     free(curstr);
     free_str_tab(strtab, cpt) ;
@@ -1086,7 +1103,7 @@ however if mode is 'c' for command line will return an error if something after 
     if(mode=='e') return SYNTAX_OK;
 
     else if (mode=='c'){
-    
+   // printf("mode c reached str is %s \n", tmp);;
         ++tmp;
         while(NEUTRAL_CHAR(*tmp)) ++tmp; 
 

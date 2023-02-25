@@ -458,11 +458,12 @@ void triadprogparse(char * line , S_USERINFO* user_saved, PROGBOOK* pbook){
         char opt_extnum=-1, opt_extmax=-1;
 
         set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
+        
         free_triad_prog(tmp_triad);
-        printf( "extnum %d extmac %d, length %d , scllen %d \n", opt_extnum ,opt_extmax , opt_length, opt_scllen);
         tmp_triad=coherand_tri(pbook, opt_scl, opt_length, opt_scllen);
-        printf("prog generated is:\n");
-        print_chprog(tmp_prog);
+       
+        printf("triad prog generated is:\n");
+        print_triad_prog(tmp_triad);
         
       }
 }
@@ -590,10 +591,9 @@ void chprogparse(char * line , S_USERINFO* user_saved, PROGBOOK * pbook){
         char opt_extnum=-1, opt_extmax=-1;
 
         set_options(tmp, 'p', &opt_extnum, &opt_extmax, &opt_scl, &opt_length, &opt_scllen);
+       
         free_chord_prog(tmp_prog);
         tmp_prog=coherand_prog(pbook, opt_scl, opt_extmax, opt_extnum, opt_length, opt_scllen);
-        printf("prog generated is:\n");
-        print_chprog(tmp_prog);
         
       }else printf("runtime error in prog\n");
 }

@@ -213,14 +213,17 @@ write book done ; tested
 
 
 
-triad coherand -length=N -scl={...} -scllen=N   -> done ; doesnt work lol
+triad coherand -length=N -scl={...} -scllen=N   -> done ; works.
 
-prog coherand -extnum=N -extmax=N -scl={....} -scllen=N -> done ; doesnt work lol 
+prog coherand -extnum=N -extmax=N -scl={....} -scllen=N -> done ; works. 
 
-syntaxcheking problem w degree progs 
+syntaxcheking problem w degree progs  fixed.
 
+fix triad coherand . DONE 
+
+
+test smtool n read book command  ; update example files to do so . 
+
+cast every malloc to look nicer :) 
 
 documentation update : far from finished
-
-coherand options dont work ; have to fix ; then update docu n then 
-ig we good for 1.3.2

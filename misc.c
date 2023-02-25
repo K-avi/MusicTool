@@ -6,18 +6,17 @@
 
 
 #ifdef WIN32 
-
-char * strndup( char * str, size_t chars){
-    if(!str) return NULL;
-    char * buffer; 
-    int n; 
-    buffer=(char*) malloc(chars+1); 
-
-    if(buffer){
-        for(n=0; ((n<chars) && (str[n]!=0)); n++) buffer[n]= str[n];
-        
-    }
-    return buffer;
+#include <string.h> 
+//from strndup.c
+char *
+strndup (const char *s, size_t n)
+{
+  size_t len = strnlen (s, n);
+  char *new = (char *) malloc (len + 1);
+  if (new == NULL)
+    return NULL;
+  new[len] = '\0';
+  return (char *) memcpy (new, s, len);
 }
 #endif
 

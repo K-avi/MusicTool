@@ -1,31 +1,26 @@
-Changes to version 1.3: 
+Changes to version 1.3.2: 
 
-The chprog type was renamed triad (short for triad progression) type. 
+the progbook was implemented. It's purpose is to store small chord progressions that are concatenated to 
+generate a longer chord / triad prog with the "prog coherand" and "triad coherand" functions. 
 
-The syntax to the "triad rand" function was upgraded. 
-You can now pass parameters to it. 
-The parameters are: 
+It's current implementation is absolutely awful. Like really really bad.  
 
--length=N (which forces the prog to be of length N)
--scllen=N (the prog is created using a random scale of length)
+It's just a dynamic array when it should be a table of length 12 (this table being a static array) 
+where each index corresponds to the length of the progs stored at said index
+ (table[0] contains progs of length 1 , table[1] of length 2,...)
+the structures stored at each index of this big table would be smaller tables (dynamic arrays or linked lists) 
+containing every prog that share the same corresponding scale (ie: [I, IV, V] and [IV, V , I]). 
+This implementation would make the generation of random progs using the progbook much more efficient / 
+straightforward. 
 
--scl={...} (the prog is generated with chords from the scale passed)
+I didn't fix this because I'm kinda fed up with MusicTool at the moment and I wanted to work on other projects. 
+However , when (if) I go back to it my priority for 1.3.3 will be to fix this. 
 
-triad rand can still be called without arguments. 
+While being badly implemented the progbook still works properly and I ran some tests 
+with valgrind to check that everything worked fine. 
 
-A new type was added! 
-It's the prog (short for chord progression). 
-This type consists of extended progs, an extended prog consists of a triad + extensions. 
-The type is very basic. It has the basic save/print/remove functions.
-As well as a prog rand function that has the same syntax than triad rand. 
-It supports every triad rand parameter as well as : 
+As previously mentionned the main features of MusicTool 1.3.2 are the progbook structure and 
+the prog/triad coherand functions.
 
--extnum=N (the number of extension of each chord in the prog is N if possible or the number closest to N)
--extmax=N (the maximum number of extension on each chord of the prog is N)
-
-the prog toscale function is also available for it. 
-
-NB: the separator in the triad and prog types aren't the same, each triad in a triad prog is separated by a comma whereas each prog 
-is separated by a semicolon. I might unify the syntax at some point but I'll keep it this way atm.
-
-Syntaxchecking can now be disabled in MusicTool by calling it with the argument -syntaxcheck=NO
+However this version also comes with some fixes with Windows compatibility and a new Documentation 
+file explaining what each internal type/ structure is. 

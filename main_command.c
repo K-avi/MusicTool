@@ -38,7 +38,7 @@ int main( int argc, char *argv[])
     progbook=malloc(sizeof(PROGBOOK));
     init_book(progbook, 30);
 
-    file_environment_parseloop( "book_basenv.txt", user_data, progbook);
+    file_environment_parseloop( "defaultenv.txt", user_data, progbook);
     
 
   SYNTAX_ERROR err =parse_command( argv, user_data, progbook);

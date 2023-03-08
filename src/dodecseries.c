@@ -14,7 +14,7 @@ bool isvalid_serie(S_DODEC serie){//returns true is a serie is full and has each
 //exactly once in it .
     
     unsigned short seriecheck=0;
-    NOTE note= 0 ,notenum=0;
+    NOTE note= 0 ;
     
     for (CPT i=0; i<12; i++){
 
@@ -256,7 +256,6 @@ S_DODEC parse_serie(char * str){//parses a str into a serie
 
 void fprint_serie( FILE* f,const S_DODEC serie ){//same as print serie but u can choose the buffer where scale is printed 
 
-    int i;
     fprintf(f,"{ ");
     for( CPT cpt=0; cpt <12; cpt ++){
         fprintf(f,"%llu ",  (serie>> (4*cpt))& 0xF);

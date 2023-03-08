@@ -190,7 +190,7 @@ bool equals_chprog( S_TRIAD_PROG* chpr1, S_TRIAD_PROG* chpr2){//returns 1 if two
 
 
 void print_pcs( const PITCH_CLASS_SET pcs){ //prints the notes of a scale and it's length in a nice way :)
-    int i;
+
     if(ERROR_FLAG_PCS & pcs ) return;
     printf("\n{  ");
     for(CPT i=0; i<12; i++){

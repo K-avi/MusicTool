@@ -38,7 +38,7 @@ void print_extensions(S_EXTENSIONS extensions){//prints the extensions of an ext
   printf(" add ");
 
   CPT cpt=0, bitindex=1, bitval; 
-  CPT tmp=0;
+ 
 
   while (cpt < len-6){
 
@@ -63,7 +63,6 @@ void fprint_extensions(FILE *f, S_EXTENSIONS extensions){//prints the extensions
   fprintf(f," add ");
 
   CPT cpt=0, bitindex=1, bitval; 
-  CPT tmp=0;
 
   while (cpt < len-6){
 

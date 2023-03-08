@@ -54,8 +54,7 @@ S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog o
     LENGTH proglength= rand()%10+1; //proglength between 1 and 10 
 
       S_SCALE scl= 0;//scl of min length 6 to make sure a chord can be generated
-      CPT extension_num=0; 
-      
+
       TRIAD curtriad= 0, prevtriad=0; //chord to pop extensions from 
 
       PITCH_CLASS_SET relevant_deg= 0; //gets deg of scl 
@@ -103,7 +102,6 @@ S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog o
   }else { 
 
     //retrieving arguments :
-      CPT i=0 ;
       char* tmp=args;
       LENGTH proglength=0, scllen=0;
      
@@ -160,7 +158,6 @@ S_TRIAD_PROG* generate_triad_prog(char* args){ //generates a random chord prog o
       if(!relevant_deg) return NULL; //case if scale doesnt contain any chords
 
       PITCH_CLASS_SET selected_deg= 0;
-      DEGREES selected_deg_converted= 0;
 
       S_SCALE curmode = 0;
       TRIADS_IN_SCALE curtriads_in= 0;
@@ -352,8 +349,6 @@ S_CHPROG* generate_chprog( char * args){
       
   }else{ 
       
-
-      CPT i=0 ;
       char* tmp=args;
       LENGTH proglength=0, scllen=0;
       char extension_num=-1;
@@ -429,7 +424,7 @@ S_CHPROG* generate_chprog( char * args){
         proglength=rand()%10+1;
       }
 
-      CPT extension_total= count_bits(scl)-2;
+      char extension_total= count_bits(scl)-2;
       extension_total= extension_total<0 ? 0 : extension_total; //prevents it from being negative
       CHORD curchord= 0 ,prevchord=0;  //chord to pop extensions from 
 

@@ -93,7 +93,7 @@ S_DEGREE_PROG* build_deg_prog_from_deg_array( BOOK_LENGTH_TABLE * table, LENGTH 
     ret_prog->length=proglength;
 
     LENGTH curlength=0, sumlength=0;
-    BOOKENTRY cur_sel=0, prev_sel=0; 
+    BOOKENTRY cur_sel=0; 
     INDEX ret_index=0; //to keep track of ret's indexes 
 
     curlength= nth_bit_pos(length_availables, (rand()%nb_length_availables)+1);

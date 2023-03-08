@@ -4,29 +4,29 @@ MusicTool:environment
 
 env book (
 
-[I]
-[bII]
-[II]
-[bIII]
-[III]
-[IV]
-[bV]
-[V]
-[bVI]
-[VI]
-[bVII]
-[VII]
+[I ]
+[bII ]
+[II ]
+[bIII ]
+[III ]
+[IV ]
+[bV ]
+[V ]
+[bVI ]
+[VI ]
+[bVII ]
+[VII ] 
 
-[I, IV]
-[I, V]
-[I, II, V]
-[I, IV, V]
-[I, bVII, bVI, V]
-[I, II, bII]
+[I, IV ]
+[I, V ]
+[I, II, V ]
+[I, IV, V ]
+[I, bVII, bVI, V ]
+[I, II, bII ]
 
-[I, bIII, IV]
+[I, bIII, IV ]
 
-[I, VI, IV, V]
+[I, VI, IV, V ]
 
 
 

@@ -91,7 +91,7 @@ LENGTH get_length_kerni( S_SCALE scale){ //doesnt
         LENGTH cnt=0; 
         while(scale!=0){
             cnt++;
-            scale=scale & scale-1;
+            scale=scale & (scale-1);
         }
         return cnt+1;
     }      
@@ -129,7 +129,7 @@ S_SCALE * make_scale( NOTE *array, LENGTH length){ //generates a scale from an a
 }
 
 void print_scale( const S_SCALE scale){ //prints the notes of a scale and it's length in a nice way :)
-    int i;
+
     if(ERROR_FLAG & scale ) return;
     printf("\n{ 0 ");
     for(CPT i=0; i<11; i++){
@@ -141,7 +141,7 @@ void print_scale( const S_SCALE scale){ //prints the notes of a scale and it's l
 
 void fprint_scale( FILE* f,const S_SCALE scale ){//same as print scale but u can choose the buffer where scale is printed 
 
-    int i;
+
     fprintf(f,"\n{ 0 ");
     for(CPT i=0; i<11; i++){
         if(GET_NTH(scale, i)) fprintf(f,"%d ", i+1);
@@ -156,7 +156,7 @@ SIGNED_BOOL scale_comp_lexi( S_SCALE scl1, S_SCALE scl2){//returns 0 if two scal
     if(!scl1) return 1;
     if(!scl2) return -1;
 
-    LENGTH lscl1= count_bits(scl1), lscl2= count_bits(scl2);
+    LENGTH lscl1= count_bits(scl1);
     
     CPT it_max= (scl1>=scl2) ?scl2 : scl1;
     
@@ -221,7 +221,6 @@ S_SCALE get_inverse_scale(S_SCALE scale){//returns the inverse (I0) of a scale p
 
 S_SCALE get_prime_scale(S_SCALE scale){//returns the prime of the scale passed as argument
 
-    LENGTH length= get_length_kerni(scale);
     S_SCALE scl_norm= get_normal_scale(scale) ,scl_inv= get_inverse_scale(scl_norm);
 
     S_SCALE ret= (scale_comp_lexi(scl_norm, scl_inv)==1) ? scl_norm : scl_inv; 

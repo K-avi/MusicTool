@@ -194,26 +194,26 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
         shift+=4;
 
         //printf("%b\n", word & (mask<<shift));
-        if( (word & (mask<<shift))== (WORD_BITS_I)<<shift){ //bI?
+        if( (word & (mask<<shift))== (unsigned)(WORD_BITS_I)<<shift){ //bI?
 
             shift+=4;
-            if((word & (mask<<shift))== (WORD_BITS_I)<<shift){ //bII?
+            if((word & (mask<<shift))== (unsigned)(WORD_BITS_I)<<shift){ //bII?
                 shift+=4;
-                if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bIII?
+                if((word & (mask<<shift))== (unsigned)(WORD_BITS_I)<<shift){//bIII?
                    shift+=4 ;
-                    if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bIIIm
+                    if((word & (mask<<shift))== (unsigned)(WORD_BITS_m)<<shift){//bIIIm
                         return DEG_bIII|(MIN <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//bIII+
+                    }else if((word & (mask<<shift))== (unsigned)(WORD_BITS_aug)<<shift){//bIII+
                         return DEG_bIII|(AUG <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bIII-
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//bIII-
                         return DEG_bIII|(DIM <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bIIIsus2
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//bIIIsus2
                         return DEG_bIII|(SUS2 <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bIIIsus4
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//bIIIsus4
                         return DEG_bIII|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//bIII 
                         return DEG_bIII|(MAJ <<4);
@@ -221,16 +221,16 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     }else 
                         return 0; //error if char other than correct ones
 
-                }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bIIm
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//bIIm
                     return DEG_bII|(MIN <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//bII+
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//bII+
                     return DEG_bII|(AUG <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bII-
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//bII-
                     return DEG_bII|(DIM <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bIIsus2
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//bIIsus2
                         return DEG_bII|(SUS2 <<4);
 
-                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bIIsus4
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//bIIsus4
                         return DEG_bII|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//bII
                     return DEG_bII|(MAJ <<4);
@@ -238,55 +238,55 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                    
             }else {return 0;} //error case 
 
-        }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){ //bV?
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_V)<<shift){ //bV?
                
             shift+=4;
-            if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bVI?
+            if((word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){//bVI?
                 shift+=4;
-                if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//bVII?
+                if((word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){//bVII?
                     shift+=4;
                     
-                    if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bVIIm
+                    if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//bVIIm
                         return DEG_bVII|(MIN <<4);
-                    }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//bVII+
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//bVII+
                         return DEG_bVII|(AUG <<4);
-                    }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bVII-
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//bVII-
                         return DEG_bVII|(DIM <<4);
                       
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVIIsus2
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//bVIIsus2
                         return DEG_bVII|(SUS2 <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVIIsus4
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//bVIIsus4
                         return DEG_bVII|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//bVII
                         return DEG_bVII|(MAJ <<4);
                     }else return 0; //error if char other than correct ones
                     
-                }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bVIm
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//bVIm
                     return DEG_bVI|(MIN <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//bVI+
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//bVI+
                     return DEG_bVI|(AUG <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bVI-
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//bVI-
                     return DEG_bVI|(DIM <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVIsus2
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//bVIsus2
                     return DEG_bVI|(SUS2 <<4);
 
-                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVIsus4
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//bVIsus4
                     return DEG_bVI|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//bVI
                     return DEG_bVI|(MAJ <<4);  
                 }else return 0; //error if char other than correct ones
 
-            }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//bVm
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//bVm
                 return DEG_bV|(MIN <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//bV+
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//bV+
                 return DEG_bV|(AUG <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//bV-
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//bV-
                 return DEG_bV|(DIM <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//bVsus2
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//bVsus2
                 return DEG_bV|(SUS2 <<4);
 
-            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//bVsus4
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//bVsus4
                 return DEG_bV|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//bV
                 return DEG_bV|(MAJ <<4);  
@@ -295,27 +295,27 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
             return 0;
         }
 
-    }else if((word & (mask))== (WORD_BITS_I)){//I?
+    }else if((word & (mask))== (unsigned) (WORD_BITS_I)){//I?
         //cases: I Im I+ I- II III IV 
         shift+=4;
         
-        if((word & (mask<<shift))== (WORD_BITS_I)<<shift){ //II?
+        if((word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){ //II?
                 shift+=4;
-                if( (word & (mask<<shift))== (WORD_BITS_I)<<shift){//III?
+                if( (word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){//III?
                    shift+=4; 
-                    if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IIIm
+                    if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//IIIm
                         return DEG_III|(MIN <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//III+
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//III+
                         return DEG_III|(AUG <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//III-
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//III-
                         return DEG_III|(DIM <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IIIsus2
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//IIIsus2
                         return DEG_III|(SUS2 <<4);
 
-                    }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IIIsus4
+                    }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//IIIsus4
                         return DEG_III|(SUS4 <<4);
                     }else if( !(word & (mask<<shift) )){//III 
                         return DEG_III|(MAJ <<4);
@@ -323,103 +323,103 @@ TRIAD word_bits_to_chord (WORD_BITS word){//translates word bits into a chord. R
                     }else 
                         return 0; //error if char other than correct ones
 
-                }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IIm
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//IIm
                     return DEG_II|(MIN <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//II+
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//II+
                     return DEG_II|(AUG <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//II-
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//II-
                     return DEG_II|(DIM <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IIsus2
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//IIsus2
                         return DEG_II|(SUS2 <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IIsus4
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//IIsus4
                     return DEG_II|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//II
                     return DEG_II|(MAJ <<4);
                 }else return 0; //error case        
         
-        }else if((word & (mask<<shift))== (WORD_BITS_V)<<shift){//IV?
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_V)<<shift){//IV?
             shift+=4;
 
-            if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//IVm
+            if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//IVm
                 return DEG_IV|(MIN <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//IV+
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//IV+
                 return DEG_IV|(AUG <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//IV+
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//IV+
                 return DEG_IV|(AUG <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//IVsus2
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//IVsus2
                     return DEG_IV|(SUS2 <<4);
 
-            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//IVsus4
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//IVsus4
                     return DEG_IV|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//IV maj
                 return DEG_IV|(MAJ <<4);   
             }else return 0; //error if char other than correct ones
             
-        }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//Im
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//Im
             return DEG_I|(MIN <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//I+
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//I+
             return DEG_I|(AUG <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//I-
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//I-
             return DEG_I|(DIM <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//Isus2
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//Isus2
             return DEG_I|(SUS2 <<4);
 
-        }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//Isus4
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//Isus4
             return DEG_I|(SUS4 <<4);
         }else if( !(word & (mask<<shift) )){//I maj
             //printf("here\n");
             return DEG_I|(MAJ <<4);
         }else return 0; //error case      
 
-    }else if ( (word & (mask<<shift))== (WORD_BITS_V)<<shift){//V?
+    }else if ( (word & (mask<<shift))== (unsigned) (WORD_BITS_V)<<shift){//V?
         //cases : V VI VII
 
         shift+=4;
-        if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//VI?
+        if((word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){//VI?
             shift+=4;
-            if((word & (mask<<shift))== (WORD_BITS_I)<<shift){//VII?
+            if((word & (mask<<shift))== (unsigned) (WORD_BITS_I)<<shift){//VII?
                 shift+=4;
                     
-                if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//VIIm
+                if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//VIIm
                     return DEG_VII|(MIN <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//VII+
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//VII+
                     return DEG_VII|(AUG <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//VII-
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//VII-
                     return DEG_VII|(DIM <<4);
-                }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//VIIsus2
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//VIIsus2
                     return DEG_VII|(SUS2 <<4);
 
-                }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//VIIsus4
+                }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//VIIsus4
                     return DEG_VII|(SUS4 <<4);
                 }else if( !(word & (mask<<shift) )){//VII
                     return DEG_VII|(MAJ <<4);
                 }else return 0; //error if char other than correct ones
                     
-            }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//VIm
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//VIm
                 return DEG_VI|(MIN <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//VI+
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//VI+
                 return DEG_VI|(AUG <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//VI-
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//VI-
                 return DEG_VI|(DIM <<4);
-            }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//VIsus2
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//VIsus2
                 return DEG_VI|(SUS2 <<4);
 
-            }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//VIsus4
+            }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//VIsus4
                 return DEG_VI|(SUS4 <<4);
             }else if( !(word & (mask<<shift) )){//VI
                 return DEG_VI|(MAJ <<4);  
             }else return 0; //error if char other than correct ones
 
-        }else if((word & (mask<<shift))== (WORD_BITS_m)<<shift){//Vm
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_m)<<shift){//Vm
             return DEG_V|(MIN <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_aug)<<shift){//V+
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_aug)<<shift){//V+
             return DEG_V|(AUG <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_dim)<<shift){//V-
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_dim)<<shift){//V-
             return DEG_V|(AUG <<4);
-        }else if((word & (mask<<shift))== (WORD_BITS_sus2)<<shift){//Vsus2
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus2)<<shift){//Vsus2
             return DEG_V|(SUS2 <<4);
 
-        }else if((word & (mask<<shift))== (WORD_BITS_sus4)<<shift){//Vsus4
+        }else if((word & (mask<<shift))== (unsigned) (WORD_BITS_sus4)<<shift){//Vsus4
             return DEG_V|(SUS4 <<4);
         }else if( !(word & (mask<<shift) )){//V
             return DEG_V|(MAJ <<4);   

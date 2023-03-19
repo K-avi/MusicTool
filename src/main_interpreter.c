@@ -17,9 +17,22 @@
 #include "globals.h"
 #include "triadgen.h"
 #include "globals.h"
+#include <signal.h>
+
+
+void sigint_handler(int sig){
+
+  free_userinfo(user_data);
+  free_book(progbook);
+  printf("\n");
+  exit (sig);
+  
+}
 
 
 int main(int argc , char * argv[]){
+
+  signal(SIGINT, *sigint_handler );
 
   if(! (argc==1 || argc==2)){
     printf("%s currently takes only 1 command line argument.\n", argv[0]);
@@ -75,12 +88,14 @@ int main(int argc , char * argv[]){
   progbook=malloc(sizeof(PROGBOOK));
   init_book(progbook, 30);
 
+  
+
+  printf("MusicTool Copyright (C) 2023  Ivan MULOT-RADOJCIC This program comes with ABSOLUTELY NO WARRANTY;\nfor details see the GPLv3 documentation.\nThis is free software, and you are welcome to redistribute it under certain conditions\n\n");
   file_environment_parseloop( "defaultenv.txt", user_data, progbook);
-
-
   printf("Welcome to MusicTool! Type 'help' for more informations\n");
   printf("  >>>");
 
+  
   cmdline_parseloop(user_data, progbook);
 
   free_userinfo(user_data);

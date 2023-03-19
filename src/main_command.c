@@ -14,12 +14,23 @@
 #include "globals.h"
 #include "triadgen.h"
 
+#include <signal.h>
+
+void sigint_handler(int sig){
+
+  free_userinfo(user_data);
+  free_book(progbook);
+
+  exit (sig);
+  
+}
 
 
 
 int main( int argc, char *argv[])
 {
-  
+  signal(SIGINT, *sigint_handler );
+
   if(argc!=3){
      printf("to use smtool pass two args\n");
   }
